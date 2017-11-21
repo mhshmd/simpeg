@@ -1,0 +1,277 @@
+<div class="animated fadeIn">
+    <div class="card" id="new">
+        <div class="card-header"><i class="icon-wrench"></i> Pengaturan Notifikasi</div>
+            <div class="card-block">
+                <div class="row" id="main-window">
+                    <div class="col-md-12">                        
+                		<ul class="nav nav-tabs" role="tablist">
+                            <!-- <li class="nav-item">
+                                <a id="pengiriman_tab" class="nav-link active" data-toggle="tab" href="#pengirimanchild" role="tab" aria-control="pengirimanchild"><i class="icon-clock"></i> Pengiriman</a>
+                            </li> -->
+                            <li class="nav-item">
+                                <a id="status_tab" class="nav-link active" data-toggle="tab" href="#statuschild" role="tab" aria-control="statuschild"><i class="icon-directions"></i> Status</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <!-- <div class="tab-pane active" id="pengirimanchild" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6" style="padding-left: 0">
+                                    	<div class="form-group row">
+				                            <label class="col-md-2 form-control-label">Jenis Notifikasi</label>
+				                            <div class="col-md-6">
+				                            	<div id="div-jbt-nama">
+					                                <select id="field-atasan" name="atasan" class="form-control input-lg" size="1">
+					                                    <option value="Puket 1">Kenaikan Pangkat</option>
+					                                    <option value="Ketua STIS">Kenaikan Gaji Berkala (KGB)</option>
+					                                    <option value="Ketua STIS">Pensiun</option>
+					                                    <option value="Ketua STIS">Penghargaan Tanda Jasa</option>
+					                                    <option value="Ketua STIS">Pembebasan Hukuman Disiplin</option>
+					                                    <option value="Ketua STIS">Presensi</option>
+					                                </select>
+				                            	</div>
+				                            </div>
+				                        </div>
+                                    	<div class="form-group row">
+				                            <label class="col-md-2 form-control-label">Variabel Patokan</label>
+				                            <div class="col-md-6">
+				                            	<div id="div-jbt-nama">
+					                                <select id="field-atasan" name="atasan" class="form-control input-lg" size="1">
+					                                    <option value="Puket 1">Tidak ada</option>
+					                                    <option value="Ketua STIS">TMT Golongan</option>
+					                                    <option value="Ketua STIS">Pensiun</option>
+					                                    <option value="Ketua STIS">TMT Hukuman Disiplin</option>
+					                                    <option value="Ketua STIS">TMT CPNS</option>
+					                                    <option value="Ketua STIS">TMT PNS</option>
+					                                </select>
+				                            	</div>
+				                            </div>
+				                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-2 form-control-label">Waktu Mulai (sebelum hari H)<span> *</span></label>
+                                            <div class="col-md-3">
+                                                <input type='number' min="0" value="0" class="form-control" name="pdk_jurusan" required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select name="pdk_ijazah" class="form-control input-lg" size="1">
+                                                    <option value="Tidak ada">Tidak ada</option>
+                                                    <option value="Tahun">Tahun</option>
+                                                    <option value="Bulan">Bulan</option>
+                                                    <option value="Minggu">Minggu</option>
+                                                    <option value="Hari">Hari</option>
+                                                    <option value="Jam">Jam</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-2 form-control-label">Waktu Mulai (setelah hari H)<span> *</span></label>
+                                            <div class="col-md-3">
+                                                <input type='number' min="0" value="0" class="form-control" name="pdk_jurusan" required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select name="pdk_ijazah" class="form-control input-lg" size="1">
+                                                    <option value="Tidak ada">Tidak ada</option>
+                                                    <option value="Tahun">Tahun</option>
+                                                    <option value="Bulan">Bulan</option>
+                                                    <option value="Minggu">Minggu</option>
+                                                    <option value="Hari">Hari</option>
+                                                    <option value="Jam">Jam</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-2 form-control-label">Periode (setiap)<span> *</span></label>
+                                            <div class="col-md-3">
+                                                <input type='number' min="0" value="0" class="form-control" name="pdk_jurusan" required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select name="pdk_ijazah" class="form-control input-lg" size="1">
+                                                    <option value="Tidak ada">Tidak ada</option>
+                                                    <option value="Tahun">Tahun</option>
+                                                    <option value="Bulan">Bulan</option>
+                                                    <option value="Minggu">Minggu</option>
+                                                    <option value="Hari">Hari</option>
+                                                    <option value="Jam">Jam</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-2 form-control-label">Pukul<span> *</span></label>
+                                            <div class="col-md-2">
+                                                <input type="text" name="periode_kgb" class="form-control date" autocomplete="off" required>
+                                            </div>
+                                        </div>
+				                        <div class="form-group row">
+				                            <label class="col-md-2 form-control-label">Media</label>
+				                            <div class="col-md-6">
+				                                <label class="checkbox-inline" for="inline-checkbox1">
+				                                    <input type="checkbox" id="inline-checkbox1" name="inline-checkbox1" value="option1">Email
+				                                </label>
+				                                <label class="checkbox-inline" for="inline-checkbox2" style="margin-left: 20px">
+				                                    <input type="checkbox" id="inline-checkbox2" name="inline-checkbox2" value="option2">SMS
+				                                </label>
+				                            </div>
+				                        </div>
+                                        <button id="button-submit-tambah-pgw" type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="tab-pane active" id="statuschild" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-4" style="padding-left: 0">
+                                    	<div class="form-group row">
+				                            <label class="col-md-3 form-control-label">Jenis Notifikasi</label>
+				                            <div class="col-md-8">
+				                            	<div id="div-jbt-nama">
+					                                <select id="field-jenis-notif" name="jenis_notif" class="form-control input-lg" size="1">
+					                                    <option value="1">Kenaikan Pangkat</option>
+					                                    <option value="2">Kenaikan Gaji Berkala (KGB)</option>
+					                                    <option value="3">Pensiun</option>
+					                                    <option value="4">Penghargaan Tanda Jasa</option>
+					                                    <option value="5">Pembebasan Hukuman Disiplin</option>
+					                                    <option value="6">Presensi</option>
+					                                </select>
+				                            	</div>
+				                            </div>
+				                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-control-label">Posisi Status<span> *</span></label>
+                                            <div class="col-md-8">
+                                                <input id="pos-status" type='number' min="1" class="form-control" name="pos_status" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-control-label">Status<span> *</span></label>
+                                            <div class="col-md-8">
+                                                <textarea id="status" name="status" rows="3" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <button id="button-submit-tambah-status" type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                    <div class="col-md-6">
+				                		<div id="tabelDaftarStatus" style="height: 300px;width:100%" class="ag-blue"></div>
+				                	</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+</div>
+
+<script src="/js/ag-grid.js"></script>
+
+<script type="text/javascript">
+	(function(){
+
+        var tabStatus = {
+            eGridDiv: document.querySelector('#tabelDaftarStatus'),
+            rowData: [
+                // {_id: 1, status: 'Nominasi Kenaikan Pangkat diumumkan'}
+            ],
+            target_posisi: null,
+            //umum
+            init: function() {
+                this.cacheDOM();
+                this.bindEvents();
+                this.registerAgComponent();
+                this.initStatus();
+            },
+            cacheDOM: function() {
+                this.$main_window = $( '#main-window' );
+
+                this.$button_submit_tambah_status = $( '#button-submit-tambah-status' );
+                this.$field_jenis_notif = $( '#field-jenis-notif' );
+                this.$status = $( '#status' );
+                this.$pos_status = $( '#pos-status' )
+            },
+            bindEvents: function() {
+                this.$button_submit_tambah_status.click(this.button_submit_tambah_statusHandler.bind(this));
+
+                this.$main_window.on('click', '.hapus-status', this.hapus_statusHandle.bind(this))
+                this.$main_window.on('click', '.edit-status', this.btnEditHandle.bind(this))
+
+                this.$main_window.on('change', '#field-jenis-notif', this.initStatus.bind(this));
+            },
+            hapus_statusHandle: function(){
+                var selectedData = this.gridOptions.api.getSelectedRows()[0];
+                var this_outer = this;
+                socket.emit('hapus status jenis notif', selectedData, function(status){
+                    if(status){
+                        this_outer.gridOptions.api.updateRowData( { remove: [selectedData] } );
+                    }
+                });
+            },
+            button_submit_tambah_statusHandler: function() {
+                var this_outer = this;
+                socket.emit('tambah status notif', {jenis: this.$field_jenis_notif.val(), target_posisi: this.target_posisi, status: [{posisi: this.$pos_status.val(), label: this.$status.val()}]}, function(response){
+                    if(response){
+                        // this_outer.addData([{_id: response._id, pos_status: this_outer.$pos_status.val(), label: this_outer.$status.val()}])
+                        this_outer.initStatus()
+                        this_outer.resetForm()
+                    }
+                });
+            },
+            resetForm: function(){
+                this.$pos_status.val('')
+                this.$status.val('')
+                this.target_posisi = null;
+            },
+            addData: function(newData){
+                this.gridOptions.api.updateRowData( { add: newData } );
+            },
+            //>Ag Comp
+            registerAgComponent: function(){
+                this.columnDefs = [
+                    {headerName: "Posisi", field: "pos_status", width: 50},
+                    {headerName: "Status", field: "label", width: 500},
+                    {headerName: "Pilihan", field: "pilihan", width: 120, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                ]
+                this.gridOptions = {
+                    columnDefs: this.columnDefs,
+                    rowData: this.rowData,
+                    enableColResize: true,
+                    rowHeight: 30,
+                    rowSelection: 'multiple',
+                    animateRows: true,
+                    enableFilter: true,
+                    enableSorting: true,
+                    getRowNodeId: function(data) { return data._id; },
+                    onRowDoubleClicked: this.btnEditHandle.bind(this)
+                }
+
+                this.renderPktTable();
+            },
+            btnInCellRenderer: function(params){
+                return `<button class='hapus-status'>Hapus</button> <button class='edit-status'>Edit</button>`
+            },
+            renderPktTable: function() {
+                new agGrid.Grid(this.eGridDiv, this.gridOptions);
+            },
+            btnEditHandle: function (e) {
+                var selectedData = this.gridOptions.api.getSelectedRows()[0];
+                this.target_posisi = selectedData.pos_status;
+                this.$pos_status.val(selectedData.pos_status)
+                this.$status.val(selectedData.label)
+            },
+            initStatus: function(){
+                socket.emit('ambil semua status', this.$field_jenis_notif.val(), this.initNotifDataTbl.bind(this))
+            },
+            initNotifDataTbl: function(all_status){
+                this.gridOptions.api.setRowData([]);
+                var stats = []
+                _.each(all_status.status, function(stat, index, list){
+                    stats.push({_id: stat._id, jenis: all_status.jenis, pos_status: stat.posisi, label: stat.label})
+                })
+                stats = _.sortBy(stats, function(o) { return o.pos_status; })
+                this.addData(stats)
+            }
+
+        }
+
+        tabStatus.init();
+
+    })()
+</script>

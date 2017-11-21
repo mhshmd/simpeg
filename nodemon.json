@@ -1,0 +1,4 @@
+{
+  "verbose": false,
+  "ignore": ["js/*", "temp/*", "temp.js", "oretan.js"]
+}

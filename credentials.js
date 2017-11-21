@@ -1,0 +1,1 @@
+module.exports = {cookieSecret: 'ID==&&%^&A&SHBJSAsjhbJGhUGkbKiUvii^%^#$%^&98G8UIugg==', };

@@ -1,0 +1,51 @@
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;    
+}
+span {
+    color: #999;
+    font-size: 
+}
+</style>
+
+Yth. {{user.jk}} {{user.nama}}
+<br><br>
+Jadwal Kenaikan Pangkat:
+<table>
+	<tr>
+		<th rowspan="2">Nama</th>
+		<th colspan="2">Golongan</th>
+		<th rowspan="2">Periode</th>
+	</tr>
+	<tr>
+		<th>Saat ini</th>
+		<th>Target</th>
+	</tr>
+	{{#each stafNotif}}
+        <tr>
+			<td>{{user.nama}}</td>
+			<td>{{gol_now}}</td>
+			<td>{{gol_target}}</td>
+			<td>{{../periode_usul}}</td>
+		</tr>
+    {{/each}}
+</table>
+Mohon agar dipantau kelengkapan berkas-berkas pengusulan Kenaikan Pangkat tersebut yaitu:
+<br>
+1. Copy SK Kenaikan Pangkat terakhir<br>
+2. Copy DP-3 tahun 2013 dan SKP<br>
+3. Copy Ijazah (legalisir pejabat yang berwenang)<br>
+4. Copy SK Tugas Belajar/Ijin Belajar<br><br>
+untuk diserahkan kepada Subbagian Kepegawaian STIS paling lambat <strong>01 {{batas_usul_ke_stis}}</strong> untuk diproses lebih lanjut.
+<br><br>
+Terima kasih,
+<br>
+<em>Subbagian Kepegawaian STIS<em>
+<hr>
+<em><span>Anda akan menerima email reminder ini setiap minggu (bulan ini). Untuk berhenti menerima email klik <a href="http://10.100.203.88:8000/konfirmasi/pk/{{unsubscribe_token}}">konfirmasi email</a>.</span><br>
+<span>Untuk masuk ke SIMANIS klik <a href="http://10.100.203.88:8000/admin">Masuk</a>.</span></em>

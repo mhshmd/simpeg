@@ -1,0 +1,227 @@
+<div class="animated fadeIn">
+    <div class="card" id="new">
+        <div class="card-header"><i class="icon-home"></i> Beranda</div>
+            <div class="card-block" id="main-window">
+                <div class="row">
+                    <div class="col-sm-7 col-md-8">
+                        <div class="card card-accent-primary">
+                            <div class="card-header">
+                                <i class="fa fa-check"></i>Status Terbaru
+                            </div>
+                            <div id="status-container" class="card-block">
+                                <!-- <h5>Kenaikan Gaji Berkala 2017: <a href="#">Sedang diproses</a></h5>
+                                <h5>Kenaikan Gaji Berkala 2015: <a href="#">Usulan diterima</a></h5>
+                                <h5>Kenaikan Pangkat III/b: <a href="#">Usulan diterima</a></h5> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-accent-info">
+                                    <div class="card-header">
+                                        <i class="fa fa-bell"></i>Berita Terbaru
+                                    </div>
+                                    <div id="berita-container" class="card-block">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-accent-secondary">
+                                    <div class="card-header">
+                                        <i class="fa fa-bookmark"></i>Artikel
+                                    </div>
+                                    <div id="artikel-container" class="card-block">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-5">
+                        <h5 style="margin-bottom: 10px">
+                            Berita Terbaru
+                        </h5>
+                        <h6><a href="#">Tatacara Pengusulan Kenaikan Gaji Berkala (KGB)</a></h6>
+                        <h6><a href="#">Panduan Penggunaan SIMANIS</a></h6>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+</div>
+
+<div class="modal fade" id="modal-baca-berita" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 id="modal-judul-berita"></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 0 15px;">
+                <div style="padding: 15px; padding-bottom: 0">
+                    <div style="height: 510px;position:relative;">
+                        <div style="max-height:100%;overflow-y:auto;overflow-x:hidden;">
+                            <div class="row" style="margin-bottom: 20px; margin-right: 5px">
+                                <div class="col-md-12">  
+                                    <div class="row" style="margin-bottom: 5px">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <span id="text-date" style="font-size: 11px; color: #8c8c8c"></span>
+                                                    <h4 id="text-judul" style="color: #216080; margin-bottom: 0"></h4>
+                                                    <span id="text-penulis" style="font-size: 11px; color: #8c8c8c"></span><hr>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12" id="text-content">
+                                                    <p>Test</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script src="/js/moment.min.js"></script>
+<script src="/js/id.js"></script>
+
+<script type="text/javascript">
+
+    moment.locale('id');
+
+    (function(){
+
+        var berandaPage = {
+            artikel: [],
+            //umum
+            init: function() {
+                this.cacheDOM();
+                this.bindEvents();
+                this.initArtikel()
+                this.initStatus('pangkat', 'Kenaikan Pangkat ')
+            },
+            cacheDOM: function() {
+                this.$main_window = $( '#main-window' );
+                this.$artikel_container = $( '#artikel-container' );
+                this.$berita_container = $( '#berita-container' );
+                this.$status_container = $( '#status-container' );
+                this.$modal_judul_berita = $( '#modal-judul-berita' );
+                this.$text_judul = $( '#text-judul' );
+                this.$text_content = $( '#text-content' );
+                this.$text_penulis = $( '#text-penulis' );
+                this.$text_date = $( '#text-date' );
+                this.$modal_baca_berita = $( '#modal-baca-berita' );
+            },
+            bindEvents: function() {
+                this.$main_window.on('click', '.artikel-item', this.openArtikel.bind(this));
+            },
+            openArtikel: function(e){
+                var berita = _.find(this.artikel, function(art){ return art._id == e.target.id; }) || _.find(this.berita, function(art){ return art._id == e.target.id; })
+                console.log(berita)
+                this.$text_judul.text(berita.judul);
+                this.$text_content.html(berita.text);
+                this.$text_penulis.html(berita.penulis);
+                this.$text_date.html(this.dateCellRenderer(berita.createdAt));
+                this.$modal_baca_berita.modal('show');
+
+            },
+            dateCellRenderer: function(params) {
+                if(params){
+                    return moment(params).format('dddd, DD MMM YYYY HH:ss')+' WIB'
+                } else {
+                    return '';
+                }
+            },
+            dateCellRenderer2: function(params) {
+                if(params){
+                    return moment(params).format('DD/MM/YYYY')
+                } else {
+                    return '';
+                }
+            },
+            initArtikel: function(){
+                socket.emit('get all berita', '', this.initArtikelHandler.bind(this))
+            },
+            initArtikelHandler: function(contents) {
+                this.artikel = contents.artikel;
+                this.berita = contents.berita;
+
+                var this_outer = this;
+                
+                this.$artikel_container.append(
+                    this.artikel.length?_.map(this.artikel, function(cont){ return `<h5 style="margin-bottom: 0"><a class='artikel-item' id='`+cont._id+`' href="#">`+cont.judul+`</a></h5>
+                        <span style="font-size: 11px; color: #8c8c8c">`+this_outer.dateCellRenderer(cont.createdAt)+`</span><hr>`; }):'<p>Belum ada artikel.</p>'
+                )
+                
+                this.$berita_container.append(
+                    this.berita.length?_.map(this.berita, function(cont){ return `<h5 style="margin-bottom: 0"><a class='artikel-item' id='`+cont._id+`' href="#">`+cont.judul+`</a></h5>
+                        <span style="font-size: 11px; color: #8c8c8c">`+this_outer.dateCellRenderer(cont.createdAt)+`</span><hr>`; }):'<p>Belum ada berita.</p>'
+                )
+            },
+            pkt_golCellRenderer: function(params){
+                var transformGol = {
+                    '1':'I/a',
+                    '2':'I/b',
+                    '3':'I/c',
+                    '4':'I/d',
+
+                    '5':'II/a',
+                    '6':'II/b',
+                    '7':'II/c',
+                    '8':'II/d',
+
+                    '9':'III/a',
+                    '10':'III/b',
+                    '11':'III/c',
+                    '12':'III/d',
+
+                    '13':'IV/a',
+                    '14':'IV/b',
+                    '15':'IV/c',
+                    '16':'IV/d',
+                    '17':'IV/e',
+                }
+
+                return transformGol[params.value]
+            },
+            initStatus: function(type, intro){
+                socket.emit('get all status', type, this.initStatusHandler.bind(this, intro))
+            },
+            initStatusHandler: function(intro, contents) {
+                // <h5>Kenaikan Gaji Berkala 2017: <a href="#">Sedang diproses</a></h5>
+                // <h5>Kenaikan Gaji Berkala 2015: <a href="#">Usulan diterima</a></h5>
+                // <h5>Kenaikan Pangkat III/b: <a href="#">Usulan diterima</a></h5>
+                var this_outer = this;
+                this.$status_container.append(
+                    contents.length?_.map(contents, function(notif){
+                        return `<h5>`+(notif.status.length?`<span style='color: #8c8c8c'>`+this_outer.dateCellRenderer2(notif.status[notif.status.length-1].time)+'</span>':'')+` `+intro+` `+this_outer.pkt_golCellRenderer({value: notif.gol_target})+`: <span class="badge badge-pill badge-success">`+(notif.status.length?notif.status[notif.status.length-1].label.replace(/\d*\.\s/, ""):'Belum ada status')+`</span></h5>`; }):'<p>Belum ada status.</p>'
+                )      
+                
+            },
+
+        }
+
+        berandaPage.init();
+
+    })()
+
+</script>

@@ -1,0 +1,170 @@
+<div class="animated fadeIn">
+    <div class="card" id="new">
+        <div class="card-header"><i class="icon-lock"></i> Administrator</div>
+            <div class="card-block">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-center" style="margin-bottom: 10px">
+                            Daftar Admin
+                        </h6>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 10px">
+                    <div class="col-md-12">
+                        <div id="tabelAdmin" style="height: 250px;width:50%" class="ag-blue"></div>
+                    </div>
+                </div>
+                <div class="row">
+                	<div class="col-md-12">
+                		<h5><i class="icon-user-follow"></i> Tambah Admin:</h5>
+                        <form id="form-admin-administrator" action="#" method="POST">
+                            <div class="row">
+                                <div class="form-group col-sm-2">
+                                    <input type="text" id="input-nama-pgw" class="autocomplete-input form-control" autocomplete="off" placeholder="Nama Pegawai" required>
+                                </div>
+                                <div class="form-group col-sm-1">
+                                    <button id="btn-tambah-admin" class="form-control" type="submit" class="px-2">Tambah</button>
+                                </div>
+                            </div> 
+                        </form>
+                	</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+</div>
+
+<script src="/js/ag-grid.js"></script>
+
+
+<script type="text/javascript">
+
+    (function(){
+
+        var adminPage = {
+            processingSomething: false,
+            eGridDiv: document.querySelector('#tabelAdmin'),
+            rowData: [
+            ],
+            typeaheadConfig: {
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            formPgwResetable: false,
+            currentPgwIDEditing: undefined,
+            //umum
+            init: function() {
+                this.cacheDOM();
+                this.bindEvents();
+                this.registerAgComponent();
+                this.renderPgwTable();
+                this.registerAutoComplete();
+            },
+            cacheDOM: function() {
+                this.$form_admin_administrator = $( '#form-admin-administrator' );
+                this.$input_nama_pgw = $( '#input-nama-pgw' );
+                this.$input_password_pgw = $( '#input-password-pgw' );
+                this.$btn_tambah_admin = $( '#btn-tambah-admin' );
+                this.$tabel_div = $( '#tabelAdmin' );
+            },
+            bindEvents: function() {
+                $(".autocomplete-input").on("typeahead:selected typeahead:autocompleted", this.autoCompleteSelecting.bind(this));
+                this.$form_admin_administrator.on( 'submit', this.submitAdminFormHandler.bind( this ) )
+                this.$tabel_div.on('click', '.hapus-admin', this.hapusAdminHandler.bind( this ) )
+            },
+            jbt_namaCellRenderer: function(params) {
+                if(params.value){
+                    return params.value.jbt_nama
+                } else {
+                    console.log(params.value)
+                    return '';
+                }
+            },
+            //>EventsFunction
+            autoCompleteSelecting: function(e,datum) {
+                 this.current_will_admin = datum.newAdmin;
+            },
+            submitAdminFormHandler: function(e) {
+                e.preventDefault();
+                if(!this.current_will_admin){
+                    GlobalAlert('Harap cek kolom nama dan pasword!');
+                    return false;
+                }
+                socket.emit('add_admin', {_id: this.current_will_admin._id, password: this.$input_password_pgw.val()}, this.addAdminResponHandler.bind(this));
+            },
+            addAdminResponHandler: function (status) {
+                if(status){
+                    this.addData([this.current_will_admin]);
+                    this.$form_admin_administrator[0].reset();
+                }
+            },
+            hapusAdminHandler: function() {
+                var selectedData = this.gridOptions.api.getSelectedRows();
+                socket.emit('hapus_admin', selectedData[0]._id, this.hapusAdminEmitResponse.bind(this));
+            },
+            hapusAdminEmitResponse: function(status) {
+                if(status){
+                    var selectedData = this.gridOptions.api.getSelectedRows();
+                    this.removeData( selectedData );
+                }
+            },
+            //>Ag-Grid Component
+            addData: function(newData){
+                this.gridOptions.api.updateRowData( { add: newData } );
+            },
+            removeData: function(newData){
+                this.gridOptions.api.updateRowData( { remove: newData } );
+            },
+            registerAgComponent: function(){
+                this.columnDefs = [
+                    {headerName: "Nama", field: "nama", width: 250},
+                    {headerName: "Jabatan", field: "jbt_nama", width: 200, cellRenderer: this.jbt_namaCellRenderer},
+                    {headerName: "NIP Lama", field: "nip_lama", width: 150},
+                    {headerName: "Email", field: "email", width: 150},
+                    {headerName: "Pilihan", field: "pilihan", width: 60, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                ]
+                this.gridOptions = {
+                    columnDefs: this.columnDefs,
+                    rowData: this.rowData,
+                    enableColResize: true,
+                    rowHeight: 30,
+                    rowSelection: 'multiple',
+                    animateRows: true,
+                    enableFilter: true,
+                    enableSorting: true,
+                    getRowNodeId: function(data) { return data._id; }
+                }
+            },
+            renderPgwTable: function() {
+                new agGrid.Grid(this.eGridDiv, this.gridOptions);
+                socket.emit('get_pgw_admin', null, this.initAllAdmins.bind(this));
+            },
+            initAllAdmins: function(all_admins) {
+                this.addData(all_admins)
+            },
+            btnInCellRenderer: function(params){
+                return `<button class='hapus-admin'>Hapus</button>`
+            },
+            //>Autocomplete
+            registerAutoComplete: function() {
+                this.$input_nama_pgw.typeahead(this.typeaheadConfig, {
+                        source: function(q, p){
+                            {
+                                socket.emit('get_pgw_with_filter', q, function (matched_pgw) {
+                                    return p(_.map(matched_pgw, function(peg){ return {newAdmin: peg, value: peg.nama}}))
+                                });
+                            }
+                        }
+                    }
+                );
+            }
+
+        }
+
+        adminPage.init();
+
+    })()
+
+</script>

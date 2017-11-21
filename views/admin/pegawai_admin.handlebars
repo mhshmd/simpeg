@@ -1,0 +1,930 @@
+<div class="animated fadeIn">
+    <div class="card" id="new">
+        <div class="card-header"><i class="icon-people"></i> Pegawai</div>
+            <div class="card-block">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a id="data_tab" class="nav-link active" data-toggle="tab" href="#datachild" role="tab" aria-control="datachild"><i class="icon-people"></i> Data Pegawai</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="usulan_tab" class="nav-link" data-toggle="tab" href="#usulanchild" role="tab" aria-control="usulanchild"><i class="icon-pencil"></i> Usulan Perubahan <span class="badge badge-pill badge-danger">1</span></a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="datachild" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12" style="padding-left: 0">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div id="tabelPegawai" style="height: 500px;width:100%" class="ag-blue"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 10px">
+                                            <div class="col-md-12">
+                                                <button id="btn-tbh-pgw" class="btn btn-primary">Tambah Pegawai</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="usulanchild" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12" style="padding-left: 0">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div id="tabelUsulanPgw" style="height: 500px;width:100%" class="ag-blue"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+</div>
+
+<div class="modal fade" id="modal-tambah-pegawai" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title"><span id="modal-title-pgw">Tambah Pegawai</span></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form_admin_tambah_pgw" action="/admin/submit_pgw_form" method="POST">
+                <div class="modal-body" style="padding: 0 15px;">
+                    <div style="padding: 15px; padding-bottom: 0">
+                        <div style="height: 510px;position:relative;">
+                            <div style="max-height:100%;overflow-y:auto;overflow-x:hidden;">
+                                <div class="row" style="margin-bottom: 20px; margin-right: 5px">
+                                    <div class="col-md-12">  
+                                        <div class="row" style="margin-bottom: 5px">
+                                            <div class="col-md-9">
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Nama<span> *</span></label>
+                                                    <div class="col-md-9">
+                                                        <input id="field-tambah-nama" type="text" name="nama" class="form-control" autocomplete="off" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Jenis Kelamin<span> *</span></label>
+                                                    <div class="col-md-9">
+                                                        <label class="radio-inline">
+                                                            <input type="radio" id="jkL" name="jk" value="L" checked="checked">  Laki-laki
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" id="jkP" name="jk" value="P">  Perempuan
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Tempat & Tanggal Lahir<span> *</span></label>
+                                                    <div class="col-md-6">
+                                                        <input type='text-input' class="form-control" name="ttl_tl" required>
+                                                        <span class="help-block text-muted">Tempat</span> 
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type='text-input' class="form-control date" name="ttl_t" required>
+                                                        <span class="help-block text-muted">Tanggal</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">NIP</label>
+                                                    <div class="col-md-3">
+                                                        <input type='number' class="form-control disable-arrow" name="nip_lama" minlength=9>
+                                                        <span class="help-block text-muted">Lama</span> 
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input id="field-nip-baru" type='number' class="form-control disable-arrow" name="nip_baru" minlength=18 required>
+                                                        <span class="help-block text-muted">Baru<span style="color: red"> *</span></span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">TMT</label>
+                                                    <div class="col-md-3">
+                                                        <input type='text-input' class="form-control date" name="tmt_cpns">
+                                                        <span class="help-block text-muted">CPNS</span> 
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type='text-input' class="form-control date" name="tmt_pns" required>
+                                                        <span class="help-block text-muted">PNS<span style="color: red"> *</span></span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Pangkat<span> *</span></label>
+                                                    <div class="col-md-3">
+                                                        <select name="pkt_gol" class="form-control input-lg" size="1">
+                                                            <option value="1">I/a</option>
+                                                            <option value="2">I/b</option>
+                                                            <option value="3">I/c</option>
+                                                            <option value="4">I/d</option>
+
+                                                            <option value="5">II/a</option>
+                                                            <option value="6">II/b</option>
+                                                            <option value="7">II/c</option>
+                                                            <option value="8">II/d</option>
+
+                                                            <option value="9">III/a</option>
+                                                            <option value="10">III/b</option>
+                                                            <option value="11">III/c</option>
+                                                            <option value="12">III/d</option>
+
+                                                            <option value="13">IV/a</option>
+                                                            <option value="14">IV/b</option>
+                                                            <option value="15">IV/c</option>
+                                                            <option value="16">IV/d</option>
+                                                            <option value="17">IV/e</option>
+                                                        </select>
+                                                        <span class="help-block text-muted">Gol</span> 
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type='text-input' class="form-control date" name="pkt_tmt" required>
+                                                        <span class="help-block text-muted">TMT</span>
+                                                    </div>
+                                                </div> 
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Jabatan<span> *</span></label>
+                                                    <div class="col-md-6">
+                                                        <select id="field-jbt_nama" name="jbt_nama" class="form-control input-lg" size="1">
+                                                        </select>
+                                                        <span class="help-block text-muted">Nama</span> 
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type='text-input' class="form-control date" name="jbt_tmt" required>
+                                                        <span class="help-block text-muted">TMT</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Tugas Belajar<span> *</span></label>
+                                                    <div class="col-md-9">
+                                                        <label class="radio-inline">
+                                                            <input type="radio" id="isTbf" name="isTb" value="false" checked="checked">  Tidak
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" id="isTt" name="isTb" value="true">  Ya
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Masa Kerja<span> *</span></label>
+                                                    <div class="col-md-3">
+                                                        <input type='number' min="0" value=0 class="form-control" name="mk_th" required>
+                                                        <span class="help-block text-muted">Banyak Th</span> 
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type='number' min="0" value=0 class="form-control" name="mk_bl" required>
+                                                        <span class="help-block text-muted">+Bl</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Pelatihan</label>
+                                                    <div class="col-md-6">
+                                                        <input type='text-input' class="form-control" name="pelatihan_nama">
+                                                        <span class="help-block text-muted">Nama</span> 
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type='number' min="1900" class="form-control" name="pelatihan_th">
+                                                        <span class="help-block text-muted">Th</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label"></label>
+                                                    <div class="col-md-9">
+                                                        <input type='text-input' class="form-control" name="pelatihan_penyelenggara">
+                                                        <span class="help-block text-muted">Penyelenggara</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Pendidikan<span> *</span></label>
+                                                    <div class="col-md-6">
+                                                        <input type='text-input' class="form-control" name="pdk_jurusan" required>
+                                                        <span class="help-block text-muted">Jurusan</span> 
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <select name="pdk_ijazah" class="form-control input-lg" size="1">
+                                                            <option value="0">Tidak ada</option>
+                                                            <option value="8">S3</option>
+                                                            <option value="7">S2</option>
+                                                            <option value="6">S1</option>
+                                                            <option value="5">DIV</option>
+                                                            <option value="4">DIII</option>
+                                                            <option value="3">SLTA/SMA/Paket C</option>
+                                                            <option value="2">SLTP/SMP/Mts/Paket B</option>
+                                                            <option value="1">SD/MI/Paket A</option>
+                                                        </select>
+                                                        <span class="help-block text-muted">Ijazah</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label"></label>
+                                                    <div class="col-md-6">
+                                                        <input type='text-input' class="form-control" name="pdk_pt" required>
+                                                        <span class="help-block text-muted">PT</span>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type='number' min="1900" class="form-control" name="pdk_lulus_th" required>
+                                                        <span class="help-block text-muted">Lulus Th</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Batas Usia Pensiun (BUP)<span> *</span></label>
+                                                    <div class="col-md-3">
+                                                        <input id="bup" type='number' min="0" name="bup" class="form-control" autocomplete="off" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Pensiun<span> *</span></label>
+                                                    <div class="col-md-3">
+                                                        <input id="field-pensiun" type="text" name="pensiun" class="form-control date" autocomplete="off" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Angka Kredit</label>
+                                                    <div class="col-md-3">
+                                                        <input type='number' min="0" step=any name="ak" class="form-control" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Periode KGB<span> *</span></label>
+                                                    <div class="col-md-3">
+                                                        <input id="periode-kgb" type="text" name="periode_kgb" class="form-control date" autocomplete="off" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">NIDN</label>
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="nidn" class="form-control" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Sertifikasi</label>
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="sertifikasi" class="form-control" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Penghargaan</label>
+                                                    <div class="col-md-6">
+                                                        <input type='text-input' class="form-control" name="hrg_jenis">
+                                                        <span class="help-block text-muted">Jenis</span>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type='number' min="1900" class="form-control" name="hrg_th">
+                                                        <span class="help-block text-muted">Th</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Hukuman Disiplin</label>
+                                                    <div class="col-md-6">
+                                                        <input type='text-input' class="form-control" name="hkm_jenis">
+                                                        <span class="help-block text-muted">Jenis</span>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type='text-input' class="form-control date" name="hkm_tmt">
+                                                        <span class="help-block text-muted">TMT</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">No. Telepon<span> *</span></label>
+                                                    <div class="col-md-5">
+                                                        <input type="number" name="telp" class="form-control disable-arrow" autocomplete="off" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Email<span> *</span></label>
+                                                    <div class="col-md-5">
+                                                        <input type="email" name="email" class="form-control" autocomplete="off" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Alamat lengkap<span> *</span></label>
+                                                    <div class="col-md-9">
+                                                        <textarea id="field-alamat" name="alamat" rows="3" class="form-control"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 form-control-label">Password</label>
+                                                    <div class="col-md-5">
+                                                        <input type="password" name="password" class="form-control" autocomplete="off">
+                                                        <span class="help-block text-muted">(kosongkan jika tidak ingin mengganti)</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <strong>Foto</strong>
+                                                <img id="profile-pict" src="img/male.png" class="img-responsive" style="max-width: 100%; height: auto; display:block">
+                                                <label for="link-ubah-foto" class="float-right form"><i class="fa fa-pencil fa-sm"></i>ubah</label>
+                                                <input id="link-ubah-foto" name="photo_pict" type='file' />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="hapus-pgw" type="button" class="btn btn-danger mr-auto">Hapus Pegawai</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                    <button id="button-submit-tambah-pgw" type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form> 
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<script src="/js/ag-grid.js"></script>
+
+<script src="/js/moment.min.js"></script>
+<script src="/js/bootstrap-datetimepicker.js"></script>
+<script src="/js/id.js"></script>
+
+
+<script type="text/javascript">
+
+    (function(){
+
+        var tabUsulan = {
+            eGridDiv: document.querySelector('#tabelUsulanPgw'),
+            rowData: [{_id: 1, nama: 'Muh. Shamad, SST', tgl_usul: '15/11/2017', usulan: [{var_label: 'Sertifikasi', var: 'sertifikasi', new: '100001251', old: ''}, {var_label: 'Tempat Lahir', var: 'ttl_tl', new: 'Punggaluku', old: 'Konawe Selatan'}]}],
+            init: function() {
+                this.cacheDOM();
+                this.bindEvents();
+                this.registerAgComponent();
+            },
+            //umum
+            cacheDOM: function() {
+
+            },
+            bindEvents: function(){
+
+            },
+            //>Ag-Grid Component
+            registerAgComponent: function(){
+                this.columnDefs = [
+                    {headerName: "Nama", field: "nama", width: 250, pinned: 'left'},
+                    {headerName: "Tanggal", field: "tgl_usul", width: 125},
+                    {headerName: "Usulan", field: "usulan", cellRenderer: this.handleDaftarUsulanColumn, width: 800},
+                    {headerName: "Pilihan", field: "pilihan", cellRenderer: this.btnInCellRenderer, width: 180, suppressFilter: true, suppressSorting: true, editable: false, pinned: 'right'}
+                ]
+
+                this.gridOptions = {
+                    columnDefs: this.columnDefs,
+                    rowData: this.rowData,
+                    enableColResize: true,
+                    rowHeight: 30,
+                    rowSelection: 'multiple',
+                    animateRows: true,
+                    enableFilter: true,
+                    enableSorting: true,
+                    getRowNodeId: function(data) { return data._id; },
+                    onRowDoubleClicked: this.btnEditHandle.bind(this)
+                }
+                this.renderPgwTable();
+            },
+            renderPgwTable: function() {
+                new agGrid.Grid(this.eGridDiv, this.gridOptions)
+            },
+            handleDaftarUsulanColumn: function(params){
+                return _.map( params.value, function(usulan){ return usulan.var_label } ).join(', ');
+            },
+            btnEditHandle: function (e) {
+                var selectedData = this.gridOptions.api.getSelectedRows();
+                console.log(selectedData)
+            },
+            btnInCellRenderer: function(params){
+                return `<button class='detail-usulan'>Detail</button> <button class='setujui-usulan'>Setujui</button> <button class='tolak-usulan'>Tolak</button>`
+            },
+        }
+
+        tabUsulan.init();
+
+        var pegawaiPage = {
+            processingSomething: false,
+            eGridDiv: document.querySelector('#tabelPegawai'),
+            rowData: [
+            ],
+            typeaheadConfig: {
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            editState: false,
+            currentPgwIDEditing: undefined,
+            formPgwResetable: false,
+            init: function() {
+                this.cacheDOM();
+                this.initSelectJbt();
+                this.registerAgComponent();
+                this.renderPgwTable();
+                this.registerSocketIOAndEvents();
+                this.registerAutoComplete();
+                this.jQueryCustomFuncInit();
+                this.initDataPgw();
+                this.bindEvents();
+            },
+            //umum
+            cacheDOM: function() {
+                this.$tabel_div = $( '#tabelPegawai' );
+                this.$btn_tbh_pgw = $( '#btn-tbh-pgw' );
+                this.$modal_tambah_pgw = $( '#modal-tambah-pegawai' );
+
+                this.$field_tambah_nama = $( '#field-tambah-nama' );
+                this.$field_nip_baru = $( '#field-nip-baru' );
+                this.$field_bup = $( '#bup' );
+                this.$periode_kgb = $( '#periode-kgb' );
+                this.$field_pensiun = $( '#field-pensiun' );
+                this.$ttl_tl = $( 'input[name=ttl_tl]' );
+                this.$jbt_nama = $( 'input[name=jbt_nama]' );
+                this.$pelatihan_nama = $( 'input[name=pelatihan_nama]' );
+                this.$pelatihan_penyelenggara = $( 'input[name=pelatihan_penyelenggara]' );
+                this.$pdk_jurusan = $( 'input[name=pdk_jurusan]' );
+                this.$pdk_pt = $( 'input[name=pdk_pt]' );
+                this.$hrg_jenis = $( 'input[name=hrg_jenis]' );
+                this.$hkm_jenis = $( 'input[name=hkm_jenis]' );
+                this.$form_admin_tambah_pgw = $( '#form_admin_tambah_pgw' );
+                this.$button_submit_tambah_pgw = $( '#button-submit-tambah-pgw' )
+                this.$modal_title_pgw = $( '#modal-title-pgw' );
+                this.$link_ubah_foto = $( '#link-ubah-foto' );
+                this.$field_alamat = $( '#field-alamat' );
+            },
+            bindEvents: function(){
+                //tambah pegawai
+                this.$btn_tbh_pgw.on( 'click', this.btnTbhPgwHandler.bind( this ) );
+                this.$modal_tambah_pgw.on('shown.bs.modal', this.modalTbhPgwShow.bind(this));
+                this.$tabel_div.on('click', '.edit-pegawai', this.btnEditHandle.bind(this))
+                this.$field_nip_baru.blur(this.field_nip_baruBlurHandler.bind(this))
+                $('.date').datetimepicker({
+                    locale: 'id',
+                    format: 'DD/MM/YYYY',
+                    widgetPositioning: {
+                        horizontal: 'left',
+                        vertical: 'bottom'
+                    }
+                });
+                this.$form_admin_tambah_pgw.on( 'submit', this.submitTbhEditPgw.bind( this ) )
+                $( '#field-jbt_nama' ).change(this.field_jbt_namaHandle.bind(this));
+                function readURL(input) {
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        
+                        reader.onload = function (e) {
+                            $('#profile-pict').attr('src', e.target.result);
+                        }
+                        
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+                this.$link_ubah_foto.change(function(){
+                    readURL(this);
+                });
+
+                siofu.listenOnInput(document.getElementById("link-ubah-foto"));
+
+                var this_outer = this;
+
+                siofu.addEventListener("start", function(event){
+                    var selectedData = this_outer.gridOptions.api.getSelectedRows()[0];
+                    if(selectedData){
+                        event.file.meta._id = selectedData._id;
+                        selectedData.photo = selectedData._id+event.file.name.match(/\.\w*$/i)[0];
+                        var rowNode = this_outer.gridOptions.api.getRowNode(selectedData._id);
+                        rowNode.setData(selectedData);
+                    }else {
+                        var name = moment().unix();
+                        this_outer.current_photo_name = name+event.file.name.match(/\.\w*$/i)[0];
+                        event.file.meta._id = name;
+                        console.log(1,this_outer.current_photo_name)
+                    }
+                });
+                this.$modal_tambah_pgw.on('click', '#hapus-pgw', this.hapus_pgwHandler.bind(this))
+            },
+            hapus_pgwHandler: function(){
+                var selectedData = this.gridOptions.api.getSelectedRows()[0];
+                var this_outer = this;
+                socket.emit('hapus pegawai', selectedData._id, function(status){
+                    if(status){
+                        this_outer.$modal_tambah_pgw.modal('toggle');
+                        this_outer.gridOptions.api.updateRowData( { remove: [selectedData] } );
+                    }
+                });
+            },
+            add2y: function(momentDate){
+                 if(momentDate.add(2, 'y').isBefore(moment())){
+                     return add2y(momentDate);
+                 } else {
+                     return momentDate
+                 }
+             },
+            field_nip_baruBlurHandler: function(){
+                this.$field_pensiun.val(moment(this.$field_nip_baru.val().substring(0, 8), 'YYYYMMDD').add( this.$field_bup.val(), 'y').format('DD/MM/YYYY'))
+                this.$periode_kgb.val(this.add2y(moment(this.$field_nip_baru.val().substring(8, 14), 'YYYYMM')).format('DD/MM/YYYY'))
+            },
+            field_jbt_namaHandle: function(e) {
+                $( '#bup' ).val($('#field-jbt_nama option[value='+$( '#field-jbt_nama' ).val()+']').attr('bup'));
+                this.field_nip_baruBlurHandler()
+            },
+            registerSocketIOAndEvents: function(){
+            },
+            //>Ag-Grid Component
+            registerAgComponent: function(){
+                this.columnDefs = [
+                    {headerName: "Nama", field: "nama", width: 250, pinned: 'left'},
+                    {headerName: "L/P", field: "jk", width: 40, filter: 'set'},
+                    {
+                        headerName: 'NIP',
+                        children: [
+                            {headerName: 'Baru', field: 'nip_baru', width: 180},
+                            {headerName: 'Lama', field: 'nip_lama', width: 90}
+                        ]
+                    },
+                    {
+                        headerName: 'TMT',
+                        children: [
+                            {headerName: 'CPNS', field: 'tmt_cpns', width: 90, filter: 'date', cellRenderer: this.dateCellRenderer},
+                            {headerName: 'PNS', field: 'tmt_pns', width: 90, filter: 'date', cellRenderer: this.dateCellRenderer}
+                        ]
+                    },
+                    {
+                        headerName: 'Pangkat',
+                        children: [
+                            {headerName: 'Gol', field: 'pkt_gol', width: 45, filter: 'set', cellRenderer: this.pkt_golCellRenderer},
+                            {headerName: 'TMT', field: 'pkt_tmt', width: 90, filter: 'date', cellRenderer: this.dateCellRenderer }
+                        ]
+                    },
+                    {
+                        headerName: 'Jabatan',
+                        children: [
+                            {headerName: 'Nama', field: 'jbt_nama', width: 200, filter: 'set', cellRenderer: this.jbt_namaCellRenderer },
+                            {headerName: 'TMT', field: 'jbt_tmt', width: 90, filter: 'date' }
+                        ]
+                    },
+                    {headerName: "TB", field: "isTb", width: 40, filter: 'set', cellRenderer: this.tFCellRenderer},
+                    {
+                        headerName: 'Masa Kerja',
+                        children: [
+                            {headerName: 'Th', field: 'mk_th', width: 45, filter: 'number'},
+                            {headerName: 'Bl', field: 'mk_bl', width: 45, filter: 'number'}
+                        ]
+                    },
+                    {
+                        headerName: 'Latihan Jabatan',
+                        children: [
+                            {headerName: 'Nama', field: 'pelatihan_nama', width: 200},
+                            {headerName: 'Bl/Th', field: 'pelatihan_th', width: 90, filter: 'number'},
+                            {headerName: 'Jml Jam', field: 'pelatihan_penyelenggara', width: 70, filter: 'set'}
+                        ]
+                    },
+                    {
+                        headerName: 'Pendidikan',
+                        children: [
+                            {headerName: 'Nama', field: 'pdk_jurusan', width: 150},
+                            {headerName: 'PT', field: 'pdk_pt', width: 150},
+                            {headerName: 'Lulus Tahun', field: 'pdk_lulus_th', width: 100, filter: 'number'},
+                            {headerName: 'Ijazah', field: 'pdk_ijazah', width: 45, filter: 'set', cellRenderer: this.pdk_ijazahCellHandler }
+                        ]
+                    },
+                    {
+                        headerName: 'Tempat & Tanggal Lahir',
+                        children: [
+                            {headerName: 'Tempat Lahir', field: 'ttl_tl', width: 150},
+                            {headerName: 'Tanggal Lahir', field: 'ttl_t', width: 90, cellRenderer: this.dateCellRenderer }
+                        ]
+                    },
+                    {headerName: "BUP", field: "bup", width: 45, filter: 'number' },
+                    {headerName: "Pensiun", field: "pensiun", width: 90, cellRenderer: this.dateCellRenderer },
+                    {headerName: "AK", field: "ak", width: 45, filter: 'number' },
+                    {headerName: "Periode KGB", field: "periode_kgb", width: 90, cellRenderer: this.dateCellRenderer },
+                    {headerName: "NIDN", field: "nidn", width: 100},
+                    {headerName: "Sertifikasi", field: "sertifikasi", width: 50},
+                    {
+                        headerName: 'Penghargaan',
+                        children: [
+                            {headerName: 'Jenis', field: 'hrg_jenis', width: 150, filter: 'set' },
+                            {headerName: 'Th', field: 'hrg_th', width: 90, filter: 'number' }
+                        ]
+                    },
+                    {
+                        headerName: 'Hukuman Disiplin',
+                        children: [
+                            {headerName: 'Jenis', field: 'hkm_jenis', width: 150},
+                            {headerName: 'TMT', field: 'hkm_tmt', width: 90, filter: 'date'}
+                        ]
+                    },
+                    {headerName: "Nomor Telepon", field: "telp", width: 100},
+                    {headerName: "Email", field: "email", width: 100},
+                    {headerName: "Alamat Lengkap", field: "alamat", width: 300},
+                    {headerName: "Pilihan", field: "pilihan", cellRenderer: this.btnInCellRenderer, width: 60, suppressFilter: true, suppressSorting: true, editable: false, pinned: 'right'}
+                ]
+
+                this.gridOptions = {
+                    columnDefs: this.columnDefs,
+                    rowData: this.rowData,
+                    enableColResize: true,
+                    rowHeight: 30,
+                    rowSelection: 'multiple',
+                    animateRows: true,
+                    enableFilter: true,
+                    enableSorting: true,
+                    getRowNodeId: function(data) { return data._id; },
+                    onRowDoubleClicked: this.btnEditHandle.bind(this)
+                }
+            },
+            tFCellRenderer: function(params){
+                if(params.value){
+                    return 'Ya'
+                }
+                return 'Tidak'
+            },
+            pdk_ijazahCellHandler: function transformIjazah(params){
+                var transformIjz = {
+                    '1':'SD',
+                    '2':'SLTP',
+                    '3':'SLTA',
+                    '4':'DIII',
+
+                    '5':'DIV',
+                    '6':'S1',
+                    '7':'S2',
+                    '8':'S3'
+                }
+
+                return transformIjz[params.value]
+            },
+            pkt_golCellRenderer: function(params){
+                var transformGol = {
+                    '1':'I/a',
+                    '2':'I/b',
+                    '3':'I/c',
+                    '4':'I/d',
+
+                    '5':'II/a',
+                    '6':'II/b',
+                    '7':'II/c',
+                    '8':'II/d',
+
+                    '9':'III/a',
+                    '10':'III/b',
+                    '11':'III/c',
+                    '12':'III/d',
+
+                    '13':'IV/a',
+                    '14':'IV/b',
+                    '15':'IV/c',
+                    '16':'IV/d',
+                    '17':'IV/e',
+                }
+
+                return transformGol[params.value]
+            },
+            jbt_namaCellRenderer: function(params) {
+                if(params.value){
+                    return params.value.jbt_nama
+                } else {
+                    return '';
+                }
+            },
+            dateCellRenderer: function(params) {
+                if(params.value){
+                    return moment(params.value).format('DD/MM/YYYY')
+                } else {
+                    return '';
+                }
+            },
+            renderPgwTable: function() {
+                new agGrid.Grid(this.eGridDiv, this.gridOptions)
+            },
+            addData: function(newData){
+                this.gridOptions.api.updateRowData( { add: newData } );
+            },        
+            updateSort: function() {
+                this.gridOptions.api.refreshInMemoryRowModel('sort');
+            },
+            updateFilter: function() {
+                this.gridOptions.api.refreshInMemoryRowModel('filter');
+            },
+            //>Autocomplete
+            registerAutoComplete: function() {
+                // this.$ttl_tl.typeahead(this.typeaheadConfig, {
+                //         source: function(q, p){
+                //                 {
+                //                     return p([{value: 'DKI Jakarta'}, {value: 'Jawa Tengah'}])
+                //                 }
+                //         }
+                //     }
+                // );
+                // this.$jbt_nama.typeahead(this.typeaheadConfig, {
+                //         source: function(q, p){
+                //                 {
+                //                     return p([{value: 'Ketua STIS'}, {value: 'Staf BAU'}])
+                //                 }
+                //         }
+                //     }
+                // );
+                // this.$pelatihan_nama.typeahead(this.typeaheadConfig, {
+                //         source: function(q, p){
+                //                 {
+                //                     return p([{value: 'Diklatpim II'}, {value: 'Latihan Innas Supas'}])
+                //                 }
+                //         }
+                //     }
+                // );
+                // this.$pelatihan_penyelenggara.typeahead(this.typeaheadConfig, {
+                //         source: function(q, p){
+                //                 {
+                //                     return p([{value: 'Pusdiklat BPS'}, {value: 'Kemendiknas'}])
+                //                 }
+                //         }
+                //     }
+                // );
+                // this.$pdk_jurusan.typeahead(this.typeaheadConfig, {
+                //         source: function(q, p){
+                //                 {
+                //                     return p([{value: 'S3 Human Fam Studies'}, {value: 'Doktor of Matematika'}])
+                //                 }
+                //         }
+                //     }
+                // );
+                // this.$pdk_pt.typeahead(this.typeaheadConfig, {
+                //         source: function(q, p){
+                //                 {
+                //                     return p([{value: 'Iowa State University'}, {value: 'Universiteit Hasselt'}])
+                //                 }
+                //         }
+                //     }
+                // );
+                // this.$hrg_jenis.typeahead(this.typeaheadConfig, {
+                //         source: function(q, p){
+                //                 {
+                //                     return p([{value: 'Setyalencana'}, {value: 'Setyalencana II'}])
+                //                 }
+                //         }
+                //     }
+                // );
+                // this.$hkm_jenis.typeahead(this.typeaheadConfig, {
+                //         source: function(q, p){
+                //                 {
+                //                     return p([{value: 'Penundaan Kenaikan Pangkat Selama 1 Tahun (PP 53/06-06-2010)'}, {value: 'Teguran Tertulis (PP30/PP53)'}])
+                //                 }
+                //         }
+                //     }
+                // );
+            },
+            //>modal pegawai
+            setModalPgwFormData: function( data_pegawai ) {
+                this.$form_admin_tambah_pgw[0].reset();
+                this.$field_alamat.text('')
+                if(data_pegawai['jk'] === 'L') $('#profile-pict').attr('src', 'img/male.png');
+                    else $('#profile-pict').attr('src', 'img/female.png');
+                for ( var key in data_pegawai ) {
+                    if (data_pegawai.hasOwnProperty( key )) {
+                        var $elem = $( '[name='+key+']' );
+                        if( !$elem.get(0) ){
+                            if(key === 'photo') {
+                                $('#profile-pict').attr('src', 'img/profile/'+data_pegawai[key]);
+                            }
+                        } else if( $elem.get(0).tagName === 'INPUT' ){
+                            if ( key == 'jk' ) {
+                                $("#jk"+data_pegawai[key]).prop("checked", true)
+                            } else if ( _.contains(['pkt_tmt', 'tmt_cpns', 'tmt_pns', 'pensiun', 'ttl_t', 'periode_kgb'], key) ) {
+                                $elem.val( this.dateCellRenderer({value: data_pegawai[key]}) );
+                            } else if ( key == 'isTb' ) {
+                                if(data_pegawai[key]){
+                                    $("#isTbt").prop("checked", true)
+                                }else {
+                                    $("#isTbf").prop("checked", true)
+                                }
+                            } else if( key !== 'password' ){
+                                $elem.val( data_pegawai[key] );
+                            }
+                        } else if( $elem.get(0).tagName === 'SELECT' ){
+                            $('[name='+key+']').val( data_pegawai[key]._id || data_pegawai[key] );
+                        } else if( $elem.get(0).tagName === 'TEXTAREA' ){
+                            $elem.text( data_pegawai[key] );
+                        }
+                    }
+                }
+            },
+            modalTbhPgwShow: function () {
+              this.$field_tambah_nama.focus();
+            },
+            setModalPgwTitleAndOpen: function(newTitle) {
+                this.$modal_title_pgw.html(newTitle);
+                this.formPgwResetable&&this.$form_admin_tambah_pgw[0].reset();
+                // this.$field_alamat.text('')
+                this.$modal_tambah_pgw.modal('show');
+            },
+            toggleDisableForm: function(state){
+                this.processingSomething = ( this.processingSomething === true? false:true );
+                this.$button_submit_tambah_pgw.prop( "disabled", this.processingSomething );
+                this.$button_submit_tambah_pgw.html( this.processingSomething?'<i class="fa fa-circle-o-notch fa-spin fa-1x fa-fw"></i> Menyimpan':'Simpan' );
+            },
+            //>jQuery custom
+            jQueryCustomFuncInit: function() {
+                $.fn.serializeObject = function(){
+                    var o = {};
+                    var a = this.serializeArray();
+                    $.each(a, function() {
+                        if (o[this.name] !== undefined) {
+                            if (!o[this.name].push) {
+                                o[this.name] = [o[this.name]];
+                            }
+                            o[this.name].push(this.value || '');
+                        } else {
+                            o[this.name] = this.value || '';
+                        }
+                    });
+                    return o;
+                };
+            },
+            //init pgw
+            initDataPgw: function () {
+                socket.emit('get_all_pgw', null, this.addData.bind(this))
+            },
+
+            //tambah pegawai
+            btnTbhPgwHandler: function () {
+                this.gridOptions.api.deselectAll()
+                this.current_photo_name = 'nochange'
+                $('#hapus-pgw').hide();
+                $('#profile-pict').attr('src', 'img/male.png')
+                this.$field_alamat.text('')
+                this.setModalPgwTitleAndOpen('Tambah Pegawai');
+                this.editState = false;
+                this.formPgwResetable = false;
+            },            
+            addRowTablePgw: function( newPgw ) {
+                newPgw.pilihan = 'Edit';
+                this.gridOptions.api.updateRowData( { add: [ newPgw ] } );
+            },
+
+            //tambah/edit pgw ##################
+            submitTbhEditPgw: function(e) {
+                e.preventDefault();
+                this.toggleDisableForm();
+                if(this.editState){
+                    socket.emit('saveEditingPgw', { _id: this.currentPgwIDEditing, data: this.$form_admin_tambah_pgw.serializeObject() }, this.saveEditingPgw.bind(this))
+                }else{
+                    console.log(2,this.current_photo_name)
+                    socket.emit('addPgw', {data: this.$form_admin_tambah_pgw.serializeObject(), current_photo_name: this.current_photo_name} , this.tambahPgwHandler.bind(this))
+                }
+            },
+            tambahPgwHandler: function(respond) {
+                if(respond){
+                    this.addRowTablePgw( respond );
+                    // this.addRowTablePgw( this.$form_admin_tambah_pgw.serializeObject() );
+                    this.$modal_tambah_pgw.modal('toggle');
+                    this.formPgwResetable = true;
+                }
+                this.toggleDisableForm();
+            },
+
+            //edit pegawai
+            btnEditHandle: function (e) {
+                $('#hapus-pgw').show();
+                this.editState = true;
+                var selectedData = this.gridOptions.api.getSelectedRows();
+                this.setModalPgwFormData(selectedData[0]);
+                this.formPgwResetable = false;
+                this.currentPgwIDEditing = selectedData[0]._id
+                this.setModalPgwTitleAndOpen('Edit Pegawai: '+selectedData[0].nama);
+                this.formPgwResetable = true;
+            },
+            btnInCellRenderer: function(params){
+                return `<button class='edit-pegawai'>Edit</button>`
+            },
+            saveEditingPgw: function(respond) {
+                if(respond){
+                    var rowNode = this.gridOptions.api.getRowNode(this.currentPgwIDEditing);
+                    // rowNode.setData(this.$form_admin_tambah_pgw.serializeObject());
+                    rowNode.setData(respond);
+                }
+                this.toggleDisableForm();
+            },
+            initSelectJbt: function(){
+                socket.emit('getAllJabatan', 'from_pengaturan_pgw_admin', this.setJbtSelect.bind(this))
+            },
+            setJbtSelect: function(all_jabatan) {
+                var jbt_opt = '';
+                _.each(all_jabatan, function(jbt, i, list){
+                    jbt_opt += '<option bup='+jbt.bup+' value='+jbt._id+' >' + jbt.jbt_nama + '</option>'
+                })
+                $( '#field-jbt_nama' ).html(jbt_opt);
+            },
+        }
+
+        pegawaiPage.init();
+
+    })()
+
+</script>

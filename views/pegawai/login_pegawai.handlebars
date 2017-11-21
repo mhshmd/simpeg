@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <link rel="shortcut icon" href="assets/ico/favicon.png"> -->
+
+    <title>Login Pegawai</title>
+
+    <!-- Icons -->
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/simple-line-icons.css" rel="stylesheet">
+
+    <!-- Main styles for this application -->
+    <link href="/css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="app flex-row align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card-group mb-0">
+                    <div class="card p-2">
+                        <div class="card-block">
+                            <h1>Login</h1>
+                            <div id="message"></div>
+                            <p class="text-muted">Login Pegawai</p>
+                            <form id="form_pgw_login" action="#" method="POST">
+                                <div class="input-group mb-1">
+                                    <span class="input-group-addon"><i class="icon-user"></i>
+                                    </span>
+                                    <input id="email" class="form-control" name="email" placeholder="Email atau NIP Lama" autocomplete="off" required>
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-addon"><i class="icon-lock"></i>
+                                    </span>
+                                    <input id="password" type="password" class="form-control" name="password" placeholder="Password" autocomplete="off" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button id="button_submit" type="submit" class="btn btn-primary px-2">Login</button>
+                                    </div>
+                                    <!-- <div class="col-6 text-right">
+                                        <button data-toggle="tooltip" title="Silahkan hubungi admin" id="forgot_pass" type="button" class="btn btn-link px-0">Lupa password?</button>
+                                    </div> -->
+                                </div>
+                            </form>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/tether.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/socket.io.js"></script>
+
+    <script type="text/javascript">
+
+        (function(){
+
+            var loginModule = {
+
+                message: '',
+                init: function() {
+                    this.cacheDOM();
+                    this.bindEvents();
+                    this.registerSocketIOAndEvents();
+                    this.$email.focus();
+                },
+                cacheDOM: function() {
+                    this.$email = $( '#email' );
+                    this.$password = $( '#password' );
+                    this.$message = $( '#message' );
+                    this.$form_pgw_login = $( '#form_pgw_login' );
+                    this.$button_submit = $( '#button_submit' );
+                },
+                bindEvents: function(){
+                    //submit login
+                    this.$form_pgw_login.on( 'submit', this.submitLogin.bind( this ) )
+                    this.$email.keyup( this.resetMessage.bind( this ) );
+                    this.$password.keyup( this.resetMessage.bind( this ) );
+                },
+                registerSocketIOAndEvents: function(){
+                    this.socket = io.connect($(location).attr('host'));
+                },
+                resetMessage: function(){
+                    this.setMessage( null )
+                },
+                setMessage: function( message ){
+                    this.message = message;
+                    this.render();
+                },
+                render: function() {
+                    if(this.message){
+                        this.$message.html(
+                            `<div class="alert alert-warning">
+                              `+this.message+`
+                            </div>`
+                        )
+                    } else {
+                        this.$message.html('');
+                    }
+                },
+                submitLogin: function(e) {
+                    e.preventDefault();
+                    this.disable_form( true )
+                    this.socket.emit('login_submit_pgw', {email: this.$email.val(), password: this.$password.val()}, this.emit_loginSubmit.bind(this))
+                },
+                emit_loginSubmit: function( status ){
+                    if( !status.valid ){
+                        this.setMessage( status.message );
+                        this.disable_form( false )
+                    } else {
+                        this.disable_form( false );
+                        window.location.replace(location.protocol+"//"+$(location).attr('host'));
+                    }
+                },
+                disable_form: function(state){
+                    this.$button_submit.prop( "disabled",state );
+                    this.$email.prop( "disabled", state );
+                    this.$password.prop( "disabled", state );
+                    this.$button_submit.html( state?'<i class="fa fa-circle-o-notch fa-spin fa-1x fa-fw"></i> Login':'Login' );
+                }
+
+            }
+
+            loginModule.init();
+
+        })()
+
+    </script>
+
+</body>
+
+</html>

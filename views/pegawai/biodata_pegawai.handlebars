@@ -1,0 +1,505 @@
+<div class="animated fadeIn">
+    <div class="card" id="new">
+        <div class="card-header"><i class="icon-user"></i> Biodata</div>
+            <div class="card-block" id="main-window">
+                <div class="row hover-special-link" style="margin-bottom: 5px">
+                    <div class="col-md-2 hover-edit">
+                        <strong>Foto</strong>
+                        <img src="img/male.png" class="img-responsive" style="max-width: 100%; height: auto; display:block">
+                        <a id="link-ubah-foto" href="#" class="float-right mute"><i class="fa fa-pencil fa-sm"></i></a>
+                    </div>
+                    <div class="col-md-5">
+                        <form id="form_pgw_usul_perubahan" action="#" method="POST">
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Nama</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{user.nama}} <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm edit"></i></a></p>
+                                    <input style="display: none;" id="field-tambah-nama" value="{{user.nama}}" type="text" name="nama" class="form-control" autocomplete="off" required>
+                                    <button style="display: none" id="button-submit-tambah-pgw" type="button" class="btn btn-primary">Usulkan</button>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Jenis Kelamin</label>
+                                <div class="col-md-9">
+                                    <label class="radio-inline">
+                                        <p class="form-control-static">Laki-laki <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                        <!-- <input type="radio" name="jk" value="L" checked="checked">  Laki-laki -->
+                                    </label>
+                                    <!-- <label class="radio-inline">
+                                        <input type="radio" name="jk" value="P">  Perempuan
+                                    </label> -->
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Tempat & Tanggal Lahir</label>
+                                <div class="col-md-6">
+                                    <p class="form-control-static">{{user.ttl_tl}} <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control" name="ttl_tl" required> -->
+                                    <span class="help-block text-muted">Tempat</span> 
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">24/02/1994 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control date" name="ttl_t" required> -->
+                                    <span class="help-block text-muted">Tanggal</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">NIP</label>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">340058367 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='number' class="form-control disable-arrow" name="nip_lama" minlength=9> -->
+                                    <span class="help-block text-muted">Lama</span> 
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="form-control-static">19940224201802241001 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='number' class="form-control disable-arrow" name="nip_baru" minlength=18 required> -->
+                                    <span class="help-block text-muted">Baru</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Terhitung Mulai Tanggal (TMT)</label>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">24/02/1994 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control date" name="tmt_cpns"> -->
+                                    <span class="help-block text-muted">CPNS</span> 
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">24/02/1994 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control date" name="tmt_pns" required> -->
+                                    <span class="help-block text-muted">PNS</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Pangkat</label>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">III/a <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <select name="pkt_gol" class="form-control input-lg" size="1">
+                                        <option value="I/a">I/a</option>
+                                        <option value="I/b">I/b</option>
+                                        <option value="I/c">I/c</option>
+                                        <option value="I/d">I/d</option>
+
+                                        <option value="II/a">II/a</option>
+                                        <option value="II/b">II/b</option>
+                                        <option value="II/c">II/c</option>
+                                        <option value="II/d">II/d</option>
+
+                                        <option value="III/a">III/a</option>
+                                        <option value="III/b">III/b</option>
+                                        <option value="III/c">III/c</option>
+                                        <option value="III/d">III/d</option>
+
+                                        <option value="IV/a">IV/a</option>
+                                        <option value="IV/b">IV/b</option>
+                                        <option value="IV/c">IV/c</option>
+                                        <option value="IV/d">IV/d</option>
+                                    </select> -->
+                                    <span class="help-block text-muted">Gol</span> 
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">24/02/1994 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control date" name="pkt_tmt" required> -->
+                                    <span class="help-block text-muted">TMT</span>
+                                </div>
+                            </div> 
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Jabatan</label>
+                                <div class="col-md-6">
+                                    <p class="form-control-static">Staf BAU <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control" name="jbt_nama" required> -->
+                                    <span class="help-block text-muted">Nama</span> 
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">24/02/1994 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control date" name="jbt_tmt" required> -->
+                                    <span class="help-block text-muted">TMT</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Masa Kerja</label>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">5 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='number' min="0" value=0 class="form-control" name="mk_th" required> -->
+                                    <span class="help-block text-muted">Banyak Th</span> 
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">7 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='number' min="0" value=0 class="form-control" name="mk_bl" required> -->
+                                    <span class="help-block text-muted">+Bl</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Pelatihan</label>
+                                <div class="col-md-6">
+                                    <p class="form-control-static">PIM 4 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control" name="pelatihan_nama"> -->
+                                    <span class="help-block text-muted">Nama</span> 
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">2018 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='number' min="1900" class="form-control" name="pelatihan_th"> -->
+                                    <span class="help-block text-muted">Th</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label"></label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">Pusdiklat BPS <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control" name="pelatihan_penyelenggara"> -->
+                                    <span class="help-block text-muted">Penyelenggara</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Pendidikan</label>
+                                <div class="col-md-6">
+                                    <p class="form-control-static">Komputasi Statistik <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control" name="pdk_jurusan" required> -->
+                                    <span class="help-block text-muted">Jurusan</span> 
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">DIV <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <select name="pdk_ijazah" class="form-control input-lg" size="1">
+                                        <option value="none">Tidak ada</option>
+                                        <option value="S3">S3</option>
+                                        <option value="S2">S2</option>
+                                        <option value="S1">S1</option>
+                                        <option value="DIV">DIV</option>
+                                        <option value="DIII">DIII</option>
+                                        <option value="SLTA">SLTA/SMA/Paket C</option>
+                                        <option value="SLTP">SLTP/SMP/Mts/Paket B</option>
+                                        <option value="SD">SD/MI/Paket A</option>
+                                    </select> -->
+                                    <span class="help-block text-muted">Ijazah</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label"></label>
+                                <div class="col-md-6">
+                                    <p class="form-control-static">Sekolah Tinggi Ilmu Statistik <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control" name="pdk_pt" required> -->
+                                    <span class="help-block text-muted">PT</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">2017 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='number' min="1900" class="form-control" name="pdk_lulus_th" required> -->
+                                    <span class="help-block text-muted">Lulus Th</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Batas Usia Pensiun (BUP)</label>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">58 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='number' min="0" name="bup" class="form-control" autocomplete="off" required> -->
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Pensiun</label>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">2052 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type="text" name="pensiun" class="form-control date" autocomplete="off" required> -->
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Angka Kredit</label>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">205.5 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='number' min="0" step=any name="ak" class="form-control" autocomplete="off"> -->
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Periode KGB</label>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">24/02/2019 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type="text" name="periode_kgb" class="form-control date" autocomplete="off" required> -->
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">NIDN</label>
+                                <div class="col-md-4">
+                                    <p class="form-control-static">1000542 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type="text" name="nidn" class="form-control" autocomplete="off"> -->
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Sertifikasi</label>
+                                <div class="col-md-4">
+                                    <p class="form-control-static"> <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type="text" name="sertifikasi" class="form-control" autocomplete="off"> -->
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Penghargaan</label>
+                                <div class="col-md-6">
+                                    <p class="form-control-static">Setyalencana <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control" name="hrg_jenis"> -->
+                                    <span class="help-block text-muted">Jenis</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">2018 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='number' min="1900" class="form-control" name="hrg_th"> -->
+                                    <span class="help-block text-muted">Th</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Hukuman Disiplin</label>
+                                <div class="col-md-6">
+                                    <p class="form-control-static">Penundaan KGB <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control" name="hkm_jenis"> -->
+                                    <span class="help-block text-muted">Jenis</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="form-control-static">24/02/2015 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type='text-input' class="form-control date" name="hkm_tmt"> -->
+                                    <span class="help-block text-muted">TMT</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">No. Telepon</label>
+                                <div class="col-md-5">
+                                    <p class="form-control-static">082311897547 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type="number" name="telp" class="form-control disable-arrow" autocomplete="off" required> -->
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Email</label>
+                                <div class="col-md-5">
+                                    <p class="form-control-static">shamad@stis.ac.id <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type="email" name="email" class="form-control" autocomplete="off" required> -->
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Alamat lengkap</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">Jl. H. Hasbi <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <textarea name="alamat" rows="3" class="form-control"></textarea> -->
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Password</label>
+                                <div class="col-md-5">
+                                    <p class="form-control-static">********* <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
+                                    <!-- <input type="password" name="password" class="form-control" autocomplete="off"> -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h6>Usulan Perubahan Data</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="tabelDaftarUsulan" style="height: 300px;width:100%" class="ag-blue"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+</div>
+
+<script src="/js/moment.min.js"></script>
+<script src="/js/bootstrap-datetimepicker.js"></script>
+<script src="/js/id.js"></script>
+<script src="/js/ag-grid.js"></script>
+
+
+<script type="text/javascript">
+
+    (function(){
+
+        var pegawaiPage = {
+            typeaheadConfig: {
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            eGridDiv: document.querySelector('#tabelDaftarUsulan'),
+            rowData: [
+                {_id: 1, var_label: 'Sertifikasi', var: 'sertifikasi', new: '100001251', old: ''}
+            ],
+            init: function() {
+                this.cacheDOM();
+                this.bindEvents();
+                this.registerAutoComplete();
+                this.jQueryCustomFuncInit();
+                this.registerAgComponent();
+            },
+            //umum
+            cacheDOM: function() {
+                this.$btn_tbh_pgw = $( '#btn-tbh-pgw' );
+
+                this.$field_tambah_nama = $( '#field-tambah-nama' );
+                this.$ttl_tl = $( 'input[name=ttl_tl]' );
+                this.$jbt_nama = $( 'input[name=jbt_nama]' );
+                this.$pelatihan_nama = $( 'input[name=pelatihan_nama]' );
+                this.$pelatihan_penyelenggara = $( 'input[name=pelatihan_penyelenggara]' );
+                this.$pdk_jurusan = $( 'input[name=pdk_jurusan]' );
+                this.$pdk_pt = $( 'input[name=pdk_pt]' );
+                this.$hrg_jenis = $( 'input[name=hrg_jenis]' );
+                this.$hkm_jenis = $( 'input[name=hkm_jenis]' );
+                this.$form_pgw_usul_perubahan = $( '#form_pgw_usul_perubahan' );
+                this.$button_submit_tambah_pgw = $( '#button-submit-tambah-pgw' )
+                this.$main_window = $('#main-window');
+            },
+            bindEvents: function(){
+                $('.date').datetimepicker({
+                    locale: 'id',
+                    format: 'DD/MM/YYYY',
+                    widgetPositioning: {
+                        horizontal: 'left',
+                        vertical: 'bottom'
+                    }
+                });
+
+                $( '.hover-special-link' ).on('mouseover', '.form-control-static, .hover-edit', function(){
+                    $(this).children('a').css('color','#20a8d8')
+                })
+
+                $( '.hover-special-link' ).on('mouseleave', '.form-control-static, .hover-edit', function(){
+                    $(this).children('a').css('color','#ffffff')
+                });
+
+                this.$main_window.on('click', '.edit', this.editDataHandle.bind(this))
+
+            },
+            editDataHandle: function(e){
+                this.$display = $(e.target).parent().parent();
+                this.$form_edit = $(e.target).parent().parent().siblings();
+                this.$display.hide();
+                this.$form_edit.show().focus();
+            },
+            //>Autocomplete
+            registerAutoComplete: function() {
+                this.$ttl_tl.typeahead(this.typeaheadConfig, {
+                        source: function(q, p){
+                                {
+                                    return p([{value: 'DKI Jakarta'}, {value: 'Jawa Tengah'}])
+                                }
+                        }
+                    }
+                );
+                this.$jbt_nama.typeahead(this.typeaheadConfig, {
+                        source: function(q, p){
+                                {
+                                    return p([{value: 'Ketua STIS'}, {value: 'Staf BAU'}])
+                                }
+                        }
+                    }
+                );
+                this.$pelatihan_nama.typeahead(this.typeaheadConfig, {
+                        source: function(q, p){
+                                {
+                                    return p([{value: 'Diklatpim II'}, {value: 'Latihan Innas Supas'}])
+                                }
+                        }
+                    }
+                );
+                this.$pelatihan_penyelenggara.typeahead(this.typeaheadConfig, {
+                        source: function(q, p){
+                                {
+                                    return p([{value: 'Pusdiklat BPS'}, {value: 'Kemendiknas'}])
+                                }
+                        }
+                    }
+                );
+                this.$pdk_jurusan.typeahead(this.typeaheadConfig, {
+                        source: function(q, p){
+                                {
+                                    return p([{value: 'S3 Human Fam Studies'}, {value: 'Doktor of Matematika'}])
+                                }
+                        }
+                    }
+                );
+                this.$pdk_pt.typeahead(this.typeaheadConfig, {
+                        source: function(q, p){
+                                {
+                                    return p([{value: 'Iowa State University'}, {value: 'Universiteit Hasselt'}])
+                                }
+                        }
+                    }
+                );
+                this.$hrg_jenis.typeahead(this.typeaheadConfig, {
+                        source: function(q, p){
+                                {
+                                    return p([{value: 'Setyalencana'}, {value: 'Setyalencana II'}])
+                                }
+                        }
+                    }
+                );
+                this.$hkm_jenis.typeahead(this.typeaheadConfig, {
+                        source: function(q, p){
+                                {
+                                    return p([{value: 'Penundaan Kenaikan Pangkat Selama 1 Tahun (PP 53/06-06-2010)'}, {value: 'Teguran Tertulis (PP30/PP53)'}])
+                                }
+                        }
+                    }
+                );
+            },
+            toggleDisableForm: function(state){
+                this.processingSomething = ( this.processingSomething === true? false:true );
+                this.$button_submit_tambah_pgw.prop( "disabled", this.processingSomething );
+                this.$button_submit_tambah_pgw.html( this.processingSomething?'<i class="fa fa-circle-o-notch fa-spin fa-1x fa-fw"></i> Usulkan Perubahan':'Usulkan Perubahan' );
+            },
+            //>jQuery custom
+            jQueryCustomFuncInit: function() {
+                $.fn.serializeObject = function(){
+                    var o = {};
+                    var a = this.serializeArray();
+                    $.each(a, function() {
+                        if (o[this.name] !== undefined) {
+                            if (!o[this.name].push) {
+                                o[this.name] = [o[this.name]];
+                            }
+                            o[this.name].push(this.value || '');
+                        } else {
+                            o[this.name] = this.value || '';
+                        }
+                    });
+                    return o;
+                };
+            },
+            //>Ag-Grid Component
+            registerAgComponent: function(){
+                this.columnDefs = [
+                    {headerName: "Jenis", field: "var_label", width: 110, pinned: 'left'},
+                    {
+                        headerName: 'Data',
+                        children: [
+                            {headerName: 'Baru', field: 'new', width: 180},
+                            {headerName: 'Lama', field: 'old', width: 180}
+                        ]
+                    },
+                    {headerName: "Pilihan", field: "pilihan", cellRenderer: this.btnInCellRenderer, width: 120, suppressFilter: true, suppressSorting: true, editable: false, pinned: 'right'}
+                ]
+
+                this.gridOptions = {
+                    columnDefs: this.columnDefs,
+                    rowData: this.rowData,
+                    enableColResize: true,
+                    rowHeight: 30,
+                    rowSelection: 'multiple',
+                    animateRows: true,
+                    enableFilter: true,
+                    enableSorting: true,
+                    getRowNodeId: function(data) { return data._id; }
+                }
+                this.renderPgwTable();
+            },
+            renderPgwTable: function() {
+                new agGrid.Grid(this.eGridDiv, this.gridOptions)
+            },
+            btnInCellRenderer: function(params){
+                return `<button class='edit-usulan'>Edit</button> <button class='batalkan-usulan'>Batalkan</button>`
+            },
+        }
+
+        pegawaiPage.init();
+
+    })()
+
+</script>

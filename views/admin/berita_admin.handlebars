@@ -1,0 +1,268 @@
+<div class="animated fadeIn">
+    <div class="card" id="new">
+        <div class="card-header"><i class="icon-bell"></i> Berita</div>
+            <div id="main-window" class="card-block">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6 class="text-center" style="margin-bottom: 10px">
+                            Daftar Tulisan
+                        </h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="tabelBerita" style="height: 500px;width:100%" class="ag-blue"></div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-md-12">
+                        <button id="btn-buat-berita" class="btn btn-primary">Buat Berita Baru</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+</div>
+
+<div class="modal fade" id="modal-tambah-berita" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Tambah Berita</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form_admin_tambah_brt" action="#" method="POST">
+                <div class="modal-body" style="padding: 0 15px;">
+                    <div style="padding: 15px; padding-bottom: 0">
+                        <div style="height: 510px;position:relative;">
+                            <div style="max-height:100%;overflow-y:auto;overflow-x:hidden;">
+                                <div class="row" style="margin-bottom: 20px; margin-right: 5px">
+                                    <div class="col-md-12">  
+                                        <div class="row" style="margin-bottom: 5px">
+                                            <div class="col-md-12">
+                                                <div class="form-group row">
+                                                    <label class="col-md-2 form-control-label">Judul<span> *</span></label>
+                                                    <div class="col-md-10">
+                                                        <input id="field-judul-berita" type="text" name="judul" class="form-control" autocomplete="off" required>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="form-group row">
+                                                    <label class="col-md-2 form-control-label">Waktu<span> *</span></label>
+                                                    <div class="col-md-3">
+                                                        <input type='text-input' class="form-control date" name="tmt_cpns">
+                                                        <span class="help-block text-muted">Terbit</span> 
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type='text-input' class="form-control date" name="tmt_pns" required>
+                                                        <span class="help-block text-muted">Berhenti</span>
+                                                    </div>
+                                                </div> -->
+                                                <div class="form-group row">
+                                                    <label class="col-md-2 form-control-label">Jenis</label>
+                                                    <div class="col-md-10">
+                                                        <label class="radio-inline">
+                                                            <input type="radio" id="typeB" name="type" value="Berita" checked="checked">  Berita
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" id="typeA" name="type" value="Artikel">  Artikel
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <span>Isi:</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <textarea name="text" id="text" rows="10" cols="80">
+                                                        </textarea>
+                                                        <script>
+                                                            CKEDITOR.replace( 'text' );
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                    <button id="button-submit-tambah-berita" type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form> 
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script src="/js/ag-grid.js"></script>
+
+<script src="/js/moment.min.js"></script>
+
+<script type="text/javascript">
+
+    (function(){
+
+        var PktTab = {
+            eGridDiv: document.querySelector('#tabelBerita'),
+            rowData: [
+                // {judul: 'Tatacara Pengusulan Kenaikan Gaji Berkala (KGB)', tgl_buat:'09/11/2017', tgl_terbit: '09/11/2017', tgl_henti: '15/11/2017', status: 'Sedang Terbit', penulis: 'Muh. Shamad, SST'}
+            ],
+            editState: false,
+            //umum
+            init: function() {
+                this.cacheDOM();
+                this.bindEvents();
+                this.registerAgComponent();
+                this.jQueryCustomFuncInit();
+                this.renderPktTable();
+                this.initBerita()
+            },
+            cacheDOM: function() {
+                this.$btn_buat_berita = $( '#btn-buat-berita' );
+                this.$field_judul_berita = $( '#field-judul-berita' );
+                this.$modal_tambah_berita = $( '#modal-tambah-berita' );
+                this.$form_berita = $('#form_admin_tambah_brt')
+                this.$main_window = $('#main-window')
+            },
+            bindEvents: function() {
+                this.$btn_buat_berita.on('click', this.handleBtnBuatBerita.bind(this))
+                this.$form_berita.on( 'submit', this.form_beritaHandler.bind( this ) )
+                this.$modal_tambah_berita.on('shown.bs.modal', this.modal_tambah_beritaHandle.bind(this));
+                this.$main_window.on('click', '.hapus-berita', this.hapusBeritaHandler.bind(this))
+                this.$main_window.on('click', '.edit-berita', this.editBeritaHandler.bind(this))
+            },
+            resetForm: function(){
+                this.$field_judul_berita.val('');
+                CKEDITOR.instances.text.setData('')
+                $("#typeB").prop("checked", true);
+            },
+            hapusBeritaHandler: function(){
+                var selectedData = this.gridOptions.api.getSelectedRows()[0];
+                var this_outer = this;
+                socket.emit('hapus berita', selectedData._id, function(status){
+                    if(status){
+                        this_outer.gridOptions.api.updateRowData( { remove: [selectedData] } );
+                    }
+                });
+            },
+            editBeritaHandler: function(){
+                this.editState = true
+                var selectedData = this.gridOptions.api.getSelectedRows()[0];
+                var this_outer = this;
+                this.$field_judul_berita.val(selectedData.judul);
+                CKEDITOR.instances.text.setData(selectedData.text)
+                $("#type"+selectedData.type.charAt(0)).prop("checked", true);
+                this.$modal_tambah_berita.modal('show');
+            },
+            addRowTablePgw: function( data ) {
+                this.gridOptions.api.updateRowData( { add: [ data ] } );
+            },
+            modal_tambah_beritaHandle: function(){
+                this.$field_judul_berita.focus();
+            },
+            form_beritaHandler: function(e){
+                e.preventDefault();
+                if(this.editState){
+                    var data = this.$form_berita.serializeObject()
+                    data.text = CKEDITOR.instances.text.getData();
+                    socket.emit('edit berita', {_id: this.gridOptions.api.getSelectedRows()[0]._id, data: data}, this.editBeritaEmitHandler.bind(this))
+                }else{
+                    var data = this.$form_berita.serializeObject()
+                    data.text = CKEDITOR.instances.text.getData();
+                    socket.emit('buat berita baru', data, this.buatBeritaBaru.bind(this))
+                }
+            },
+            editBeritaEmitHandler: function(data){
+                var rowNode = this.gridOptions.api.getRowNode(data._id);
+                rowNode.setData(data);
+                this.resetForm()
+                this.$modal_tambah_berita.modal('toggle');
+            },
+            buatBeritaBaru: function(newBerita){
+                this.addRowTablePgw(newBerita)
+                this.resetForm()
+                this.$modal_tambah_berita.modal('toggle');
+            },
+            handleBtnBuatBerita: function() {
+                this.editState = false;
+                this.resetForm()
+                this.$modal_tambah_berita.modal('show');
+            },
+            //>jQuery custom
+            jQueryCustomFuncInit: function() {
+                $.fn.serializeObject = function(){
+                    var o = {};
+                    var a = this.serializeArray();
+                    $.each(a, function() {
+                        if (o[this.name] !== undefined) {
+                            if (!o[this.name].push) {
+                                o[this.name] = [o[this.name]];
+                            }
+                            o[this.name].push(this.value || '');
+                        } else {
+                            o[this.name] = this.value || '';
+                        }
+                    });
+                    return o;
+                };
+            },
+            //>Ag Comp
+            registerAgComponent: function(){
+                this.columnDefs = [
+                    {headerName: "Judul", field: "judul", width: 800},
+                    {headerName: "Jenis", field: "type", width: 75},
+                    {headerName: "Tanggal Buat", field: "createdAt", width: 90, cellRenderer: this.dateCellRenderer},
+                    {headerName: "Penulis", field: "penulis", width: 200},
+                    {headerName: "Pilihan", field: "pilihan", width: 120, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                ]
+                this.gridOptions = {
+                    columnDefs: this.columnDefs,
+                    rowData: this.rowData,
+                    enableColResize: true,
+                    rowHeight: 30,
+                    rowSelection: 'multiple',
+                    animateRows: true,
+                    enableFilter: true,
+                    enableSorting: true,
+                    getRowNodeId: function(data) { return data._id; },
+                    onRowDoubleClicked: this.editBeritaHandler.bind(this)
+                }
+            },
+            dateCellRenderer: function(params) {
+                if(params.value){
+                    return moment(params.value).format('DD/MM/YYYY')
+                } else {
+                    return '';
+                }
+            },
+            btnInCellRenderer: function(params){
+                return `<button class='hapus-berita'>Hapus</button> <button class='edit-berita'>Edit</button>`
+            },
+            renderPktTable: function() {
+                new agGrid.Grid(this.eGridDiv, this.gridOptions);
+            },
+            initBerita: function(){
+                socket.emit('get all berita', '', this.initBeritaHandler.bind(this))
+            },
+            initBeritaHandler: function(all_berita) {
+                all_berita = all_berita.berita.concat(all_berita.artikel)
+                this.gridOptions.api.updateRowData( { add: all_berita } );
+            },
+
+        }
+
+        PktTab.init();
+
+    })()
+
+</script>

@@ -1,0 +1,379 @@
+<div class="animated fadeIn">
+    <div class="card" id="new">
+        <div class="card-header"><i class="icon-wrench"></i> Pengaturan Pegawai</div>
+            <div class="card-block">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6 style="margin-bottom: 10px">
+                            Pengaturan Jabatan
+                        </h6>
+                    </div>
+                </div>
+                <div id="global-div" class="row">
+                	<div class="col-md-6" style="margin-bottom: 5px">
+                		<div class="form-group row">
+                            <label class="col-md-3 form-control-label">Jabatan</label>
+                            <div class="col-md-6">
+                            	<div id="div-jbt-nama">
+	                                <select id="field-jbt_nama" name="jbt_nama" class="form-control input-lg" size="1">
+	                                </select>
+                            	</div>
+                            	<div id="div-link-ganti-nama" style="margin-top: 3px">
+                            		<a id="link-ganti-nama-jbt" href="#" class="mute"><i class="fa fa-pencil fa-lg"></i> ganti nama</a>
+                            		<a id="link-hapus-nama-jbt" href="#" class="mute"><i class="fa fa-trash fa-lg"></i> hapus</a>
+                            		<a id="link-tambah-nama-jbt" href="#" class="mute"><i class="fa fa-plus fa-lg"></i> tambah</a>
+                            	</div>
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 15px">
+                            <label class="col-md-3 form-control-label">Tipe</label>
+                            <div class="col-md-6">
+                                <label class="radio-inline">
+                                    <input type="radio" id="typeN" name="type" value="Non Fungsional" checked="checked">  Non Fungsional
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="typeF" name="type" value="Fungsional">  Fungsional
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 15px">
+                            <label class="col-md-3 form-control-label">Struktural</label>
+                            <div class="col-md-6">
+                                <label class="radio-inline">
+                                    <input type="radio" id="eselon0" name="eselon" value="0" checked="checked">  Tidak
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="eselon2" name="eselon" value="2">  Eselon II
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="eselon3" name="eselon" value="3">  Eselon III
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="eselon4" name="eselon" value="4">  Eselon IV
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label">Batas Usia Pensiun (BUP)</label>
+                            <div class="col-md-2">
+                                <input id="bup" type='number' min="0" name="bup" class="form-control" autocomplete="off" required>
+                                <span class="help-block text-muted">dalam Th</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label">Bawahan</label>
+                            <div class="col-md-9">
+                                <input id="field-daftar-bawahan" type="text" name="bawahan" class="form-control" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <button id="button-simpan-hierarki" type="button" class="btn btn-primary">Simpan</button>
+                	</div>
+                	<div class="col-md-6">
+                		<div id="tabelDaftarHierarkiJbtn" style="height: 300px;width:100%" class="ag-blue"></div>
+                	</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+</div>
+
+<script src="/js/ag-grid.js"></script>
+
+<script type="text/javascript">
+	(function(){
+
+        var PengaturanPgwAdmin = {
+            eGridDiv: document.querySelector('#tabelDaftarHierarkiJbtn'),
+            rowData: [
+                // {_id: 1, jbt_nama: 'Ketua STIS', bup: 58, daftar_bawahan: [{jbt_nama: 'Puket I'}, {jbt_nama: 'Puket II'}, {jbt_nama: 'Puket III'}]}
+            ],
+            daftar_bawahan : [],
+            prev_jbt_nama_jbt_nama: '',
+            isGanti: true,
+            isTambah: false,
+            isEdit: true,
+            temp_dropdown_jbt_html: '',
+            //umum
+            init: function() {
+                this.cacheDOM();
+                this.bindEvents();
+                this.registerAgComponent();
+                this.populateJabatanSelect();
+            },
+            cacheDOM: function() {
+            	this.$global_div = $( '#global-div' );
+
+                this.$field_daftar_bawahan = $( '#field-daftar-bawahan' );
+                this.$field_jbt_nama = $( '#field-jbt_nama' );
+                this.$field_type = $( '#type' );
+                this.$field_bup = $( '#bup' );
+                this.$tabel_div = $( '#tabelDaftarHierarkiJbtn' )
+                this.$button_simpan_hierarki = $( '#button-simpan-hierarki' )
+                this.$link_ganti_jbt_nama = $( '#link-ganti-nama-jbt' );
+
+                this.$div_jbt_nama = $( '#div-jbt-nama' );
+                this.$div_link_ganti_nama = $( '#div-link-ganti-nama' );
+            },
+            bindEvents: function() {
+                //Autocomplete
+                var this_outer = this;
+			    this.$field_daftar_bawahan.tokenfield({
+			      typeahead: [null, { source: function(q, p){
+			        {
+			            socket.emit('filter_jbt', {query: q, not_in: _.map( this_outer.daftar_bawahan, function(jbt){ return jbt._id } ), selected: this_outer.$field_jbt_nama.val() }, function (filtered_jbt) {
+			                if($( '#field-daftar-bawahan' ).val()){
+			                    var regEx = new RegExp(q+"$");
+			                    if(regEx.test($( '#field-daftar-bawahan' ).val())){
+			                        return p([]);
+			                    }
+			                }
+			                return p(_.map(filtered_jbt, function(jbt){ return {_id: jbt._id, value: jbt.jbt_nama}}))
+			            });
+			        }
+			      }}]
+			    });
+			    
+			    this.$field_daftar_bawahan.on("tokenfield:createdtoken", this.handleAddDaftarBwhan.bind(this));
+			    this.$field_daftar_bawahan.on("tokenfield:removetoken", this.handleRemoveDaftarBwhan.bind(this));
+
+			    this.$tabel_div.on('click', '.edit-hierarki', this.btnEditHandle.bind(this))
+			    this.$tabel_div.on('click', '.hapus-hierarki', this.btnHapusHandle.bind(this))
+
+			    this.$global_div.on('click', '#button-simpan-hierarki', this.HandlerbtnSimpanHierarki.bind(this))
+
+			    this.$global_div.on('click', '#link-ganti-nama-jbt', this.link_ganti_jbt_namaHandle.bind(this, true))
+
+			    this.$global_div.on('click', '#link-batal-ganti-tambah', this.restoreFirstForm.bind(this))
+
+			    this.$global_div.on('click', '#link-tambah-nama-jbt', this.link_ganti_jbt_namaHandle.bind(this, false))
+			    this.$global_div.on('click', '#link-hapus-nama-jbt', this.link_hapus_nama_jbtHandle.bind(this))
+
+                this.$global_div.on('change', '#field-jbt_nama', this.field_jbt_namaHandle.bind(this));
+
+                this.$field_bup.keyup(this.btnSimpanClickEvent.bind(this));
+            },
+            btnSimpanClickEvent: function(e) {
+                if(e.keyCode == 13){
+                    this.$button_simpan_hierarki.click();
+                }
+            },
+            field_jbt_namaHandle: function(){
+                this.populateFieldSelectedJbt();
+            },
+            link_hapus_nama_jbtHandle: function() {
+            	if (confirm(`Hapus jabatan?`) == true) {
+                    var this_outer = this;
+                    var selectedData = this.gridOptions.api.getRowNode($( '#field-jbt_nama' ).val())
+                    socket.emit('hapusJabatan', selectedData.data._id, function(status){
+                        if(status){
+                            this_outer.gridOptions.api.updateRowData( { remove: [selectedData.data] } );
+                            socket.emit('getAllJabatan', 'from_pengaturan_pgw_admin', this_outer.setJbtSelect.bind(this_outer))
+                        }
+                    })
+                }
+            },
+            btnHapusHandle: function (e) {
+                if (confirm(`Hapus jabatan?`) == true) {
+                    var this_outer = this;
+                    var selectedData = this.gridOptions.api.getSelectedRows();
+                    socket.emit('hapusJabatan', selectedData[0]._id, function(status){
+                        if(status){
+                            this_outer.gridOptions.api.updateRowData( { remove: selectedData } );
+                            socket.emit('getAllJabatan', 'from_pengaturan_pgw_admin', this_outer.setJbtSelect.bind(this_outer))
+                        }
+                    })
+                }
+            },
+            restoreFirstForm: function() {
+            	this.$div_jbt_nama.html(`
+
+                    <select id="field-jbt_nama" name="jbt_nama" class="form-control input-lg" size="1"></select>
+
+                `)
+
+
+                $( '#field-jbt_nama' ).html(this.temp_dropdown_jbt_html)
+
+		    	this.$div_link_ganti_nama.html(`
+		    		<a id="link-ganti-nama-jbt" href="#" class="mute"><i class="fa fa-pencil fa-lg"></i> ganti nama</a>
+		    		<a id="link-hapus-nama-jbt" href="#" class="mute"><i class="fa fa-trash fa-lg"></i> hapus</a>
+                    <a id="link-tambah-nama-jbt" href="#" class="mute"><i class="fa fa-plus fa-lg"></i> tambah</a>
+		    	`);
+
+                this.populateFieldSelectedJbt();
+            },
+            link_ganti_jbt_namaHandle: function(isGanti) {
+		    	this.isGanti = isGanti;
+                if(isGanti){
+                    this.prev_jbt_nama_jbt_nama = $('#field-jbt_nama option:selected').text();
+                    this.prev_jbt_nama_jbt_id = $( '#field-jbt_nama' ).val();
+                } else{
+                    this.prev_jbt_nama_jbt_nama = '';
+                    this.isTambah = true;
+                }
+
+		    	this.$div_jbt_nama.html(`
+		    		<input id="field-jbt-nama" type="text" name="jbt_nama" class="form-control" autocomplete="off" required>
+		    	`)
+		    	this.$div_link_ganti_nama.html(`
+		    		<a id="link-batal-ganti-tambah" href="#" class="mute"><i class="fa fa-reply fa-lg"></i> batal</a>
+		    	`)
+		    	$( '#field-jbt-nama' ).val(this.prev_jbt_nama_jbt_nama).focus();
+		    },
+            //tombol tambah
+            HandlerbtnSimpanHierarki: function() {
+                if( this.isTambah ){
+                    if(!this.$field_bup.val() || !$( '#field-jbt-nama' ).val()){
+                        GlobalAlert('Nama jabatan atau BUP tidak boleh kosong');
+                        return;
+                    }
+                    socket.emit('addJabatan', { jbt_nama: $( '#field-jbt-nama' ).val(), type: $('input[name=type]:checked').val(), eselon: $('input[name=eselon]:checked').val(), bup: this.$field_bup.val(), daftar_bawahan: this.daftar_bawahan }, this.handleAddJabatan.bind(this))
+                } else if( this.isEdit ){
+                    if(!this.$field_bup.val()){
+                        GlobalAlert('BUP tidak boleh kosong');
+                        return;
+                    }
+                    socket.emit('editJabatan', { _id: $( '#field-jbt_nama' ).val() || this.prev_jbt_nama_jbt_id, jbt_nama: $('#field-jbt_nama option:selected').text() || $( '#field-jbt-nama' ).val(), type: $('input[name=type]:checked').val(), eselon: $('input[name=eselon]:checked').val(), bup: this.$field_bup.val(), daftar_bawahan: this.daftar_bawahan }, this.handleEditJabatan.bind(this))
+                }
+            },
+            handleEditJabatan: function(status) {
+                if(status){
+                    this.gridOptions.api.updateRowData({update: [{ _id: $( '#field-jbt_nama' ).val() || this.prev_jbt_nama_jbt_id, jbt_nama: $('#field-jbt_nama option:selected').text() || $( '#field-jbt-nama' ).val(), type: $('input[name=type]:checked').val(), eselon: $('input[name=eselon]:checked').val(), bup: this.$field_bup.val(), daftar_bawahan: this.daftar_bawahan }]});
+                    this.restoreFirstForm();
+                    socket.emit('getAllJabatan', 'from_pengaturan_pgw_admin', this.setJbtSelect.bind(this));
+                }
+            },
+            handleAddJabatan: function(newJbtDoc){
+                if(newJbtDoc){
+                    this.addTableData([newJbtDoc])
+                    this.temp_dropdown_jbt_html += '<option value='+newJbtDoc._id+' >' + newJbtDoc.jbt_nama + '</option>'
+                    this.resetForm();
+                    this.cacheDOM();
+                    this.isTambah = false;
+                }
+            },
+            addTableData: function( jbt ) {
+                this.gridOptions.api.updateRowData( { add: jbt } );
+            },
+            resetForm: function() {
+                this.daftar_bawahan = [];
+                this.$field_daftar_bawahan.tokenfield('setTokens', []);
+                this.$field_daftar_bawahan.val('');
+                this.restoreFirstForm();
+            },
+            handleAddDaftarBwhan: function(e) {
+		        delete e.attrs.label;
+		        this.AddDaftarBawahanField({ _id: e.attrs._id, 'jbt_nama': e.attrs.value});
+		    },
+            handleRemoveDaftarBwhan: function(e) {
+		        this.daftar_bawahan = _.without(this.daftar_bawahan, _.findWhere(this.daftar_bawahan, {
+			        jbt_nama: e.attrs.value
+		        }));
+		    },
+		    AddDaftarBawahanField: function(selected_bawahan) {
+		    	this.daftar_bawahan.push(selected_bawahan);
+		    },
+		    setDaftarBawahanField: function(jbt_array) {
+		    	this.daftar_bawahan = [];
+		    	this.$field_daftar_bawahan.tokenfield('setTokens', []);
+            	this.$field_daftar_bawahan.val('');
+            	_.each(jbt_array, this.handleEachSetDaftarBawahanField.bind(this))
+		    },
+		    handleEachSetDaftarBawahanField: function(jbt, i, list){
+                $( '#field-daftar-bawahan' ).tokenfield('createToken', {_id: jbt._id, jbt_nama: jbt.jbt_nama, value: jbt.jbt_nama});
+            },
+            //>Ag Comp
+            registerAgComponent: function(){
+                this.columnDefs = [
+                    {headerName: "Nama Jabatan", field: "jbt_nama", width: 200},
+                    {headerName: "BUP", field: "bup", width: 100},
+                    {headerName: "Tipe", field: "type", width: 150},
+                    {headerName: "Struktural", field: "eselon", width: 150, cellRenderer: this.handleStrukturalColumn},
+                    {headerName: "Bawahan", field: "daftar_bawahan", width: 300, cellRenderer: this.handleDaftarBwhanColumn},
+                    {headerName: "Pilihan", field: "pilihan", width: 120, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                ]
+                this.gridOptions = {
+                    columnDefs: this.columnDefs,
+                    rowData: this.rowData,
+                    enableColResize: true,
+                    rowHeight: 30,
+                    rowSelection: 'multiple',
+                    animateRows: true,
+                    enableFilter: true,
+                    enableSorting: true,
+                    getRowNodeId: function(data) { return data._id; },
+                    onRowDoubleClicked: this.btnEditHandle.bind(this)
+                }
+
+                this.renderPktTable();
+            },
+            handleStrukturalColumn: function(params){
+                var eselon = 'Tidak';
+                if(params.value === '2'){
+                    eselon = 'Eselon II';
+                } else if(params.value === '3'){
+                    eselon = 'Eselon III';
+                } else if(params.value === '4'){
+                    eselon = 'Eselon IV';
+                }
+
+                return eselon;
+            },
+            btnInCellRenderer: function(params){
+                return `<button class='hapus-hierarki'>Hapus</button> <button class='edit-hierarki'>Edit</button>`
+            },
+            handleDaftarBwhanColumn: function(params){
+            	return _.map( params.value, function(jbt){ return jbt.jbt_nama } ).join(',');
+            },
+            renderPktTable: function() {
+                new agGrid.Grid(this.eGridDiv, this.gridOptions);
+            },
+            btnEditHandle: function (e) {
+            	this.restoreFirstForm();
+            	this.cacheDOM()
+                var selectedData = this.gridOptions.api.getSelectedRows();
+                this.setForm(selectedData[0]._id, selectedData[0].type, selectedData[0].eselon, selectedData[0].bup, selectedData[0].daftar_bawahan)
+            },
+            setForm: function(_id_jbt, type, eselon, bup, daftar_bawahan) {
+                this.$field_jbt_nama.val( _id_jbt );
+                type&&$("#type"+type.charAt(0)).prop("checked", true)
+                if(eselon){
+                    $("#eselon"+eselon).prop("checked", true)
+                } else {
+                    $("#eselon0").prop("checked", true)
+                }
+                this.$field_bup.val( bup );
+                this.setDaftarBawahanField(daftar_bawahan)
+            },
+            //populate dropdown jabatan
+            populateJabatanSelect: function() {
+                socket.emit('getAllJabatan', 'from_pengaturan_pgw_admin', this.handleGetAllJabatanResponse.bind(this))
+            },
+            setJbtSelect: function(all_jabatan) {
+                var jbt_opt = '';
+                _.each(all_jabatan, function(jbt, i, list){
+                    jbt_opt += '<option value='+jbt._id+' >' + jbt.jbt_nama + '</option>'
+                })
+                this.temp_dropdown_jbt_html = jbt_opt;
+                $( '#field-jbt_nama' ).html(jbt_opt);
+            },
+            handleGetAllJabatanResponse: function(all_jabatan){
+                this.addTableData(all_jabatan);
+                this.setJbtSelect(all_jabatan);
+
+                this.populateFieldSelectedJbt();
+            },
+            populateFieldSelectedJbt: function() {
+                const _id = $( '#field-jbt_nama' ).val();
+                if(!_id) return;
+                const selectedData = this.gridOptions.api.getRowNode(_id).data;
+                this.setForm(selectedData._id, selectedData.type, selectedData.bup, selectedData.daftar_bawahan)
+            }
+
+        }
+
+        PengaturanPgwAdmin.init();
+
+    })()
+</script>

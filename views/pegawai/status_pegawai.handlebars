@@ -1,0 +1,268 @@
+<div class="animated fadeIn">
+    <div class="card" id="new">
+        <div class="card-header"><i class="icon-check"></i> Status</div>
+            <div class="card-block" id="main-window">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a id="pangkat_tab" class="nav-link active" data-toggle="tab" href="#pangkatchild" role="tab" aria-control="pangkatchild"><i class="icon-arrow-up-circle"></i> Kenaikan Pangkat</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="kgb_tab" class="nav-link" data-toggle="tab" href="#kgbchild" role="tab" aria-control="kgbchild"><i class="icon-wallet"></i> KGB</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="pensiun_tab" class="nav-link" data-toggle="tab" href="#pensiunchild" role="tab" aria-control="pensiunchild"><i class="icon-cup"></i> Pensiun</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="ptj_tab" class="nav-link" data-toggle="tab" href="#ptjchild" role="tab" aria-control="ptjchild"><i class="icon-badge"></i> Penghargaan Tanda Jasa</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="phd_tab" class="nav-link" data-toggle="tab" href="#phdchild" role="tab" aria-control="phdchild"><i class="icon-check"></i> Pembebasan Hukuman Disiplin</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="presensi_tab" class="nav-link" data-toggle="tab" href="#presensichild" role="tab" aria-control="presensichild"><i class="icon-layers"></i> Presensi</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="pangkatchild" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                <div class="row">
+                                                    <div class="col-md-12" style="padding-left: 0">
+                                                        <div id="tabelStatus" style="height: 300px;width:100%" class="ag-blue"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="row">
+                                                    <div class="col-md-12" style="padding-left: 0">
+                                                        <h5 style="margin-bottom: 10px">
+                                                            Status
+                                                        </h5>
+                                                        <!-- <h6 id="pkt-status-title">Silahkan pilih salah satu usulan (double klik)</h6> -->
+                                                        <div id="timeline-div">
+                                                            <p>Double-click salah satu notifikasi.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="kgbchild" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12" style="padding-left: 0">
+                                        <p>kgbchild</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="pensiunchild" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12" style="padding-left: 0">
+                                        <p>pensiunchild</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="ptjchild" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12" style="padding-left: 0">
+                                        <p>ptjchild</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="phdchild" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12" style="padding-left: 0">
+                                        <p>phdchild</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="presensichild" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12" style="padding-left: 0">
+                                        <p>presensichild</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+</div>
+
+<script src="/js/ag-grid.js"></script>
+<script src="/js/vertical-timeline.js"></script>
+
+<script src="/js/moment.min.js"></script>
+
+
+<script type="text/javascript">
+
+    (function(){
+
+        var PktTab = {
+            eGridDiv: document.querySelector('#tabelStatus'),
+            rowData: [
+                // {_id: 'kj3n45n2k3jk532jk23nk23n32j5', pkt_gol: 'III/b', 'pkt_batas_usul': '24/12/2017', 'pkt_last_status': 'Usulan Diterima', 'pkt_last_notif': '07:30 09/11/2017'}
+            ],
+            //umum
+            init: function() {
+                this.cacheDOM();
+                this.bindEvents();
+                this.registerAgComponent();
+                this.renderPktTable();
+                this.initStatus('pangkat');
+            },
+            cacheDOM: function() {
+                this.$timelineDiv = $('#timeline-div');
+                this.$main_window = $( '#main-window' )
+            },
+            bindEvents: function() {
+                this.$main_window.on('click', '.konfirmasi-pkt', this.konfirmasi_pktHandle.bind(this))
+                this.$main_window.on('click', '.btl-konfirmasi-pkt', this.btl_konfirmasi_pktHandle.bind(this))
+            },
+            konfirmasi_pktHandle: function(){
+                var selectedData = this.gridOptions.api.getSelectedRows()[0];
+                var this_outer = this;
+                selectedData.type = 'staf';
+                socket.emit('konfirmasi notif kenaikan pangkat', selectedData, function(respons){
+                    if(respons){
+                        selectedData.isConfirmed = true;
+                        selectedData.isConfirmed = respons;
+                        selectedData.pilihan = `<button class='btl-konfirmasi-pkt'>Batal Konfirmasi</button>`
+                        var rowNode = this_outer.gridOptions.api.getRowNode(selectedData._id);
+                        rowNode.setData(selectedData);
+                    }
+                });
+            },
+            btl_konfirmasi_pktHandle: function(){
+                var selectedData = this.gridOptions.api.getSelectedRows()[0];
+                var this_outer = this;
+                selectedData.type = 'staf';
+                socket.emit('batal konfirmasi notif kenaikan pangkat', selectedData, function(status){
+                    if(status){
+                        selectedData.isConfirmed = false;
+                        selectedData.pilihan = `<button class='konfirmasi-pkt'>Konfirmasi</button>`
+                        var rowNode = this_outer.gridOptions.api.getRowNode(selectedData._id);
+                        rowNode.setData(selectedData);
+                    }
+                });
+            },
+            registerTimeline: function(timeline) {
+                $( '#timeline-div' ).html(timeline)
+                this.$timelineDiv.verticalTimeline({
+                    startLeft: false,
+                    alternate: true,
+                    animate: "fade",
+                    arrows: false
+                });
+            },
+            //>Ag Comp
+            registerAgComponent: function(){
+                this.columnDefs = [
+                    {headerName: "Golongan", field: "gol_target", width: 75, cellRenderer: this.pkt_golCellRenderer},
+                    {headerName: "Periode TMT", field: "periode_tmt", width: 90, cellRenderer: this.dateCellRenderer},
+                    {headerName: "Batas Usul ke Kepeg", field: "bu_stis", width: 140, cellRenderer: this.dateCellRenderer},
+                    {headerName: "Status Terakhir", field: "status", width: 200, cellRenderer: this.statusCellRenderer},
+                    {headerName: "Notifikasi Terakhir", field: "time", width: 150, cellRenderer: this.dateCellRenderer2},
+                    {headerName: "Pilihan", field: "pilihan", width: 125, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                ]
+                this.gridOptions = {
+                    columnDefs: this.columnDefs,
+                    rowData: this.rowData,
+                    enableColResize: true,
+                    rowHeight: 30,
+                    rowSelection: 'multiple',
+                    animateRows: true,
+                    enableFilter: true,
+                    enableSorting: true,
+                    getRowNodeId: function(data) { return data._id; },
+                    onRowDoubleClicked: this.lihatStatus.bind(this)
+                }
+            },
+            pkt_golCellRenderer: function(params){
+                var transformGol = {
+                    '1':'I/a',
+                    '2':'I/b',
+                    '3':'I/c',
+                    '4':'I/d',
+
+                    '5':'II/a',
+                    '6':'II/b',
+                    '7':'II/c',
+                    '8':'II/d',
+
+                    '9':'III/a',
+                    '10':'III/b',
+                    '11':'III/c',
+                    '12':'III/d',
+
+                    '13':'IV/a',
+                    '14':'IV/b',
+                    '15':'IV/c',
+                    '16':'IV/d',
+                    '17':'IV/e',
+                }
+
+                return transformGol[params.value]
+            },
+            statusCellRenderer: function(params){
+                return params.value[0]?params.value[params.value.length-1].label:'Belum ada';
+            },
+            dateCellRenderer: function(params) {
+                if(params.value){
+                    return moment(params.value).format('DD/MM/YYYY')
+                } else {
+                    return '';
+                }
+            },
+            dateCellRenderer2: function(params) {
+                if(params.value){
+                    return moment(params.value).format('HH:mm DD/MM/YYYY')
+                } else {
+                    return '';
+                }
+            },
+            addRowTablePgw: function( data ) {
+                this.gridOptions.api.updateRowData( { add: [ data ] } );
+            },
+            btnInCellRenderer: function(params){
+                return !params.data.isConfirmed?`<button class='konfirmasi-pkt'>Konfirmasi</button>`:`<button class='btl-konfirmasi-pkt'>Batal Konfirmasi</button>`;
+            },
+            renderPktTable: function() {
+                new agGrid.Grid(this.eGridDiv, this.gridOptions);
+            },
+            initStatus: function(type){
+                socket.emit('get all status', type, this.initStatusHandler.bind(this))
+            },
+            initStatusHandler: function(contents) {
+                this.gridOptions.api.updateRowData( { add: contents } );
+                // this.setTimeline(contents.length?contents[0].status.length?contents[0].status:[]:[]);
+                
+            },
+            lihatStatus: function(){
+                var selectedData = this.gridOptions.api.getSelectedRows()[0];
+                this.setTimeline(selectedData.status)
+            },
+            setTimeline: function(status){
+                var this_outer = this;
+                this.registerTimeline(
+                    status.length?_.map(status, function(stat){
+                    return `<div data-vtdate="`+this_outer.dateCellRenderer({value: stat.time})+`">`+stat.label+`</div>`; }):'Belum ada'
+                )
+            }
+
+        }
+
+        PktTab.init();
+
+    })()
+
+</script>
