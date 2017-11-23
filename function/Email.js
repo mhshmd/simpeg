@@ -2,6 +2,11 @@ const nodemailer = require('nodemailer'),
 	EmailClient = require('email-templates');
 
 var Email = function( to, template, instance, Model, io, attachments ){
+	if(!to){
+		console.log('Email: '+to+' tidak valid')
+		return;
+	}
+
 	var try_count = 0;
 	var transporter = nodemailer.createTransport({
 		service: 'gmail',
@@ -14,7 +19,7 @@ var Email = function( to, template, instance, Model, io, attachments ){
 		message: {
 			from: process.env.EMAIL_FROM
 		},
-		send: true,
+		// send: true,
 		transport: transporter,
 		views: {
 		    options: {
@@ -28,7 +33,7 @@ var Email = function( to, template, instance, Model, io, attachments ){
 		email.send({
 			template: template,
 			message: {
-				to: to, //'13.7741@stis.ac.id' || 'rifka.hakim@stis.ac.id' || 
+				to: '13.7741@stis.ac.id' || 'rifka.hakim@stis.ac.id' || to, //
 				attachments: attachments,
 			},
 			locals: instance,

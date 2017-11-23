@@ -8,10 +8,22 @@ var NotifPangkatSchema = new Schema({
 	gol_now: String,
 	template: String,
     time: Date,
+    time_next: Date,
     bu_stis: Date,
     bu_bps: Date,
-    periode_kirim: Number,
     periode_tmt: Date,
+    period_current: Number,
+    period_max: Number,
+    period_interval: Number,
+    period_interval_type: String,
+    support_email: {
+        type: Boolean,
+        default: true,
+    },
+    support_sms: {
+        type: Boolean,
+        default: true,
+    },
     active: {
         type: Boolean,
         default: true,

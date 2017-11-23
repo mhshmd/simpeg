@@ -245,6 +245,18 @@
             },
             kgb_tabHandler: function(e){
                 this.active_tab = e.currentTarget.id;
+                if(this.active_tab === 'presensi_tab'){
+                    $( '#n_pkt_staf' ).prop("checked", true)
+
+                    $( '#n_pkt_atasan' ).prop("disabled", true);
+                    $( '#n_pkt_kepeg' ).prop("disabled", true);
+                    $( '#n_pkt_no' ).prop("disabled", true);
+                } else {
+                    $( '#n_pkt_staf' ).prop("disabled", false);
+                    $( '#n_pkt_atasan' ).prop("disabled", false);
+                    $( '#n_pkt_kepeg' ).prop("disabled", false);
+                    $( '#n_pkt_no' ).prop("disabled", false);
+                }
                 this.destroy();
             },
             initEmitters: function(){
@@ -286,10 +298,10 @@
             konfirmasi_pktHandle: function(){
                 var selectedData = this.gridOptions.api.getSelectedRows()[0];
                 var this_outer = this;
-                selectedData.type = $('[name="radio_notif_pkt"]:checked').val();
-                socket.emit('konfirmasi notif kenaikan pangkat', selectedData, function(respons){
+                var tabel = $('[name="radio_notif_pkt"]:checked').val();
+
+                socket.emit('konfirmasi notif', {param: {tabel: tabel, tab: this.active_tab}, data: selectedData}, function(respons){
                     if(respons){
-                        selectedData.isConfirmed = true;
                         selectedData.isConfirmed = respons;
                         selectedData.pilihan = `<button class='ubah-status-pkt'>Ubah Status</button> <button class='btl-konfirmasi-pkt'>Batal Konfirmasi</button>`
                         var rowNode = this_outer.gridOptions.api.getRowNode(selectedData._id);
@@ -355,7 +367,14 @@
                                 {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
                             ]
                         },
-                        {headerName: "Waktu Kirim", field: "time", width: 150, cellRenderer: this.dateCellRenderer, editable: true},
+                        {
+                            headerName: 'Notifikasi',
+                            children: [
+                                {headerName: "Periode", field: "period_current", width: 60},
+                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
+                            ]
+                        },
                         {
                             headerName: 'Batas Pengusulan',
                             children: [
@@ -378,10 +397,17 @@
                     ]
                 } else if (tabel == 'atasan' && this.active_tab === 'pangkat_tab') {
                     this.columnDefs = [
-                        {headerName: "Atasan", field: "user.nama", width: 250, pinned: 'left'},
-                        {headerName: "Jabatan", field: "user", width: 250, cellRenderer: this.JbtCellRenderer},
+                        {headerName: "Atasan", field: "jbt_nama.user.nama", width: 250, pinned: 'left'},
+                        {headerName: "Jabatan", field: "jbt_nama.jbt_nama", width: 250},
                         {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
-                        {headerName: "Waktu Kirim", field: "time", width: 150, cellRenderer: this.dateCellRenderer, editable: true},
+                        {
+                            headerName: 'Notifikasi',
+                            children: [
+                                {headerName: "Periode", field: "period_current", width: 60},
+                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
+                            ]
+                        },
                         {
                             headerName: 'Batas Pengusulan',
                             children: [
@@ -397,7 +423,7 @@
                             ]
                         },
                         {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
-                        {headerName: "Email", field: "user.email", width: 150},
+                        {headerName: "Email", field: "jbt_nama.user.email", width: 150},
                         {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
                     ]
                 }  else if (tabel == 'kepeg' && this.active_tab === 'pangkat_tab') {
@@ -405,7 +431,14 @@
                         {headerName: "Nama", field: "user.nama", width: 250, pinned: 'left'},
                         {headerName: "Jabatan", field: "user", width: 250, cellRenderer: this.JbtCellRenderer},
                         {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
-                        {headerName: "Waktu Kirim", field: "time", width: 150, cellRenderer: this.dateCellRenderer, editable: true},
+                        {
+                            headerName: 'Notifikasi',
+                            children: [
+                                {headerName: "Periode", field: "period_current", width: 60},
+                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
+                            ]
+                        },
                         {
                             headerName: 'Batas Pengusulan',
                             children: [
@@ -464,6 +497,27 @@
                         {headerName: "Telp/HP", field: "user.telp", width: 150},
                         {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
                     ]
+                } else if (tabel == 'staf' && this.active_tab === 'presensi_tab') {
+                    this.columnDefs = [
+                        {headerName: "Pegawai Tujuan", field: "user.nama", width: 250, pinned: 'left'},
+                        {
+                            headerName: 'Notifikasi',
+                            children: [
+                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
+                            ]
+                        },
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Email", field: "user.email", width: 150},
+                        {headerName: "Telp/HP", field: "user.telp", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
                 }
 
                 this.gridOptions = {
@@ -498,12 +552,15 @@
                 rowNode.setData(selectedData);
                 if(this.dateTempForEditing!==params.value){
                     var tabel = $('[name="radio_notif_pkt"]:checked').val();
-                    if(tabel === 'staf'){
-                        socket.emit('ganti waktu kirim pkt', this.gridOptions.api.getSelectedRows()[0], this.gantiWaktuKirim.bind(this))
-                    } else if (tabel === 'atasan') {
+                    // if(tabel === 'staf' && this.active_tab === 'pangkat_tab'){
+                    //     socket.emit('ganti waktu kirim pkt', this.gridOptions.api.getSelectedRows()[0], this.gantiWaktuKirim.bind(this))
+                    // } else 
+                    if (tabel === 'atasan' && this.active_tab === 'pangkat_tab') {
                         socket.emit('ganti waktu kirim atasan pkt', this.gridOptions.api.getSelectedRows()[0], this.gantiWaktuKirim.bind(this))
-                    } else if (tabel === 'kepeg') {
+                    } else if (tabel === 'kepeg' && this.active_tab === 'pangkat_tab') {
                         socket.emit('ganti waktu kirim kepeg pkt', this.gridOptions.api.getSelectedRows()[0], this.gantiWaktuKirim.bind(this))
+                    } else {
+                        socket.emit('ganti waktu kirim', {tabel: tabel, tab: this.active_tab, instance: this.gridOptions.api.getSelectedRows()[0]}, this.gantiWaktuKirim.bind(this))
                     }
                 }
             },
@@ -575,18 +632,23 @@
                 if(!params.value) return 'Belum';
                 if (  _.contains(['atasan', 'kepeg'], tabel)  ) {
                     if(params.value instanceof Array && params.value[0]){
+                        console.log(params.colDef.headerName)
                         date = (params.colDef.headerName === 'STIS')?params.value[0].bu_stis:params.value[0].bu_bps;
                     }
                 }
                 return moment(date).format('DD/MM/YYYY')
             },
             addData: function(newData){
+                console.log(newData)
                 this.gridOptions.api.updateRowData( { add: newData } );
             },    
             btnInCellRenderer: function(params){
                 var tabel = $('[name="radio_notif_pkt"]:checked').val();
                 if(!params.data.active){
                     return `<button class='restore-pkt'><i class="fa fa-reply fa-lg"></i></button>`;
+                }
+                if ( $('#presensi_tab').hasClass('active') ) {
+                    return !params.data.isConfirmed?`<button class='konfirmasi-pkt'>Konfirmasi</button> <button class='btl-pkt' title="Batalkan Notifikasi"><i class="icon-user-unfollow"></i></button>`:`<button class='btl-konfirmasi-pkt'>Batal Konfirmasi</button>`;
                 }
                 if(tabel === 'staf'){
                     return !params.data.isConfirmed?`<button class='ubah-status-pkt'>Ubah Status</button> <button class='konfirmasi-pkt'>Konfirmasi</button> <button class='btl-pkt' title="Batalkan Notifikasi"><i class="icon-user-unfollow"></i></button>`:`<button class='ubah-status-pkt'>Ubah Status</button> <button class='btl-konfirmasi-pkt'>Batal Konfirmasi</button>`;
@@ -600,15 +662,17 @@
             },
             initPangkatNotif: function() {
                 var tabel = $('[name="radio_notif_pkt"]:checked').val();
-                if( tabel === 'staf' && this.active_tab === 'pangkat_tab' ){
-                    socket.emit('get all pangkat notif', '', this.addData.bind(this));
-                } else if ( tabel === 'atasan' && this.active_tab === 'pangkat_tab' ) {
-                    socket.emit('get all pangkat atasan notif', '', this.addData.bind(this));
-                } else if ( tabel === 'no' && this.active_tab === 'pangkat_tab' ) {
-                    socket.emit('get all pangkat no notif', 'pangkat', this.addData.bind(this));
-                }  else if ( tabel === 'kepeg' && this.active_tab === 'pangkat_tab' ) {
-                    socket.emit('get all pangkat kepeg notif', 'pangkat', this.addData.bind(this));
-                }                
+                socket.emit('get all notif', {tabel: tabel, tab: this.active_tab}, this.addData.bind(this));
+
+                // if( tabel === 'staf' && this.active_tab === 'pangkat_tab' ){
+                //     socket.emit('get all pangkat notif', '', this.addData.bind(this));
+                // } else if ( tabel === 'atasan' && this.active_tab === 'pangkat_tab' ) {
+                //     socket.emit('get all pangkat atasan notif', '', this.addData.bind(this));
+                // } else if ( tabel === 'no' && this.active_tab === 'pangkat_tab' ) {
+                //     socket.emit('get all pangkat no notif', 'pangkat', this.addData.bind(this));
+                // }  else if ( tabel === 'kepeg' && this.active_tab === 'pangkat_tab' ) {
+                //     socket.emit('get all pangkat kepeg notif', 'pangkat', this.addData.bind(this));
+                // }                
             },
             destroy: function(e){
                 this.gridOptions.api.destroy();
@@ -620,23 +684,7 @@
 
         }
 
-
-        // var General = {
-        //     init: function() {
-        //         this.cacheDOM();
-        //         this.bindEvents();
-        //         console.log('okay')
-        //     },
-        //     cacheDOM: function() {
-        //         this.$main_window = $( '#main-window' );
-        //     },
-        //     bindEvents: function(){
-                
-        //     }
-        // }
-
         PktTab.init();
-        // General.init();
 
     })()
 

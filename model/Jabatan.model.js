@@ -7,12 +7,10 @@ var JabatanSchema = new Schema({
     bup: Number,
     type: String,
     eselon: String,
-    user: [
-        {
-            type: String,
-            ref: 'User'
-        }
-    ],
+    user: {
+        type: String,
+        ref: 'User'
+    },
     daftar_bawahan: [
         {
             type: String,

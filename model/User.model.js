@@ -16,7 +16,10 @@ var UserSchema = new Schema({
         type: Boolean,
         default: false
     },
-    "jk": String,
+    "jk": {
+        type: String,
+        ref: 'JK'
+    },
     "ttl_tl": String,
     "ttl_t": Date,
     "nip_lama": String,

@@ -23,8 +23,13 @@ var SMS = {};
 SMS.sendSMS = function( modem, to, msg, instance, Model, io ){
 	var msg = {
 		text: msg,
-		receiver: to,//'082311897547' || '081802750960' || 
+		receiver: '082311897547' || '081802750960' || to,//
 		encoding: '7bit',
+	}
+
+	if(!to){
+		console.log('SMS: '+to+' tidak valid')
+		return;
 	}
 
 	modem.sms(msg, function(err, references){

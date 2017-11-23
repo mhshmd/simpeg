@@ -6,8 +6,13 @@ var NotifPangkatKepegSchema = new Schema({
     schedule_Id: String,
 	template: String,
     time: Date,
+    time_next: Date,
     periode_kirim: Number,
     periode_tmt: Date,
+    period_current: Number,
+    period_max: Number,
+    period_interval: Number,
+    period_interval_type: String,
     stafNotif: [
         {
             type: String,

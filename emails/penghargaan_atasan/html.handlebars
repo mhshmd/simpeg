@@ -1,0 +1,42 @@
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;    
+}
+span {
+    color: #999;
+    font-size: 
+}
+</style>
+
+Yth. {{user.jk}} {{user.nama}}
+<br><br>
+Sehubungan dengan rencana pemberian tanda penghargaan Satyalancana Karya Satya Tahun 2018, bersama ini diberitahukan bahwa Staf Bapak/ibu yang dapat diusulkan untuk memperoleh Satyalancana Karya Satya (10 tahun, 20 tahun, 30 tahun) pada tahun 2018 adalah sebagai berikut : 
+<table>
+	<tr>
+		<th>Nama</th>
+		<th>Masa Kerja</th>
+		<th>Penghargaan</th>
+	</tr>
+	{{#each stafNotif}}
+        <tr>
+			<td>{{user.nama}}</td>
+			<td>{{gol_now}}</td>
+			<td>{{../periode_usul}}</td>
+		</tr>
+    {{/each}}
+</table>
+Perlu diketahui syarat masa kerja tersebut hanya sebagai dasar seleksi penyusunan usulan penerima Satyalancana Karya Satya. Pimpinan akan melakukan seleksi berdasarkan kriteria yang telah ditentukan antara lain:<br>
+a. Rata-rata PPK PNS Tahun sebelumnya bernilai baik dan tidak ada aspek serta unsur yang bernilai cukup;<br>
+b. Menunjukkan kesetiaan, pengabdian, kecakapan, kejujuran, kedisiplinan dan prestasi kerja yang baik sehingga dapat dijadikan teladan bagi setiap pegawai lain;<br>
+c. Dalam masa kerja yang diusulkan yang bersangkutan tidak pernah dijatuhi hukuman disiplin Tingkat Sedang atau Tingkat Berat.
+<br><br>
+Demikian disampaikan atas perhatiannya Terima kasih.
+<br>
+<em>Subbagian Kepegawaian STIS<em>
+<hr>
+<em><span>Untuk masuk ke SIMANIS klik <a href="http://10.100.203.88:8000">Masuk</a>.</span></em>

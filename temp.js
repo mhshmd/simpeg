@@ -1,5 +1,21 @@
 // db.copyDatabase("simpeg","simanis","localhost")
-// use simpeg;
+// use simanis;
+
+// db.jk.insert([
+
+// {
+//     _id: 'L',
+//     label: 'Laki-laki',
+//     label2: 'Bapak',
+// },
+// {
+//     _id: 'P',
+//     label: 'Perempuan',
+//     label2: 'Ibu',
+// }
+
+// ])
+
 // show collections
 // db.user.insert({
 // 	"email" : "shamad@stis.ac.id",
