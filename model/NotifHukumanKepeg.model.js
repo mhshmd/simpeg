@@ -2,12 +2,23 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var NotifKGBSchema = new Schema({
+var NotifHukumanKepegSchema = new Schema({
     schedule_Id: String,
 	template: String,
     time: Date,
+    time_next: Date,
     periode_kirim: Number,
-    periode_kgb: Date,
+    periode_tmt: Date,
+    period_current: Number,
+    period_max: Number,
+    period_interval: Number,
+    period_interval_type: String,
+    stafNotif: [
+        {
+            type: String,
+            ref: 'NotifHukuman'
+        }
+    ],
     active: {
         type: Boolean,
         default: true,
@@ -26,6 +37,6 @@ var NotifKGBSchema = new Schema({
         ref: 'User'
     },
     unsubscribe_token: String
-}, { collection: 'notif_kgb' });
+}, { collection: 'notif_hukuman_kepeg' });
 
-module.exports = mongoose.model('NotifKGB', NotifKGBSchema);
+module.exports = mongoose.model('NotifHukumanKepeg', NotifHukumanKepegSchema);

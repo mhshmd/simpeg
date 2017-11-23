@@ -312,8 +312,8 @@
             btl_konfirmasi_pktHandle: function(){
                 var selectedData = this.gridOptions.api.getSelectedRows()[0];
                 var this_outer = this;
-                selectedData.type = $('[name="radio_notif_pkt"]:checked').val();
-                socket.emit('batal konfirmasi notif kenaikan pangkat', selectedData, function(status){
+                var tabel = $('[name="radio_notif_pkt"]:checked').val();
+                socket.emit('batal konfirmasi', {param: {tabel: tabel, tab: this.active_tab}, data: selectedData}, function(status){
                     if(status){
                         selectedData.isConfirmed = false;
                         selectedData.pilihan = `<button class='ubah-status-pkt'>Ubah Status</button> <button class='konfirmasi-pkt'>Konfirmasi</button> <button class='btl-pkt'><i class="icon-user-unfollow"></i></button>`
@@ -325,8 +325,8 @@
             btl_pktHandle: function(){
                 var selectedData = this.gridOptions.api.getSelectedRows()[0];
                 var this_outer = this;
-                selectedData.type = $('[name="radio_notif_pkt"]:checked').val();
-                socket.emit('hapus notif kenaikan pangkat', selectedData, function(status){
+                var tabel = $('[name="radio_notif_pkt"]:checked').val();
+                socket.emit('hapus notif', {param: {tabel: tabel, tab: this.active_tab}, data: selectedData}, function(status){
                     if(status){
                         selectedData.active = false;
                         selectedData.pilihan = `<button class='restore-pkt'><i class="fa fa-reply fa-lg"></i></button>`
@@ -555,13 +555,7 @@
                     // if(tabel === 'staf' && this.active_tab === 'pangkat_tab'){
                     //     socket.emit('ganti waktu kirim pkt', this.gridOptions.api.getSelectedRows()[0], this.gantiWaktuKirim.bind(this))
                     // } else 
-                    if (tabel === 'atasan' && this.active_tab === 'pangkat_tab') {
-                        socket.emit('ganti waktu kirim atasan pkt', this.gridOptions.api.getSelectedRows()[0], this.gantiWaktuKirim.bind(this))
-                    } else if (tabel === 'kepeg' && this.active_tab === 'pangkat_tab') {
-                        socket.emit('ganti waktu kirim kepeg pkt', this.gridOptions.api.getSelectedRows()[0], this.gantiWaktuKirim.bind(this))
-                    } else {
-                        socket.emit('ganti waktu kirim', {tabel: tabel, tab: this.active_tab, instance: this.gridOptions.api.getSelectedRows()[0]}, this.gantiWaktuKirim.bind(this))
-                    }
+                    socket.emit('ganti waktu kirim', {tabel: tabel, tab: this.active_tab, instance: this.gridOptions.api.getSelectedRows()[0]}, this.gantiWaktuKirim.bind(this))
                 }
             },
             gantiWaktuKirim: function(respon) {
@@ -632,14 +626,12 @@
                 if(!params.value) return 'Belum';
                 if (  _.contains(['atasan', 'kepeg'], tabel)  ) {
                     if(params.value instanceof Array && params.value[0]){
-                        console.log(params.colDef.headerName)
                         date = (params.colDef.headerName === 'STIS')?params.value[0].bu_stis:params.value[0].bu_bps;
                     }
                 }
                 return moment(date).format('DD/MM/YYYY')
             },
             addData: function(newData){
-                console.log(newData)
                 this.gridOptions.api.updateRowData( { add: newData } );
             },    
             btnInCellRenderer: function(params){
@@ -662,17 +654,7 @@
             },
             initPangkatNotif: function() {
                 var tabel = $('[name="radio_notif_pkt"]:checked').val();
-                socket.emit('get all notif', {tabel: tabel, tab: this.active_tab}, this.addData.bind(this));
-
-                // if( tabel === 'staf' && this.active_tab === 'pangkat_tab' ){
-                //     socket.emit('get all pangkat notif', '', this.addData.bind(this));
-                // } else if ( tabel === 'atasan' && this.active_tab === 'pangkat_tab' ) {
-                //     socket.emit('get all pangkat atasan notif', '', this.addData.bind(this));
-                // } else if ( tabel === 'no' && this.active_tab === 'pangkat_tab' ) {
-                //     socket.emit('get all pangkat no notif', 'pangkat', this.addData.bind(this));
-                // }  else if ( tabel === 'kepeg' && this.active_tab === 'pangkat_tab' ) {
-                //     socket.emit('get all pangkat kepeg notif', 'pangkat', this.addData.bind(this));
-                // }                
+                socket.emit('get all notif', {tabel: tabel, tab: this.active_tab}, this.addData.bind(this));         
             },
             destroy: function(e){
                 this.gridOptions.api.destroy();

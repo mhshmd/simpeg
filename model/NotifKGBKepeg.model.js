@@ -2,28 +2,28 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var NotifAbsensiSchema = new Schema({
+var NotifKGBKepegSchema = new Schema({
     schedule_Id: String,
-    template: String,
+	template: String,
     time: Date,
     time_next: Date,
+    periode_kirim: Number,
+    periode_tmt: Date,
     period_current: Number,
     period_max: Number,
     period_interval: Number,
     period_interval_type: String,
-    isConfirmed: Date,
+    stafNotif: [
+        {
+            type: String,
+            ref: 'NotifKGB'
+        }
+    ],
     active: {
         type: Boolean,
         default: true,
     },
-    support_email: {
-        type: Boolean,
-        default: true,
-    },
-    support_sms: {
-        type: Boolean,
-        default: true,
-    },
+    isConfirmed: Date,
     isSent_email: {
         type: Boolean,
         default: false,
@@ -36,6 +36,7 @@ var NotifAbsensiSchema = new Schema({
         type: String,
         ref: 'User'
     },
-}, { collection: 'notif_absensi' });
+    unsubscribe_token: String
+}, { collection: 'notif_kgb_kepeg' });
 
-module.exports = mongoose.model('NotifAbsensi', NotifAbsensiSchema);
+module.exports = mongoose.model('NotifKGBKepeg', NotifKGBKepegSchema);

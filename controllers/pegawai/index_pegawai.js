@@ -8,8 +8,8 @@ var index = express.Router();
 //load model User
 var User = require('../../model/User.model');
 var NotifPangkat = require('../../model/NotifPangkat.model');
-var NotifPangkatAtasan = require('../../model/NotifPangkatAtasan');
-var NotifPangkatKepeg = require('../../model/NotifPangkatKepeg');
+var NotifPangkatAtasan = require('../../model/NotifPangkatAtasan.model');
+var NotifPangkatKepeg = require('../../model/NotifPangkatKepeg.model');
 
 //load crypto utk hashing password
 var crypto = require('crypto');
