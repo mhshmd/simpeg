@@ -4,14 +4,8 @@ var Schema = mongoose.Schema;
 
 var NotifPensiunSchema = new Schema({
     schedule_Id: String,
-    gol_target: String,
-	gol_now: String,
 	template: String,
     time: Date,
-    time_next: Date,
-    bu_stis: Date,
-    bu_bps: Date,
-    periode_tmt: Date,
     period_current: Number,
     period_max: Number,
     period_interval: Number,
@@ -51,7 +45,6 @@ var NotifPensiunSchema = new Schema({
         type: String,
         ref: 'User'
     },
-    unsubscribe_token: String
 }, { collection: 'notif_pensiun' });
 
 module.exports = mongoose.model('NotifPensiun', NotifPensiunSchema);

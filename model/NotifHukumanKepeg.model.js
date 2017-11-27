@@ -19,6 +19,14 @@ var NotifHukumanKepegSchema = new Schema({
             ref: 'NotifHukuman'
         }
     ],
+    support_email: {
+        type: Boolean,
+        default: true,
+    },
+    support_sms: {
+        type: Boolean,
+        default: false,
+    },
     active: {
         type: Boolean,
         default: true,

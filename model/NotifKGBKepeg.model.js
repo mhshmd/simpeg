@@ -8,7 +8,7 @@ var NotifKGBKepegSchema = new Schema({
     time: Date,
     time_next: Date,
     periode_kirim: Number,
-    periode_tmt: Date,
+    periode_kgb: Date,
     period_current: Number,
     period_max: Number,
     period_interval: Number,
@@ -19,6 +19,14 @@ var NotifKGBKepegSchema = new Schema({
             ref: 'NotifKGB'
         }
     ],
+    support_email: {
+        type: Boolean,
+        default: true,
+    },
+    support_sms: {
+        type: Boolean,
+        default: false,
+    },
     active: {
         type: Boolean,
         default: true,

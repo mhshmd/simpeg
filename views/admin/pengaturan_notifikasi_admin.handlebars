@@ -9,7 +9,10 @@
                                 <a id="pengiriman_tab" class="nav-link active" data-toggle="tab" href="#pengirimanchild" role="tab" aria-control="pengirimanchild"><i class="icon-clock"></i> Pengiriman</a>
                             </li> -->
                             <li class="nav-item">
-                                <a id="status_tab" class="nav-link active" data-toggle="tab" href="#statuschild" role="tab" aria-control="statuschild"><i class="icon-directions"></i> Status</a>
+                                <a id="status_tab" class="nav-link active notif-tab" data-toggle="tab" href="#statuschild" role="tab" aria-control="statuschild"><i class="icon-directions"></i> Status</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="hukuman_tab" class="nav-link notif-tab" data-toggle="tab" href="#hukumanchild" role="tab" aria-control="hukumanchild"><i class="icon-directions"></i> Jenis Hukuman</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -117,39 +120,12 @@
                             </div> -->
                             <div class="tab-pane active" id="statuschild" role="tabpanel">
                                 <div class="row">
-                                    <div class="col-md-4" style="padding-left: 0">
-                                    	<div class="form-group row">
-				                            <label class="col-md-3 form-control-label">Jenis Notifikasi</label>
-				                            <div class="col-md-8">
-				                            	<div id="div-jbt-nama">
-					                                <select id="field-jenis-notif" name="jenis_notif" class="form-control input-lg" size="1">
-					                                    <option value="1">Kenaikan Pangkat</option>
-					                                    <option value="2">Kenaikan Gaji Berkala (KGB)</option>
-					                                    <option value="3">Pensiun</option>
-					                                    <option value="4">Penghargaan Tanda Jasa</option>
-					                                    <option value="5">Pembebasan Hukuman Disiplin</option>
-					                                    <option value="6">Presensi</option>
-					                                </select>
-				                            	</div>
-				                            </div>
-				                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-3 form-control-label">Posisi Status<span> *</span></label>
-                                            <div class="col-md-8">
-                                                <input id="pos-status" type='number' min="1" class="form-control" name="pos_status" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-3 form-control-label">Status<span> *</span></label>
-                                            <div class="col-md-8">
-                                                <textarea id="status" name="status" rows="3" class="form-control"></textarea>
-                                            </div>
-                                        </div>
-                                        <button id="button-submit-tambah-status" type="submit" class="btn btn-primary">Simpan</button>
+                                    <div id="form-target" class="col-md-4" style="padding-left: 0">
+                                        
                                     </div>
                                     <div class="col-md-6">
-				                		<div id="tabelDaftarStatus" style="height: 300px;width:100%" class="ag-blue"></div>
-				                	</div>
+                                        <div id="tabelDaftarStatus" style="height: 300px;width:100%" class="ag-blue"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -172,12 +148,78 @@
                 // {_id: 1, status: 'Nominasi Kenaikan Pangkat diumumkan'}
             ],
             target_posisi: null,
+            active_tab: 'status_tab',
             //umum
             init: function() {
+                this.initForm();
                 this.cacheDOM();
                 this.bindEvents();
                 this.registerAgComponent();
                 this.initStatus();
+            },
+            initForm: function(){
+                if (this.active_tab === 'status_tab') {
+                    $('#form-target').html(`
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label">Jenis Notifikasi</label>
+                            <div class="col-md-8">
+                                <div id="div-jbt-nama">
+                                    <select id="field-jenis-notif" name="jenis_notif" class="form-control input-lg" size="1">
+                                        <option value="1">Kenaikan Pangkat</option>
+                                        <option value="2">Kenaikan Gaji Berkala (KGB)</option>
+                                        <option value="3">Pensiun</option>
+                                        <option value="4">Penghargaan Tanda Jasa</option>
+                                        <option value="5">Pembebasan Hukuman Disiplin</option>
+                                        <option value="6">Presensi</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label">Posisi Status<span> *</span></label>
+                            <div class="col-md-8">
+                                <input id="pos-status" type='number' min="1" class="form-control" name="pos_status" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label">Status<span> *</span></label>
+                            <div class="col-md-8">
+                                <textarea id="status" name="status" rows="3" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <button id="button-submit-tambah-status" type="submit" class="btn btn-primary">Simpan</button>
+                    `)
+                } else {
+                    $('#form-target').html(`
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label">Nama Hukuman<span> *</span></label>
+                            <div class="col-md-8">
+                                <textarea id="hkm-label" name="hkm_label" rows="3" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 15px">
+                            <label class="col-md-3 form-control-label">Jenis Hukuman</label>
+                            <div class="col-md-6">
+                                <label class="radio-inline">
+                                    <input type="radio" id="hkm_jenisR" name="hkm_jenis" value="Ringan" checked="checked">  Ringan
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="hkm_jenisS" name="hkm_jenis" value="Sedang">  Sedang
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="hkm_jenisB" name="hkm_jenis" value="Berat">  Berat
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label">Masa Berlaku (Bulan)<span> *</span></label>
+                            <div class="col-md-5">
+                                <input id="masa-berlaku" type='number' min="1" value=1 class="form-control" name="masa_berlaku" required>
+                            </div>
+                        </div>
+                        <button id="button-submit-tambah-hukum" type="submit" class="btn btn-primary">Simpan</button>
+                    `)
+                }
             },
             cacheDOM: function() {
                 this.$main_window = $( '#main-window' );
@@ -188,12 +230,19 @@
                 this.$pos_status = $( '#pos-status' )
             },
             bindEvents: function() {
-                this.$button_submit_tambah_status.click(this.button_submit_tambah_statusHandler.bind(this));
+                this.$main_window.on('click', '#button-submit-tambah-status', this.button_submit_tambah_statusHandler.bind(this))
+                this.$main_window.on('click', '#button-submit-tambah-hukum', this.button_submit_tambah_hukumHandler.bind(this))
 
                 this.$main_window.on('click', '.hapus-status', this.hapus_statusHandle.bind(this))
                 this.$main_window.on('click', '.edit-status', this.btnEditHandle.bind(this))
 
                 this.$main_window.on('change', '#field-jenis-notif', this.initStatus.bind(this));
+
+                this.$main_window.on('click', '.notif-tab', this.kgb_tabHandler.bind(this))
+            },
+            kgb_tabHandler: function(e){
+                this.active_tab = e.currentTarget.id;
+                this.destroy();
             },
             hapus_statusHandle: function(){
                 var selectedData = this.gridOptions.api.getSelectedRows()[0];
@@ -214,21 +263,60 @@
                     }
                 });
             },
+            button_submit_tambah_hukumHandler: function() {
+                var this_outer = this;
+                if(this.hkm_id){
+                    socket.emit('edit hukum notif', {_id: this.hkm_id, hkm_jenis: $('input[name=hkm_jenis]:checked').val(), hkm_label: $('#hkm-label').val(), 
+                        masa_berlaku: $('#masa-berlaku').val()}, function(response){
+                        if(response){
+                            this_outer.initStatus()
+                            this_outer.resetForm()
+                        }
+                    });
+                } else {
+                    socket.emit('tambah hukum notif', {hkm_jenis: $('input[name=hkm_jenis]:checked').val(), hkm_label: $('#hkm-label').val(), 
+                        masa_berlaku: $('#masa-berlaku').val()}, function(response){
+                        if(response){
+                            // this_outer.addData([{_id: response._id, pos_status: this_outer.$pos_status.val(), label: this_outer.$status.val()}])
+                            this_outer.initStatus()
+                            this_outer.resetForm()
+                        }
+                    });
+                }
+            },
             resetForm: function(){
-                this.$pos_status.val('')
-                this.$status.val('')
-                this.target_posisi = null;
+                var selectedData = this.gridOptions.api.getSelectedRows()[0];
+                if (this.active_tab === 'status_tab') {
+                    this.$pos_status.val('')
+                    this.$status.val('')
+                    this.target_posisi = null;
+                } else {
+                    this.hkm_id = null;
+                    $('#hkm-label').val(``)
+                    $('#hkm_jenisR').prop("checked", true)
+                    $('#masa-berlaku').val(``)
+                }
             },
             addData: function(newData){
                 this.gridOptions.api.updateRowData( { add: newData } );
             },
             //>Ag Comp
             registerAgComponent: function(){
-                this.columnDefs = [
-                    {headerName: "Posisi", field: "pos_status", width: 50},
-                    {headerName: "Status", field: "label", width: 500},
-                    {headerName: "Pilihan", field: "pilihan", width: 120, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
-                ]
+                if (this.active_tab === 'status_tab') {
+                    this.columnDefs = [
+                        {headerName: "Posisi", field: "pos_status", width: 50},
+                        {headerName: "Status", field: "label", width: 500},
+                        {headerName: "Pilihan", field: "pilihan", width: 120, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else {
+                    this.columnDefs = [
+                        {headerName: "Jenis Hukuman", field: "hkm_jenis", width: 110},
+                        {headerName: "Hukuman", field: "hkm_label", width: 300},
+                        {headerName: "Masa Berlaku", field: "masa_berlaku", width: 100},
+                        {headerName: "Pilihan", field: "pilihan", width: 120, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                }
+                
                 this.gridOptions = {
                     columnDefs: this.columnDefs,
                     rowData: this.rowData,
@@ -252,21 +340,43 @@
             },
             btnEditHandle: function (e) {
                 var selectedData = this.gridOptions.api.getSelectedRows()[0];
-                this.target_posisi = selectedData.pos_status;
-                this.$pos_status.val(selectedData.pos_status)
-                this.$status.val(selectedData.label)
+                if (this.active_tab === 'status_tab') {
+                    this.target_posisi = selectedData.pos_status;
+                    this.$pos_status.val(selectedData.pos_status)
+                    this.$status.val(selectedData.label)
+                } else {
+                    this.hkm_id = selectedData._id;
+                    $('#hkm-label').val(selectedData.hkm_label)
+                    $('#hkm_jenis'+selectedData.hkm_jenis.charAt(0)).prop("checked", true)
+                    $('#masa-berlaku').val(selectedData.masa_berlaku)
+                }
             },
             initStatus: function(){
-                socket.emit('ambil semua status', this.$field_jenis_notif.val(), this.initNotifDataTbl.bind(this))
+                if (this.active_tab === 'status_tab') {
+                    socket.emit('ambil semua status', this.$field_jenis_notif.val(), this.initNotifDataTbl.bind(this))
+                } else {
+                    socket.emit('ambil semua hukuman', '', this.initNotifDataTbl.bind(this))
+                }
             },
             initNotifDataTbl: function(all_status){
                 this.gridOptions.api.setRowData([]);
-                var stats = []
-                _.each(all_status.status, function(stat, index, list){
-                    stats.push({_id: stat._id, jenis: all_status.jenis, pos_status: stat.posisi, label: stat.label})
-                })
-                stats = _.sortBy(stats, function(o) { return o.pos_status; })
-                this.addData(stats)
+                if (this.active_tab === 'status_tab') {
+                    var stats = []
+                    _.each(all_status.status, function(stat, index, list){
+                        stats.push({_id: stat._id, jenis: all_status.jenis, pos_status: stat.posisi, label: stat.label})
+                    })
+                    stats = _.sortBy(stats, function(o) { return o.pos_status; })
+                    this.addData(stats)
+                } else {
+                    this.addData(all_status)
+                }
+            },
+            destroy: function(e){
+                this.gridOptions.api.destroy();
+                this.initForm()
+                this.cacheDOM();
+                this.registerAgComponent();
+                this.initStatus();
             }
 
         }

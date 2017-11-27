@@ -50,7 +50,10 @@ var UserSchema = new Schema({
     "sertifikasi": String,
     "hrg_jenis": String,
     "hrg_th": Number,
-    "hkm_jenis": String,
+    "hkm_jenis": {
+        type: String,
+        ref: 'JenisHukuman'
+    },
     "hkm_tmt": String,
     "telp": String,
     "email": String,

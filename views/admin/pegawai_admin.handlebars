@@ -283,11 +283,12 @@
                                                 <div class="form-group row">
                                                     <label class="col-md-3 form-control-label">Hukuman Disiplin</label>
                                                     <div class="col-md-6">
-                                                        <input type='text-input' class="form-control" name="hkm_jenis">
-                                                        <span class="help-block text-muted">Jenis</span>
+                                                        <select id="field-hkm_jenis" name="hkm_jenis" class="form-control input-lg" size="1">
+                                                        </select>
+                                                        <span class="help-block text-muted">Jenis</span> 
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <input type='text-input' class="form-control date" name="hkm_tmt">
+                                                        <input id="tmt_hukuman" type='text-input' class="form-control date" name="hkm_tmt">
                                                         <span class="help-block text-muted">TMT</span>
                                                     </div>
                                                 </div>
@@ -474,6 +475,7 @@
                 });
                 this.$form_admin_tambah_pgw.on( 'submit', this.submitTbhEditPgw.bind( this ) )
                 $( '#field-jbt_nama' ).change(this.field_jbt_namaHandle.bind(this));
+                $( '#field-hkm_jenis' ).change(this.field_hkm_jenisHandle.bind(this));
                 function readURL(input) {
                     if (input.files && input.files[0]) {
                         var reader = new FileReader();
@@ -533,6 +535,14 @@
             field_jbt_namaHandle: function(e) {
                 $( '#bup' ).val($('#field-jbt_nama option[value='+$( '#field-jbt_nama' ).val()+']').attr('bup'));
                 this.field_nip_baruBlurHandler()
+            },
+            field_hkm_jenisHandle: function(e) {
+                // $( '#bup' ).val($('#field-jbt_nama option[value='+$( '#field-jbt_nama' ).val()+']').attr('bup'));
+                if($( '#field-hkm_jenis' ).val() === 'tidak ada'){
+                    $("#tmt_hukuman").val('');
+                }else {
+                    $("#tmt_hukuman").val(moment().format('DD/MM/YYYY'));
+                }
             },
             registerSocketIOAndEvents: function(){
             },
@@ -796,7 +806,7 @@
                         } else if( $elem.get(0).tagName === 'INPUT' ){
                             if ( key == 'jk' ) {
                                 $("#jk"+data_pegawai[key]).prop("checked", true)
-                            } else if ( _.contains(['pkt_tmt', 'tmt_cpns', 'tmt_pns', 'pensiun', 'ttl_t', 'periode_kgb'], key) ) {
+                            } else if ( _.contains(['pkt_tmt', 'tmt_cpns', 'tmt_pns', 'pensiun', 'ttl_t', 'periode_kgb', 'tmt_hukuman'], key) ) {
                                 $elem.val( this.dateCellRenderer({value: data_pegawai[key]}) );
                             } else if ( key == 'isTb' ) {
                                 if(data_pegawai[key]){
@@ -913,6 +923,7 @@
             },
             initSelectJbt: function(){
                 socket.emit('getAllJabatan', 'from_pengaturan_pgw_admin', this.setJbtSelect.bind(this))
+                socket.emit('getAllHukuman', 'from_pengaturan_pgw_admin', this.setHkmSelect.bind(this))
             },
             setJbtSelect: function(all_jabatan) {
                 var jbt_opt = '';
@@ -920,6 +931,13 @@
                     jbt_opt += '<option bup='+jbt.bup+' value='+jbt._id+' >' + jbt.jbt_nama + '</option>'
                 })
                 $( '#field-jbt_nama' ).html(jbt_opt);
+            },
+            setHkmSelect: function(all_hukuman) {
+                var hkm_opt = '<option value="tidak ada" >Tidak ada</option>';
+                _.each(all_hukuman, function(hkm, i, list){
+                    hkm_opt += '<option mb='+hkm.masa_berlaku+' value='+hkm._id+' >' + hkm.hkm_label + '</option>'
+                })
+                $( '#field-hkm_jenis' ).html(hkm_opt);
             },
         }
 

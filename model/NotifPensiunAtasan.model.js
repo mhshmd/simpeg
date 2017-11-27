@@ -7,6 +7,7 @@ var NotifPensiunAtasanSchema = new Schema({
 	template: String,
     time: Date,
     time_next: Date,
+    pensiun: Date,
     periode_kirim: Number,
     periode_tmt: Date,
     period_current: Number,
@@ -19,6 +20,14 @@ var NotifPensiunAtasanSchema = new Schema({
             ref: 'NotifPensiun'
         }
     ],
+    support_email: {
+        type: Boolean,
+        default: true,
+    },
+    support_sms: {
+        type: Boolean,
+        default: false,
+    },
     active: {
         type: Boolean,
         default: true,

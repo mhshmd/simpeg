@@ -4,14 +4,13 @@ var Schema = mongoose.Schema;
 
 var NotifPenghargaanSchema = new Schema({
     schedule_Id: String,
-    gol_target: String,
-	gol_now: String,
 	template: String,
     time: Date,
     time_next: Date,
-    bu_stis: Date,
-    bu_bps: Date,
-    periode_tmt: Date,
+    masa_kerja: Number,
+    hrg_target: String,
+    hrg_thn: Number,
+    hrg_thn2: Number,
     period_current: Number,
     period_max: Number,
     period_interval: Number,

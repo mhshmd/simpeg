@@ -4,18 +4,15 @@ var Schema = mongoose.Schema;
 
 var NotifHukumanSchema = new Schema({
     schedule_Id: String,
-    gol_target: String,
-	gol_now: String,
 	template: String,
+    akhir_hukuman: String,
     time: Date,
     time_next: Date,
-    bu_stis: Date,
-    bu_bps: Date,
-    periode_tmt: Date,
     period_current: Number,
     period_max: Number,
     period_interval: Number,
     period_interval_type: String,
+    isConfirmed: Date,
     support_email: {
         type: Boolean,
         default: true,
@@ -28,7 +25,6 @@ var NotifHukumanSchema = new Schema({
         type: Boolean,
         default: true,
     },
-    isConfirmed: Date,
     isSent_email: {
         type: Boolean,
         default: false,

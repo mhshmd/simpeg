@@ -141,16 +141,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <table id="table-detail" class="notif" width="100%">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2">Nama</th>
-                                    <th colspan="2">Golongan</th>
-                                    <th rowspan="2">Periode</th>
-                                </tr>
-                                <tr>
-                                    <th>Saat ini</th>
-                                    <th>Target</th>
-                                </tr>
+                            <thead id="thead-table-detail">
+                                
                             </thead>
                             <tbody>
                             </tbody>
@@ -219,28 +211,53 @@
                 var tabel = $('[name="radio_notif_pkt"]:checked').val();
                 var selectedData = this.gridOptions.api.getSelectedRows()[0];
                 var this_outer = this;
-                var child = _.map(selectedData.stafNotif, function(staf){
-                    return `<tr>
-                                <td>`+staf.user.nama+`</td>
-                                <td>`+this_outer.pkt_golCellRenderer({value: staf.gol_now})+`</td>
-                                <td>`+this_outer.pkt_golCellRenderer({value: staf.gol_target})+`</td>
-                                <td>`+this_outer.buCellRenderer({value: staf.periode_tmt})+`</td>
-                            </tr>`
-                });
+                var child;
 
                 $('#table-detail tbody').html('')
 
-                if( tabel === 'atasan' && this.active_tab === 'pangkat_tab' ){
+                if( this.active_tab === 'pangkat_tab' ){
                     this.$title_modal_detail.html('Detail Staf')
-                    $('#table-detail tbody').append(
-                        child
+                    $('#thead-table-detail').html(
+                        `<tr>
+                            <th rowspan="2">Nama</th>
+                            <th colspan="2">Golongan</th>
+                            <th rowspan="2">Periode</th>
+                        </tr>
+                        <tr>
+                            <th>Saat ini</th>
+                            <th>Target</th>
+                        </tr>`
                     )
-                } else if (tabel === 'kepeg' && this.active_tab === 'pangkat_tab') {
-                    this.$title_modal_detail.html('Detail Pegawai Yang Akan Naik Pangkat')
                     $('#table-detail tbody').append(
-                        child
+                        _.map(selectedData.stafNotif, function(staf){
+                            return `<tr>
+                                        <td>`+staf.user.nama+`</td>
+                                        <td>`+this_outer.pkt_golCellRenderer({value: staf.gol_now})+`</td>
+                                        <td>`+this_outer.pkt_golCellRenderer({value: staf.gol_target})+`</td>
+                                        <td>`+this_outer.buCellRenderer({value: staf.periode_tmt})+`</td>
+                                    </tr>`
+                        })
+                    )
+                } else if (this.active_tab === 'kgb_tab') {
+                    this.$title_modal_detail.html('Detail Pegawai Yang Akan Naik Pangkat')
+                    $('#thead-table-detail').html(
+                        `<tr>
+                            <th>Nama</th>
+                            <th>TMT CPNS</th>
+                            <th>Periode KGB</th>
+                        </tr>`
+                    )
+                    $('#table-detail tbody').append(
+                        _.map(selectedData.stafNotif, function(staf){
+                            return `<tr>
+                                        <td>`+staf.user.nama+`</td>
+                                        <td>`+this_outer.buCellRenderer({value: staf.user.tmt_cpns})+`</td>
+                                        <td>`+this_outer.buCellRenderer({value: staf.user.periode_kgb})+`</td>
+                                    </tr>`
+                        })
                     )
                 }
+
                 this.$modal_detail.modal('show');
             },
             kgb_tabHandler: function(e){
@@ -251,11 +268,16 @@
                     $( '#n_pkt_atasan' ).prop("disabled", true);
                     $( '#n_pkt_kepeg' ).prop("disabled", true);
                     $( '#n_pkt_no' ).prop("disabled", true);
-                } else {
+                } else if(_.contains(['pangkat_tab', 'ptj_tab'], this.active_tab)){
                     $( '#n_pkt_staf' ).prop("disabled", false);
                     $( '#n_pkt_atasan' ).prop("disabled", false);
                     $( '#n_pkt_kepeg' ).prop("disabled", false);
                     $( '#n_pkt_no' ).prop("disabled", false);
+                } else {
+                    $( '#n_pkt_staf' ).prop("disabled", false);
+                    $( '#n_pkt_atasan' ).prop("disabled", false);
+                    $( '#n_pkt_kepeg' ).prop("disabled", false);
+                    $( '#n_pkt_no' ).prop("disabled", true);
                 }
                 this.destroy();
             },
@@ -400,14 +422,7 @@
                         {headerName: "Atasan", field: "jbt_nama.user.nama", width: 250, pinned: 'left'},
                         {headerName: "Jabatan", field: "jbt_nama.jbt_nama", width: 250},
                         {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
-                        {
-                            headerName: 'Notifikasi',
-                            children: [
-                                {headerName: "Periode", field: "period_current", width: 60},
-                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
-                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
-                            ]
-                        },
+                        {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
                         {
                             headerName: 'Batas Pengusulan',
                             children: [
@@ -426,19 +441,12 @@
                         {headerName: "Email", field: "jbt_nama.user.email", width: 150},
                         {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
                     ]
-                }  else if (tabel == 'kepeg' && this.active_tab === 'pangkat_tab') {
+                } else if (tabel == 'kepeg' && this.active_tab === 'pangkat_tab') {
                     this.columnDefs = [
                         {headerName: "Nama", field: "user.nama", width: 250, pinned: 'left'},
                         {headerName: "Jabatan", field: "user", width: 250, cellRenderer: this.JbtCellRenderer},
                         {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
-                        {
-                            headerName: 'Notifikasi',
-                            children: [
-                                {headerName: "Periode", field: "period_current", width: 60},
-                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
-                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
-                            ]
-                        },
+                        {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
                         {
                             headerName: 'Batas Pengusulan',
                             children: [
@@ -474,8 +482,77 @@
                 } else if (tabel == 'staf' && this.active_tab === 'kgb_tab') {
                     this.columnDefs = [
                         {headerName: "Pegawai Tujuan", field: "user.nama", width: 250, pinned: 'left'},
-                        {headerName: "TMT CPNS", field: "user.nama", width: 90},
-                        {headerName: "Periode KGB", field: "periode_kgb", width: 90},
+                        {headerName: "TMT CPNS", field: "user.tmt_cpns", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Periode KGB", field: "user.periode_kgb", width: 90, cellRenderer: this.buCellRenderer},
+                        {
+                            headerName: 'Notifikasi',
+                            children: [
+                                {headerName: "Periode", field: "period_current", width: 60},
+                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
+                            ]
+                        },
+                        {headerName: "Status", field: "status", width: 150, cellRenderer: this.statusCellRenderer },
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
+                        {headerName: "Email", field: "user.email", width: 150},
+                        {headerName: "Telp/HP", field: "user.telp", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if (tabel == 'atasan' && this.active_tab === 'kgb_tab') {
+                    this.columnDefs = [
+                        {headerName: "Atasan", field: "jbt_nama.user.nama", width: 250, pinned: 'left'},
+                        {headerName: "Jabatan", field: "jbt_nama.jbt_nama", width: 250},
+                        {headerName: "Periode KGB", field: "periode_kgb", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                // {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
+                        {headerName: "Email", field: "jbt_nama.user.email", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if (tabel == 'kepeg' && this.active_tab === 'kgb_tab') {
+                    this.columnDefs = [
+                        {headerName: "Nama", field: "user.nama", width: 250, pinned: 'left'},
+                        {headerName: "Jabatan", field: "user", width: 250, cellRenderer: this.JbtCellRenderer},
+                        {headerName: "Periode KGB", field: "periode_kgb", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                        {
+                            headerName: 'Batas Pengusulan',
+                            children: [
+                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
+                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
+                            ]
+                        },
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                // {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
+                        {headerName: "Email", field: "user.email", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if (tabel == 'staf' && this.active_tab === 'pensiun_tab') {
+                    this.columnDefs = [
+                        {headerName: "Pegawai Tujuan", field: "user.nama", width: 250, pinned: 'left'},
+                        {headerName: "Tanggal Lahir", field: "user.ttl_t", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Jabatan", field: "user.jbt_nama.jbt_nama", width: 90},
+                        {headerName: "BUP", field: "user.bup", width: 50},
+                        {headerName: "Pensiun", field: "user.pensiun", width: 90, cellRenderer: this.buCellRenderer},
                         {headerName: "Waktu Kirim", field: "time", width: 150, cellRenderer: this.dateCellRenderer, editable: true},
                         {headerName: "Status", field: "status", width: 150, cellRenderer: this.statusCellRenderer },
                         {
@@ -486,15 +563,246 @@
                             ]
                         },
                         {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
-                        {
-                            headerName: 'Hukuman Disiplin',
-                            children: [
-                                {headerName: 'Jenis', field: 'hkm_jenis', width: 150},
-                                {headerName: 'TMT', field: 'hkm_tmt', width: 90, filter: 'date'}
-                            ]
-                        },
                         {headerName: "Email", field: "user.email", width: 150},
                         {headerName: "Telp/HP", field: "user.telp", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if (tabel == 'atasan' && this.active_tab === 'pensiun_tab') {
+                    this.columnDefs = [
+                        {headerName: "Atasan", field: "jbt_nama.user.nama", width: 250, pinned: 'left'},
+                        {headerName: "Jabatan", field: "jbt_nama.jbt_nama", width: 250},
+                        {headerName: "Pensiun", field: "pensiun", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                        {
+                            headerName: 'Batas Pengusulan',
+                            children: [
+                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
+                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
+                            ]
+                        },
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                // {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
+                        {headerName: "Email", field: "jbt_nama.user.email", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if (tabel == 'kepeg' && this.active_tab === 'pensiun_tab') {
+                    this.columnDefs = [
+                        {headerName: "Nama", field: "user.nama", width: 250, pinned: 'left'},
+                        {headerName: "Jabatan", field: "user", width: 250, cellRenderer: this.JbtCellRenderer},
+                        {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
+                        {
+                            headerName: 'Notifikasi',
+                            children: [
+                                {headerName: "Periode", field: "period_current", width: 60},
+                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
+                            ]
+                        },
+                        {
+                            headerName: 'Batas Pengusulan',
+                            children: [
+                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
+                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
+                            ]
+                        },
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                // {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
+                        {headerName: "Email", field: "user.email", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if (tabel == 'staf' && this.active_tab === 'ptj_tab') {
+                    this.columnDefs = [
+                        {headerName: "Pegawai Tujuan", field: "user.nama", width: 250, pinned: 'left'},
+                        {headerName: "TMT CPNS", field: "user.tmt_cpns", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Masa kerja (Th)", field: "masa_kerja", width: 90},
+                        {
+                            headerName: 'Penghargaan',
+                            children: [
+                                {headerName: 'Terakhir', field: 'user.hrg_jenis', width: 200 },
+                                {headerName: 'Target', field: 'hrg_target', width: 200 }
+                            ]
+                        },
+                        {headerName: "Waktu Kirim", field: "time", width: 150, cellRenderer: this.dateCellRenderer, editable: true},
+                        {headerName: "Status", field: "status", width: 150, cellRenderer: this.statusCellRenderer },
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
+                        {headerName: "Email", field: "user.email", width: 150},
+                        {headerName: "Telp/HP", field: "user.telp", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if (tabel == 'atasan' && this.active_tab === 'ptj_tab') {
+                    this.columnDefs = [
+                        {headerName: "Atasan", field: "jbt_nama.user.nama", width: 250, pinned: 'left'},
+                        {headerName: "Jabatan", field: "jbt_nama.jbt_nama", width: 250},
+                        {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
+                        {
+                            headerName: 'Notifikasi',
+                            children: [
+                                {headerName: "Periode", field: "period_current", width: 60},
+                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
+                            ]
+                        },
+                        {
+                            headerName: 'Batas Pengusulan',
+                            children: [
+                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
+                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
+                            ]
+                        },
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                // {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
+                        {headerName: "Email", field: "jbt_nama.user.email", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if (tabel == 'kepeg' && this.active_tab === 'ptj_tab') {
+                    this.columnDefs = [
+                        {headerName: "Nama", field: "user.nama", width: 250, pinned: 'left'},
+                        {headerName: "Jabatan", field: "user", width: 250, cellRenderer: this.JbtCellRenderer},
+                        {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
+                        {
+                            headerName: 'Notifikasi',
+                            children: [
+                                {headerName: "Periode", field: "period_current", width: 60},
+                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
+                            ]
+                        },
+                        {
+                            headerName: 'Batas Pengusulan',
+                            children: [
+                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
+                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
+                            ]
+                        },
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                // {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
+                        {headerName: "Email", field: "user.email", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if (tabel == 'no' && this.active_tab === 'ptj_tab') {
+                    this.columnDefs = [
+                        {headerName: "Pegawai", field: "user.nama", width: 250, pinned: 'left'},
+                        {headerName: "TMT CPNS", field: "user.tmt_cpns", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Penghargaan Terakhir", field: "user.hrg_jenis", width: 200, editable: true},
+                        {headerName: "Keterangan", field: "ket", width: 300},
+                    ]
+                } else if (tabel == 'staf' && this.active_tab === 'phd_tab') {
+                    this.columnDefs = [
+                        {headerName: "Pegawai Tujuan", field: "user.nama", width: 250, pinned: 'left'},
+                        {
+                            headerName: 'Hukuman',
+                            children: [
+                                {headerName: 'Jenis', field: 'user.hkm_jenis.hkm_label', width: 290 },
+                                {headerName: 'TMT', field: 'user.hkm_tmt', width: 90, cellRenderer: this.buCellRenderer },
+                                {headerName: 'Durasi (Bln)', field: 'user.hkm_jenis.masa_berlaku', width: 80 },
+                                {headerName: 'Akhir', field: 'akhir_hukuman', width: 120 }
+                            ]
+                        },
+                        {headerName: "Waktu Kirim", field: "time", width: 150, cellRenderer: this.dateCellRenderer, editable: true},
+                        {headerName: "Status", field: "status", width: 150, cellRenderer: this.statusCellRenderer },
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
+                        {headerName: "Email", field: "user.email", width: 150},
+                        {headerName: "Telp/HP", field: "user.telp", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if (tabel == 'atasan' && this.active_tab === 'phd_tab') {
+                    this.columnDefs = [
+                        {headerName: "Atasan", field: "jbt_nama.user.nama", width: 250, pinned: 'left'},
+                        {headerName: "Jabatan", field: "jbt_nama.jbt_nama", width: 250},
+                        {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
+                        {
+                            headerName: 'Notifikasi',
+                            children: [
+                                {headerName: "Periode", field: "period_current", width: 60},
+                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
+                            ]
+                        },
+                        {
+                            headerName: 'Batas Pengusulan',
+                            children: [
+                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
+                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
+                            ]
+                        },
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                // {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
+                        {headerName: "Email", field: "jbt_nama.user.email", width: 150},
+                        {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if (tabel == 'kepeg' && this.active_tab === 'phd_tab') {
+                    this.columnDefs = [
+                        {headerName: "Nama", field: "user.nama", width: 250, pinned: 'left'},
+                        {headerName: "Jabatan", field: "user", width: 250, cellRenderer: this.JbtCellRenderer},
+                        {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
+                        {
+                            headerName: 'Notifikasi',
+                            children: [
+                                {headerName: "Periode", field: "period_current", width: 60},
+                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
+                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
+                            ]
+                        },
+                        {
+                            headerName: 'Batas Pengusulan',
+                            children: [
+                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
+                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
+                            ]
+                        },
+                        {
+                            headerName: 'Terkirim',
+                            children: [
+                                {headerName: 'Email', field: 'isSent_email', width: 60, cellRenderer: this.blmSdhCellRenderer },
+                                // {headerName: 'SMS', field: 'isSent_sms', width: 45, cellRenderer: this.blmSdhCellRenderer }
+                            ]
+                        },
+                        {headerName: "Terkonfirmasi", field: "isConfirmed", width: 150, cellRenderer: this.buCellRenderer},
+                        {headerName: "Email", field: "user.email", width: 150},
                         {headerName: "Pilihan", field: "pilihan", width: 225, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
                     ]
                 } else if (tabel == 'staf' && this.active_tab === 'presensi_tab') {
@@ -535,6 +843,14 @@
                     onCellEditingStopped: this.cellEditingStoppedHandle.bind(this)
                 }
                 this.renderPktTable();
+            },
+            masaKerja: function(params){
+                if(params.value){
+                    var startTime = moment(params.value);
+                    return Math.floor(moment.duration(moment().diff(startTime)).asYears())
+                } else {
+                    return 0;
+                }
             },
             cellEditingStartedHandle: function(params){
                 this.dateTempForEditing = moment(params.value).format('HH:mm DD/MM/YYYY');
@@ -632,20 +948,29 @@
                 return moment(date).format('DD/MM/YYYY')
             },
             addData: function(newData){
+                console.log(newData)
                 this.gridOptions.api.updateRowData( { add: newData } );
             },    
             btnInCellRenderer: function(params){
                 var tabel = $('[name="radio_notif_pkt"]:checked').val();
+                const btn_konfirmasi = `<button class='konfirmasi-pkt' title="Konfirmasi Notifikasi Untuk Berhenti Mengirimkan Notifikasi">Konfirmasi</button>`;
+                const btn_batal_konfirmasi = `<button class='btl-konfirmasi-pkt' title="Kembali Mengirimkan Notifikasi">Batal Konfirmasi</button>`
+                const btn_hapus_notifikasi = `<button class='btl-pkt' title="Batalkan Notifikasi Selamanya"><i class="icon-user-unfollow"></i></button>`
+                const btn_detail_semua_pgw = `<button class='detail-staf-pkt' title="Lihat Detail Daftar Pegawai">Detail</button>`
+                const btn_restore = `<button class='restore-pkt'><i class="fa fa-reply fa-lg"></i></button>`;
+                const btn_ubah_status = `<button class='ubah-status-pkt' title="Ubah Status Pengusulan">Ubah Status</button>`;
+
+
                 if(!params.data.active){
-                    return `<button class='restore-pkt'><i class="fa fa-reply fa-lg"></i></button>`;
+                    return btn_restore;
                 }
                 if ( $('#presensi_tab').hasClass('active') ) {
-                    return !params.data.isConfirmed?`<button class='konfirmasi-pkt'>Konfirmasi</button> <button class='btl-pkt' title="Batalkan Notifikasi"><i class="icon-user-unfollow"></i></button>`:`<button class='btl-konfirmasi-pkt'>Batal Konfirmasi</button>`;
+                    return !params.data.isConfirmed?btn_konfirmasi+` `+btn_hapus_notifikasi:btn_batal_konfirmasi;
                 }
                 if(tabel === 'staf'){
-                    return !params.data.isConfirmed?`<button class='ubah-status-pkt'>Ubah Status</button> <button class='konfirmasi-pkt'>Konfirmasi</button> <button class='btl-pkt' title="Batalkan Notifikasi"><i class="icon-user-unfollow"></i></button>`:`<button class='ubah-status-pkt'>Ubah Status</button> <button class='btl-konfirmasi-pkt'>Batal Konfirmasi</button>`;
+                    return !params.data.isConfirmed?btn_ubah_status+` `+btn_konfirmasi+` `+btn_hapus_notifikasi:btn_ubah_status+` `+btn_batal_konfirmasi;
                 } else if ( _.contains(['atasan', 'kepeg'], tabel) ) {
-                    return !params.data.isConfirmed?`<button class='detail-staf-pkt'>Detail</button> <button class='konfirmasi-pkt'>Konfirmasi</button> <button class='btl-pkt' title="Batalkan Notifikasi"><i class="icon-user-unfollow"></i></button>`:`<button class='detail-staf-pkt'>Detail</button> <button class='btl-konfirmasi-pkt'>Batal Konfirmasi</button>`;
+                    return !params.data.isConfirmed?btn_detail_semua_pgw+` `+btn_konfirmasi+` `+btn_hapus_notifikasi:btn_detail_semua_pgw+` `+btn_batal_konfirmasi;
                 }
                 
             },

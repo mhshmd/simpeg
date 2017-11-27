@@ -1,5 +1,10 @@
 // db.copyDatabase("simpeg","simanis","localhost")
-// use simanis;
+use simanis;
+
+db.user.update(
+   {  },
+   { $unset: { hkm_jenis: 1, hkm_tmt: 1 } }, {multi: true}
+)
 
 // db.jk.insert([
 

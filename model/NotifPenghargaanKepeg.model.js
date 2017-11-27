@@ -19,6 +19,14 @@ var NotifPenghargaanKepegSchema = new Schema({
             ref: 'NotifPenghargaan'
         }
     ],
+    support_email: {
+        type: Boolean,
+        default: true,
+    },
+    support_sms: {
+        type: Boolean,
+        default: false,
+    },
     active: {
         type: Boolean,
         default: true,

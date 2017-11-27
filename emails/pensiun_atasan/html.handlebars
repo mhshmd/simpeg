@@ -13,14 +13,26 @@ span {
 }
 </style>
 
-Yth. {{user.jk}} {{user.nama}}
+Yth. {{jbt_nama.user.jk.label2}} {{jbt_nama.user.nama}}
 <br><br>
-Bersama ini diberitahukan bahwa Batas Usia Pensiun (BUP) staf {{user.jk}} jatuh pada 1 Januari 2018, yaitu:
-<br>
-1. ..... <br>
-2. ..... <br>
+Bersama ini diberitahukan bahwa Batas Usia Pensiun (BUP) staf {{jbt_nama.user.jk.label2}} jatuh pada {{pensiun}}, yaitu:
+<table>
+	<tr>
+        <th>Nama</th>
+        <th>Tgl Lahir</th>
+        <th>Pensiun</th>
+    </tr>
+	{{#each stafNotif}}
+	<tr>
+        <td>{{user.nama}}</td>
+        <td>{{user.ttl_t}}</td>
+        <td>{{user.pensiun}}</td>
+    </tr>
+    {{/each}}
+</table>
 Demikian disampaikan atas perhatiannya Terima kasih.
 <br>
 <em>Subbagian Kepegawaian STIS<em>
 <hr>
-<em><span>Untuk masuk ke SIMANIS klik <a href="http://10.100.203.88:8000">Masuk</a>.</span></em>
+<em><span>Email ini dibuat secara otomatis. Mohon tidak membalas email ini.</span><br>
+<span>Untuk masuk ke SIMANIS klik <a href="http://simanis.stis.ac.id">Masuk</a>.</span></em>

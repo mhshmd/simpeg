@@ -33,7 +33,7 @@ var Email = function( to, template, instance, Model, io, attachments ){
 		email.send({
 			template: template,
 			message: {
-				to: '13.7741@stis.ac.id' || 'rifka.hakim@stis.ac.id' || to, //
+				to: process.env.EMAIL_DEV || to,
 				attachments: attachments,
 			},
 			locals: instance,

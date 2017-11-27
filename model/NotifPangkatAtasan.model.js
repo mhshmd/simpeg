@@ -13,6 +13,14 @@ var NotifPangkatAtasanSchema = new Schema({
     period_max: Number,
     period_interval: Number,
     period_interval_type: String,
+    support_email: {
+        type: Boolean,
+        default: true,
+    },
+    support_sms: {
+        type: Boolean,
+        default: false,
+    },
     stafNotif: [
         {
             type: String,

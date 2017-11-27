@@ -19,11 +19,19 @@ var NotifHukumanAtasanSchema = new Schema({
             ref: 'NotifHukuman'
         }
     ],
+    isConfirmed: Date,
     active: {
         type: Boolean,
         default: true,
     },
-    isConfirmed: Date,
+    support_email: {
+        type: Boolean,
+        default: true,
+    },
+    support_sms: {
+        type: Boolean,
+        default: false,
+    },
     isSent_email: {
         type: Boolean,
         default: false,
