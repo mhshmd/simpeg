@@ -36,7 +36,7 @@ var NotifPensiunKepeg = require('../../model/NotifPensiunKepeg.model');
 
 var NotifHukuman = require('../../model/NotifHukuman.model');
 var NotifHukumanAtasan = require('../../model/NotifHukumanAtasan.model');
-var NotifHukumanKepeg = require('../../model/NotifPangkatKepeg.model');
+var NotifHukumanKepeg = require('../../model/NotifHukumanKepeg.model');
 
 var NotifPenghargaan = require('../../model/NotifPenghargaan.model');
 var NotifPenghargaanAtasan = require('../../model/NotifPenghargaanAtasan.model');
@@ -60,10 +60,10 @@ var SMS = require('../SMS')
 
 var modem = require('modem').Modem()
 
-// modem.open('COM7', function(err){
-// 	console.log(err)
-// 	console.log('Modem ready')
-// })
+modem.open(process.env.COM, function(err){
+	console.log(err)
+	console.log('Modem ready')
+})
 
 //load crypto utk hashing password
 var crypto = require('crypto');
@@ -468,6 +468,29 @@ admin.socket = function(io, connections, client){
 	});
 
 
+	client.on('restore notif', function (data, cb) {
+
+		var notif_type = getType(data.param);
+
+		if(notif_type){
+        	getScheduleModelCenter(notif_type).update({_id: data.data._id}, { active: true }).exec(function(err, status){
+				if(cb){
+					if(err){
+						sendNotif(client, 'Server terganggu');
+						console.log(err)
+						cb(false)
+					} else{
+						sendNotif(client, 'Berhasil dihidupkan.');
+						cb(status)
+					}
+				}
+
+			})
+        }
+
+	});
+
+
 	client.on('restore notif kenaikan pangkat', function (data, cb) {
 
 		var notif_type = getType(data.param);
@@ -498,26 +521,40 @@ admin.socket = function(io, connections, client){
 			update = { isConfirmed: new Date(), $push: {status: { time: new Date(), label_id: notif.label_id, label: notif.label }} }
 		}
 
-		NotifPangkat.update({_id: notif._id}, update).exec(function(err, status){
-			if(cb){
-				if(err){
-					sendNotif(client, 'Server terganggu');
-					console.log(err)
-					cb(false)
-				} else{
-					if(notif.label_id !== 'Belum ada'){
-						all_email_kenaikan_pangkat[notif.schedule_Id]&&all_email_kenaikan_pangkat[notif.schedule_Id].cancel();
-						var msg = `Status usulan kenaikan pangkat Anda: `+notif.label.replace(/\d*\.\s/g, "")+`.\n-Kepegawaian STIS-`;
-						console.log(msg)
-						modem&&SMS.sendSMS( modem, notif.data.user.telp, msg, notif.data, NotifPangkat, admin.io );
-					}
-					sendNotif(client, 'Berhasil diubah.');
-					console.log(status)
-					cb(status)
-				}
-			}
+		var notif_type = getType(notif.param);
 
-		})
+		if(notif_type){
+        	getScheduleModelCenter(notif_type).update({_id: notif._id}, update).exec(function(err, status){
+				if(cb){
+					if(err){
+						sendNotif(client, 'Server terganggu');
+						console.log(err)
+						cb(false)
+					} else{
+						if(notif.label_id !== 'Belum ada'){
+							all_email_kenaikan_pangkat[notif.schedule_Id]&&all_email_kenaikan_pangkat[notif.schedule_Id].cancel();
+							var msg = notif.label.replace(/\d*\.\s/g, "")+`.\n-Kepegawaian STIS-`;
+							if(notif_type === 'pangkat'){
+								msg = `Status Kenaikan Pangkat Anda: `+msg;
+							} else if(notif_type === 'kgb'){
+								msg = `Status KGB Anda: `+msg;
+							} else if(notif_type === 'pensiun'){
+								msg = `Status Pensiun Anda: `+msg;
+							} else if(notif_type === 'penghargaan'){
+								msg = `Status Penghargaan Anda: `+msg;
+							} else if(notif_type === 'hukuman'){
+								msg = `Status Pembebasan Hukuman Disiplin Anda: `+msg;
+							}
+							modem&&SMS.sendSMS( modem, notif.data.user.telp, msg, notif.data, NotifPangkat, admin.io );
+						}
+						sendNotif(client, 'Berhasil diubah.');
+						console.log(status)
+						cb(status)
+					}
+				}
+
+			})
+        }
 
 	});
 
@@ -623,20 +660,28 @@ admin.socket = function(io, connections, client){
 
 	});
 
-	client.on('ambil semua status', function (jenis_notif, cb) {
+	client.on('ambil semua status', function (param, cb) {
+		var notif_type;
+		if(param.tabel){
+			notif_type = getType(param);
+		} else {
+			notif_type = param;
+		}
 
-		StatusNotif.findOne({jenis: jenis_notif}, function(err, status){
-			if(cb){
-				if(err){
-					sendNotif(client, 'Server terganggu');
-					console.log(err)
-					cb(false)
-				} else{
-					cb(status)
+		if(notif_type){
+        	StatusNotif.findOne({jenis: notif_type}, function(err, status){
+				if(cb){
+					if(err){
+						sendNotif(client, 'Server terganggu');
+						console.log(err)
+						cb(false)
+					} else{
+						cb(status)
+					}
 				}
-			}
 
-		})
+			})
+        }
 
 	});
 
@@ -836,24 +881,40 @@ admin.socket = function(io, connections, client){
 	});
 
 	client.on('get all status', function (type, cb) {
-		var Model;
-		if(type === 'pangkat'){
-			Model = NotifPangkat;
+		var notif_type = getType(type);
+
+		if(!client.handshake.session.user){
+			return
 		}
 
-		Model.find({user: client.handshake.session.user._id}).populate('user').exec(function(err, status){
-			if(cb){
-				if(err){
-					sendNotif(client, 'Server terganggu');
-					console.log(err)
-					cb(false)
-				} else{
-					cb(status)
+        if(notif_type){
+        	getScheduleModelCenter(notif_type).find({user: client.handshake.session.user._id}).populate(getSchedulePath(notif_type)).exec(function(err, status){
+				if(cb){
+					if(err){
+						sendNotif(client, 'Server terganggu');
+						console.log(err)
+						cb(false)
+					} else{
+						cb(status)
+					}
 				}
-			}
-		})
+			})
+        }
 
 	});
+
+	client.on('get user', function (type, cb) {
+		User.findOne({_id: client.handshake.session.user._id}, function(err, user){
+			if(err){
+				sendNotif(client, 'Server terganggu');
+				console.log(err)
+				cb(false)
+			} else{
+				console.log(user)
+				cb(user)
+			}
+		})
+	})
 
 }
 
@@ -1363,9 +1424,9 @@ function getScheduleIDCenter(type, dasar_instance, opt_instance){
 	if(type === 'pensiun'){
 		return dasar_instance._id;
 	} else if (type === 'pensiun_atasan') {
-		return dasar_instance._id
+		return dasar_instance._id+moment(opt_instance.user.pensiun).unix()
 	} else if (type === 'pensiun_kepeg') {
-		return dasar_instance._id
+		return dasar_instance._id+moment(opt_instance.user.pensiun).unix()
 	} else 
 
 	if(type === 'penghargaan'){
@@ -1381,17 +1442,17 @@ function getScheduleIDCenter(type, dasar_instance, opt_instance){
 		}
 		return dasar_instance._id+romawi;
 	} else if (type === 'penghargaan_atasan') {
-		return dasar_instance._id
+		return dasar_instance._id+opt_instance.hrg_thn
 	} else if (type === 'penghargaan_kepeg') {
-		return dasar_instance._id
+		return dasar_instance._id+opt_instance.hrg_thn
 	} else 
 
 	if(type === 'hukuman'){
 		return dasar_instance._id;
 	} else if (type === 'hukuman_atasan') {
-		return dasar_instance._id
+		return dasar_instance._id+opt_instance.akhir_hukuman
 	} else if (type === 'hukuman_kepeg') {
-		return dasar_instance._id
+		return dasar_instance._id+opt_instance.akhir_hukuman
 	} else 
 
 	if(type === 'absensi'){
@@ -1470,9 +1531,9 @@ function getSchedulePath(type){
 	if(type === 'pensiun'){
 		return {path: 'user', populate: { path: 'jbt_nama jk' }}
 	} else if (type === 'pensiun_atasan') {
-		return [{path: 'jbt_nama', populate: { path: 'user', populate: { path: 'jk' } }}, {path: 'stafNotif', populate: { path: 'user' }}];
+		return [{path: 'jbt_nama', populate: { path: 'user', populate: { path: 'jk' } }}, {path: 'stafNotif', populate: { path: 'user' , populate: { path: 'jbt_nama' }}}];
 	} else if (type === 'pensiun_kepeg') {
-		return [{path: 'user', populate: { path: 'jbt_nama jk' }}, {path: 'stafNotif', populate: { path: 'user' }}];
+		return [{path: 'user', populate: { path: 'jbt_nama jk' }}, {path: 'stafNotif', populate: { path: 'user' , populate: { path: 'jbt_nama' }}}];
 	} else 
 
 	if(type === 'penghargaan'){
@@ -1488,9 +1549,9 @@ function getSchedulePath(type){
 	if(type === 'hukuman'){
 		return {path: 'user', populate: { path: 'jbt_nama jk hkm_jenis' }}
 	} else if (type === 'hukuman_atasan') {
-		return [{path: 'jbt_nama', populate: { path: 'user', populate: { path: 'jk' } }}, {path: 'stafNotif', populate: { path: 'user' }}];
+		return [{path: 'jbt_nama', populate: { path: 'user', populate: { path: 'jk' } }}, {path: 'stafNotif', populate: { path: 'user', populate: { path: 'hkm_jenis' } }}];
 	} else if (type === 'hukuman_kepeg') {
-		return [{path: 'user', populate: { path: 'jbt_nama jk hkm_jenis' }}, {path: 'stafNotif', populate: { path: 'user' }}];
+		return [{path: 'user', populate: { path: 'jbt_nama jk hkm_jenis' }}, {path: 'stafNotif', populate: { path: 'user', populate: { path: 'hkm_jenis' } }}];
 	} else 
 
 	if(type === 'absensi'){
@@ -1778,6 +1839,10 @@ function createScheduleOnServer(type, schedule_Id, time, Model, populateVar, mid
 							completeScheduleCreating('kgb_atasan', atasan_jbt, filterKGBAtasan, newKGBAtasanObjectConstructor, getMiddleVarTransform('kgb_atasan'), result.getSchedule, atasan_cb);
 						} else if (type === 'pensiun') {
 							completeScheduleCreating('pensiun_atasan', atasan_jbt, filterPensiunAtasan, newPensiunAtasanObjectConstructor, getMiddleVarTransform('pensiun_atasan'), result.getSchedule, atasan_cb);
+						} else if (type === 'penghargaan') {
+							completeScheduleCreating('penghargaan_atasan', atasan_jbt, filterPenghargaanAtasan, newPenghargaanAtasanObjectConstructor, getMiddleVarTransform('penghargaan_atasan'), result.getSchedule, atasan_cb);
+						} else if (type === 'hukuman') {
+							completeScheduleCreating('hukuman_atasan', atasan_jbt, filterHukumanAtasan, newHukumanAtasanObjectConstructor, getMiddleVarTransform('hukuman_atasan'), result.getSchedule, atasan_cb);
 						} else{
 							atasan_cb(null, {jbt: null, stafNotif: result.getSchedule})
 						}
@@ -1800,6 +1865,12 @@ function createScheduleOnServer(type, schedule_Id, time, Model, populateVar, mid
 							completeScheduleCreating('pangkat_kepeg', admin, filterPktKepeg, newPktKepegObjectConstructor, null, result.getSchedule, task_cb)
 						} else if(type === 'kgb'){
 							completeScheduleCreating('kgb_kepeg', admin, filterKGBKepeg, newKGBKepegObjectConstructor, null, result.getSchedule, task_cb)
+						} else if(type === 'pensiun'){
+							completeScheduleCreating('pensiun_kepeg', admin, filterPensiunKepeg, newPensiunKepegObjectConstructor, null, result.getSchedule, task_cb)
+						} else if(type === 'penghargaan'){
+							completeScheduleCreating('penghargaan_kepeg', admin, filterPenghargaanKepeg, newPenghargaanKepegObjectConstructor, null, result.getSchedule, task_cb)
+						} else if(type === 'hukuman'){
+							completeScheduleCreating('hukuman_kepeg', admin, filterHukumanKepeg, newHukumanKepegObjectConstructor, null, result.getSchedule, task_cb)
 						} else {
 							task_cb&&task_cb(null, 'ok')
 						}
@@ -2500,7 +2571,7 @@ function middleTransformPensiunAtasan(scheduleDB){
 		stafNotif.user.ttl_t = moment(stafNotif.user.ttl_t).format('DD MMMM YYYY');
 		stafNotif.user.pensiun = moment(stafNotif.user.pensiun).format('DD MMM YYYY');
 	})
-	scheduleDB.pensiun = moment(scheduleDB.stafNotif[0].pensiun).format('DD MMMM YYYY');
+	scheduleDB.pensiun = moment(scheduleDB.pensiun).format('DD MMMM YYYY');
 	return scheduleDB;
 }
 
@@ -2526,11 +2597,20 @@ function filterPensiunKepeg(user, cb){
 
 //fungsi objek baru
 function newPensiunKepegObjectConstructor(user, stafNotif){
-	return {schedule_Id: getScheduleIDCenter('pangkat_kepeg', user, stafNotif), template: 'pangkat_kepeg', time: stafNotif.time, 
-		'periode_tmt': stafNotif.periode_tmt, stafNotif: [stafNotif._id], period_current: 1, period_max: 4, period_interval: 7, period_interval_type: 'd', user: user._id }
+	return {schedule_Id: getScheduleIDCenter('pensiun_kepeg', user, stafNotif), template: 'pensiun_kepeg', pensiun: stafNotif.user.pensiun, time: stafNotif.time, paling_lambat: moment(stafNotif.user.pensiun).subtract(1, 'y'),
+		stafNotif: [stafNotif._id], period_current: 1, period_max: 1, period_interval: 7, period_interval_type: 'd', user: user._id }
 
 }
 //middle variable transform function
+function middleTransformPensiunKepeg(scheduleDB){
+	_.each(scheduleDB.stafNotif, function(stafNotif, index, list){
+		stafNotif.user.ttl_t = moment(stafNotif.user.ttl_t).format('DD MMMM YYYY');
+		stafNotif.user.pensiun = moment(stafNotif.user.pensiun).format('DD MMMM YYYY');
+	})
+	scheduleDB.pensiun = moment(scheduleDB.pensiun).format('DD MMMM YYYY');
+	scheduleDB.paling_lambat = moment(scheduleDB.paling_lambat).format('DD MMMM YYYY');
+	return scheduleDB;
+}
 
 //init
 
@@ -2652,20 +2732,9 @@ function filterPenghargaanAtasan(jbt, cb){
 
 //fungsi objek baru
 function newPenghargaanAtasanObjectConstructor(jbt, stafNotif){
-	return {schedule_Id: getScheduleIDCenter('pangkat_atasan', jbt, stafNotif), template: 'pangkat_atasan', time: stafNotif.time, 
-		'periode_tmt': stafNotif.periode_tmt, stafNotif: [stafNotif._id], period_current: 1, period_max: 4, period_interval: 7, period_interval_type: 'd', jbt_nama: jbt._id }
+	return {schedule_Id: getScheduleIDCenter('penghargaan_atasan', jbt, stafNotif), template: 'penghargaan_atasan', time: stafNotif.time, hrg_thn: stafNotif.hrg_thn,
+		stafNotif: [stafNotif._id], period_current: 1, period_max: 1, period_interval: 7, period_interval_type: 'd', jbt_nama: jbt._id }
 
-}
-
-//middle variable transform function
-function middleTransformPenghargaanAtasan(scheduleDB){
-	_.each(scheduleDB.stafNotif, function(stafNotif, index, list){
-		stafNotif.gol_now = transformGolCW[stafNotif.gol_now];
-		stafNotif.gol_target = transformGolCW[stafNotif.gol_target]
-	})
-	scheduleDB.periode_usul = moment(scheduleDB.periode_tmt).format('MMMM YYYY');
-	scheduleDB.batas_usul_ke_stis = moment(scheduleDB.stafNotif[0].bu_stis).format('MMMM YYYY')
-	return scheduleDB;
 }
 
 //init
@@ -2690,8 +2759,8 @@ function filterPenghargaanKepeg(user, cb){
 
 //fungsi objek baru
 function newPenghargaanKepegObjectConstructor(user, stafNotif){
-	return {schedule_Id: getScheduleIDCenter('pangkat_kepeg', user, stafNotif), template: 'pangkat_kepeg', time: stafNotif.time, 
-		'periode_tmt': stafNotif.periode_tmt, stafNotif: [stafNotif._id], period_current: 1, period_max: 4, period_interval: 7, period_interval_type: 'd', user: user._id }
+	return {schedule_Id: getScheduleIDCenter('penghargaan_kepeg', user, stafNotif), template: 'penghargaan_kepeg', time: stafNotif.time, hrg_thn: stafNotif.hrg_thn,
+		stafNotif: [stafNotif._id], period_current: 1, period_max: 1, period_interval: 7, period_interval_type: 'd', user: user._id }
 
 }
 //middle variable transform function
@@ -2761,8 +2830,8 @@ function filterHukumanAtasan(jbt, cb){
 
 //fungsi objek baru
 function newHukumanAtasanObjectConstructor(jbt, stafNotif){
-	return {schedule_Id: getScheduleIDCenter('pangkat_atasan', jbt, stafNotif), template: 'pangkat_atasan', time: stafNotif.time, 
-		'periode_tmt': stafNotif.periode_tmt, stafNotif: [stafNotif._id], period_current: 1, period_max: 4, period_interval: 7, period_interval_type: 'd', jbt_nama: jbt._id }
+	return {schedule_Id: getScheduleIDCenter('hukuman_atasan', jbt, stafNotif), template: 'hukuman_atasan', time: stafNotif.time, akhir_hukuman: stafNotif.akhir_hukuman,
+		stafNotif: [stafNotif._id], period_current: 1, period_max: 1, period_interval: 7, period_interval_type: 'd', jbt_nama: jbt._id }
 
 }
 
@@ -2799,8 +2868,8 @@ function filterHukumanKepeg(user, cb){
 
 //fungsi objek baru
 function newHukumanKepegObjectConstructor(user, stafNotif){
-	return {schedule_Id: getScheduleIDCenter('pangkat_kepeg', user, stafNotif), template: 'pangkat_kepeg', time: stafNotif.time, 
-		'periode_tmt': stafNotif.periode_tmt, stafNotif: [stafNotif._id], period_current: 1, period_max: 4, period_interval: 7, period_interval_type: 'd', user: user._id }
+	return {schedule_Id: getScheduleIDCenter('hukuman_kepeg', user, stafNotif), template: 'hukuman_kepeg', time: stafNotif.time, akhir_hukuman: stafNotif.akhir_hukuman,
+		stafNotif: [stafNotif._id], period_current: 1, period_max: 1, period_interval: 7, period_interval_type: 'd', user: user._id }
 
 }
 //middle variable transform function
@@ -2852,17 +2921,17 @@ function initAbsensi(all_users){
 
 //ambil semua user
 User.find({}).populate('jbt_nama hkm_jenis').exec(function(err, all_users){
-	initPangkat(all_users)
+	// initPangkat(all_users)
 
-	initKGB(all_users)
+	// initKGB(all_users)
 
-	initPenghargaan(all_users)
+	// initPenghargaan(all_users)
 
-	initHukuman(all_users)
+	// initHukuman(all_users)
 
-	initPensiun(all_users)
+	// initPensiun(all_users)
 	//ABSENSI
-	initAbsensi(all_users)
+	// initAbsensi(all_users)
 
 })
 

@@ -8,7 +8,7 @@ var NotifHukumanAtasanSchema = new Schema({
     time: Date,
     time_next: Date,
     periode_kirim: Number,
-    periode_tmt: Date,
+    akhir_hukuman: String,
     period_current: Number,
     period_max: Number,
     period_interval: Number,

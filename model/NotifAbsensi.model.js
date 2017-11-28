@@ -32,6 +32,16 @@ var NotifAbsensiSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    status:[
+        {
+            time: Date,
+            label_id: String,
+            label: {
+                type: String,
+                default: 'Belum ada.'
+            },
+        }
+    ],
     user: {
         type: String,
         ref: 'User'

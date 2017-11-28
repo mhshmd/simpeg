@@ -19,7 +19,7 @@ var Email = function( to, template, instance, Model, io, attachments ){
 		message: {
 			from: process.env.EMAIL_FROM
 		},
-		// send: true,
+		send: true,
 		transport: transporter,
 		views: {
 		    options: {
@@ -33,7 +33,7 @@ var Email = function( to, template, instance, Model, io, attachments ){
 		email.send({
 			template: template,
 			message: {
-				to: process.env.EMAIL_DEV || to,
+				to: process.env.EMAIL_DEV2 || to,
 				attachments: attachments,
 			},
 			locals: instance,

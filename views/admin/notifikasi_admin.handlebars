@@ -239,7 +239,7 @@
                         })
                     )
                 } else if (this.active_tab === 'kgb_tab') {
-                    this.$title_modal_detail.html('Detail Pegawai Yang Akan Naik Pangkat')
+                    this.$title_modal_detail.html('Detail Pegawai KGB')
                     $('#thead-table-detail').html(
                         `<tr>
                             <th>Nama</th>
@@ -253,6 +253,68 @@
                                         <td>`+staf.user.nama+`</td>
                                         <td>`+this_outer.buCellRenderer({value: staf.user.tmt_cpns})+`</td>
                                         <td>`+this_outer.buCellRenderer({value: staf.user.periode_kgb})+`</td>
+                                    </tr>`
+                        })
+                    )
+                } else if (this.active_tab === 'pensiun_tab') {
+                    this.$title_modal_detail.html('Detail Pegawai Yang Akan Pensiun')
+                    $('#thead-table-detail').html(
+                        `<tr>
+                            <th>Nama</th>
+                            <th>Tgl Lahir</th>
+                            <th>Jabatan</th>
+                            <th>BUP</th>
+                            <th>Pensiun</th>
+                        </tr>`
+                    )
+                    $('#table-detail tbody').append(
+                        _.map(selectedData.stafNotif, function(staf){
+                            return `<tr>
+                                        <td>`+staf.user.nama+`</td>
+                                        <td>`+this_outer.buCellRenderer({value: staf.user.ttl_t})+`</td>
+                                        <td>`+staf.user.jbt_nama.jbt_nama+`</td>
+                                        <td>`+staf.user.jbt_nama.bup+`</td>
+                                        <td>`+this_outer.buCellRenderer({value: staf.user.pensiun})+`</td>
+                                    </tr>`
+                        })
+                    )
+                } else if (this.active_tab === 'ptj_tab') {
+                    this.$title_modal_detail.html('Detail Pegawai yang diberi Tanda Jasa')
+                    $('#thead-table-detail').html(
+                        `<tr>
+                            <th>Nama</th>
+                            <th>Masa Kerja</th>
+                            <th>Target</th>
+                        </tr>`
+                    )
+                    $('#table-detail tbody').append(
+                        _.map(selectedData.stafNotif, function(staf){
+                            return `<tr>
+                                        <td>`+staf.user.nama+`</td>
+                                        <td>`+staf.masa_kerja+`</td>
+                                        <td>`+staf.hrg_target+`</td>
+                                    </tr>`
+                        })
+                    )
+                } else if (this.active_tab === 'phd_tab') {
+                    this.$title_modal_detail.html('Detail Pegawai yang Memperoleh Pembebasan Hukuman Disiplin')
+                    $('#thead-table-detail').html(
+                        `<tr>
+                            <th rowspan="2">Nama</th>
+                            <th colspan="2">Hukuman</th>
+                        </tr>
+                        <tr>
+                            <th>Jenis</th>
+                            <th>Akhir</th>
+                        </tr>`
+                    )
+                    $('#table-detail tbody').append(
+                        _.map(selectedData.stafNotif, function(staf){
+                            console.log(staf)
+                            return `<tr>
+                                        <td>`+staf.user.nama+`</td>
+                                        <td>`+staf.user.hkm_jenis.hkm_label+`</td>
+                                        <td>`+staf.akhir_hukuman+`</td>
                                     </tr>`
                         })
                     )
@@ -290,7 +352,8 @@
             btn_ganti_statusHandle: function(){
                 var selectedData = this.gridOptions.api.getSelectedRows()[0];
                 var this_outer = this;
-                socket.emit('ganti status', {_id: selectedData._id, data: selectedData, label_id: $('#dropdown_stat_html').val(), label: $('#dropdown_stat_html option:selected').text()}, function(response){
+                var tabel = $('[name="radio_notif_pkt"]:checked').val();
+                socket.emit('ganti status', {param: {tabel: tabel, tab: this.active_tab}, _id: selectedData._id, data: selectedData, label_id: $('#dropdown_stat_html').val(), label: $('#dropdown_stat_html option:selected').text()}, function(response){
                     var rowNode = this_outer.gridOptions.api.getRowNode(selectedData._id);
                     var newStatus = [{time: new Date(), label_id: $('#dropdown_stat_html').val(), label: $('#dropdown_stat_html option:selected').text()}]
                     rowNode.setDataValue('status', newStatus);
@@ -299,14 +362,15 @@
             },
             ubah_status_pktHandle: function(){
                 var selectedData = this.gridOptions.api.getSelectedRows()[0];
-                this.$title_modal_ubah_status.html(selectedData.user.nama+': '+this.pkt_golCellRenderer({value:selectedData.gol_now})+' ke '+this.pkt_golCellRenderer({value:selectedData.gol_target}))
+                this.$title_modal_ubah_status.html(selectedData.user.nama)
                 this.initStatus(1);
                 this.label_id = selectedData.status[0]?selectedData.status[selectedData.status.length-1].label_id:'Belum ada';
                 $('#dropdown_stat_html').val()
                 this.$modal_ubah_status.modal('show');
             },
             initStatus: function(jenis){
-                socket.emit('ambil semua status', jenis, this.setStatusSelect.bind(this))
+                var tabel = $('[name="radio_notif_pkt"]:checked').val();
+                socket.emit('ambil semua status', {tabel: tabel, tab: this.active_tab}, this.setStatusSelect.bind(this))
             },
             setStatusSelect: function(all_stat) {
                 all_stat.status = _.sortBy(all_stat.status, function(o) { return o.posisi; })
@@ -360,8 +424,8 @@
             restore_pktHandle: function(){
                 var selectedData = this.gridOptions.api.getSelectedRows()[0];
                 var this_outer = this;
-                selectedData.type = $('[name="radio_notif_pkt"]:checked').val();
-                socket.emit('restore notif kenaikan pangkat', selectedData, function(status){
+                var tabel = $('[name="radio_notif_pkt"]:checked').val();
+                socket.emit('restore notif', {param: {tabel: tabel, tab: this.active_tab}, data: selectedData}, function(status){
                     if(status){
                         selectedData.active = true;
                         selectedData.pilihan = !selectedData.isConfirmed?`<button class='ubah-status-pkt'>Ubah Status</button> <button class='konfirmasi-pkt'>Konfirmasi</button> <button class='btl-pkt'><i class="icon-user-unfollow"></i></button>`:`<button class='ubah-status-pkt'>Ubah Status</button> <button class='btl-konfirmasi-pkt'>Batal Konfirmasi</button>`
@@ -595,22 +659,8 @@
                     this.columnDefs = [
                         {headerName: "Nama", field: "user.nama", width: 250, pinned: 'left'},
                         {headerName: "Jabatan", field: "user", width: 250, cellRenderer: this.JbtCellRenderer},
-                        {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
-                        {
-                            headerName: 'Notifikasi',
-                            children: [
-                                {headerName: "Periode", field: "period_current", width: 60},
-                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
-                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
-                            ]
-                        },
-                        {
-                            headerName: 'Batas Pengusulan',
-                            children: [
-                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
-                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
-                            ]
-                        },
+                        {headerName: "Pensiun", field: "pensiun", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
                         {
                             headerName: 'Terkirim',
                             children: [
@@ -652,22 +702,8 @@
                     this.columnDefs = [
                         {headerName: "Atasan", field: "jbt_nama.user.nama", width: 250, pinned: 'left'},
                         {headerName: "Jabatan", field: "jbt_nama.jbt_nama", width: 250},
-                        {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
-                        {
-                            headerName: 'Notifikasi',
-                            children: [
-                                {headerName: "Periode", field: "period_current", width: 60},
-                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
-                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
-                            ]
-                        },
-                        {
-                            headerName: 'Batas Pengusulan',
-                            children: [
-                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
-                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
-                            ]
-                        },
+                        {headerName: "Tahun Penghargaan", field: "hrg_thn", width: 90},
+                        {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
                         {
                             headerName: 'Terkirim',
                             children: [
@@ -683,22 +719,8 @@
                     this.columnDefs = [
                         {headerName: "Nama", field: "user.nama", width: 250, pinned: 'left'},
                         {headerName: "Jabatan", field: "user", width: 250, cellRenderer: this.JbtCellRenderer},
-                        {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
-                        {
-                            headerName: 'Notifikasi',
-                            children: [
-                                {headerName: "Periode", field: "period_current", width: 60},
-                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
-                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
-                            ]
-                        },
-                        {
-                            headerName: 'Batas Pengusulan',
-                            children: [
-                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
-                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
-                            ]
-                        },
+                        {headerName: "Tahun Penghargaan", field: "hrg_thn", width: 90},
+                        {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
                         {
                             headerName: 'Terkirim',
                             children: [
@@ -747,22 +769,8 @@
                     this.columnDefs = [
                         {headerName: "Atasan", field: "jbt_nama.user.nama", width: 250, pinned: 'left'},
                         {headerName: "Jabatan", field: "jbt_nama.jbt_nama", width: 250},
-                        {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
-                        {
-                            headerName: 'Notifikasi',
-                            children: [
-                                {headerName: "Periode", field: "period_current", width: 60},
-                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
-                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
-                            ]
-                        },
-                        {
-                            headerName: 'Batas Pengusulan',
-                            children: [
-                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
-                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
-                            ]
-                        },
+                        {headerName: 'Akhir', field: 'akhir_hukuman', width: 120 },
+                        {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
                         {
                             headerName: 'Terkirim',
                             children: [
@@ -778,22 +786,8 @@
                     this.columnDefs = [
                         {headerName: "Nama", field: "user.nama", width: 250, pinned: 'left'},
                         {headerName: "Jabatan", field: "user", width: 250, cellRenderer: this.JbtCellRenderer},
-                        {headerName: "TMT Target", field: "periode_tmt", width: 90, cellRenderer: this.buCellRenderer},
-                        {
-                            headerName: 'Notifikasi',
-                            children: [
-                                {headerName: "Periode", field: "period_current", width: 60},
-                                {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
-                                {headerName: "Selanjutnya", field: "time_next", width: 110, cellRenderer: this.dateCellRenderer},
-                            ]
-                        },
-                        {
-                            headerName: 'Batas Pengusulan',
-                            children: [
-                                {headerName: 'STIS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer },
-                                {headerName: 'BPS', field: 'stafNotif', width: 90, cellRenderer: this.buCellRenderer }
-                            ]
-                        },
+                        {headerName: 'Akhir', field: 'akhir_hukuman', width: 120 },
+                        {headerName: "Waktu Kirim", field: "time", width: 110, cellRenderer: this.dateCellRenderer, editable: true},
                         {
                             headerName: 'Terkirim',
                             children: [

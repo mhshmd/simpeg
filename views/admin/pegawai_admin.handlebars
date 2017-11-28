@@ -322,7 +322,7 @@
                                                 <strong>Foto</strong>
                                                 <img id="profile-pict" src="img/male.png" class="img-responsive" style="max-width: 100%; height: auto; display:block">
                                                 <label for="link-ubah-foto" class="float-right form"><i class="fa fa-pencil fa-sm"></i>ubah</label>
-                                                <input id="link-ubah-foto" name="photo_pict" type='file' />
+                                                <input id="link-ubah-foto" name="photo_pict" type='file'/>
                                             </div>
                                         </div>
                                     </div>
@@ -365,7 +365,17 @@
             },
             //umum
             cacheDOM: function() {
-
+                this.$field_tambah_nama = $( '#field-tambah-nama' );
+                this.$ttl_tl = $( 'input[name=ttl_tl]' );
+                this.$jbt_nama = $( 'input[name=jbt_nama]' );
+                this.$pelatihan_nama = $( 'input[name=pelatihan_nama]' );
+                this.$pelatihan_penyelenggara = $( 'input[name=pelatihan_penyelenggara]' );
+                this.$pdk_jurusan = $( 'input[name=pdk_jurusan]' );
+                this.$pdk_pt = $( 'input[name=pdk_pt]' );
+                this.$hrg_jenis = $( 'input[name=hrg_jenis]' );
+                this.$hkm_jenis = $( 'input[name=hkm_jenis]' );
+                this.$form_pgw_usul_perubahan = $( '#form_pgw_usul_perubahan' );
+                this.$button_submit_tambah_pgw = $( '#button-submit-tambah-pgw' )
             },
             bindEvents: function(){
 
@@ -627,8 +637,8 @@
                     {
                         headerName: 'Hukuman Disiplin',
                         children: [
-                            {headerName: 'Jenis', field: 'hkm_jenis', width: 150},
-                            {headerName: 'TMT', field: 'hkm_tmt', width: 90, filter: 'date'}
+                            {headerName: 'Jenis', field: 'hkm_jenis.hkm_label', width: 150},
+                            {headerName: 'TMT', field: 'hkm_tmt', width: 90, filter: 'date', cellRenderer: this.dateCellRenderer}
                         ]
                     },
                     {headerName: "Nomor Telepon", field: "telp", width: 100},
@@ -806,7 +816,7 @@
                         } else if( $elem.get(0).tagName === 'INPUT' ){
                             if ( key == 'jk' ) {
                                 $("#jk"+data_pegawai[key]).prop("checked", true)
-                            } else if ( _.contains(['pkt_tmt', 'tmt_cpns', 'tmt_pns', 'pensiun', 'ttl_t', 'periode_kgb', 'tmt_hukuman'], key) ) {
+                            } else if ( _.contains(['pkt_tmt', 'tmt_cpns', 'tmt_pns', 'pensiun', 'ttl_t', 'periode_kgb', 'hkm_tmt'], key) ) {
                                 $elem.val( this.dateCellRenderer({value: data_pegawai[key]}) );
                             } else if ( key == 'isTb' ) {
                                 if(data_pegawai[key]){

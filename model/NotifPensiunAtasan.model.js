@@ -8,8 +8,6 @@ var NotifPensiunAtasanSchema = new Schema({
     time: Date,
     time_next: Date,
     pensiun: Date,
-    periode_kirim: Number,
-    periode_tmt: Date,
     period_current: Number,
     period_max: Number,
     period_interval: Number,

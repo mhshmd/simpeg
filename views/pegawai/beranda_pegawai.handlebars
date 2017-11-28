@@ -117,7 +117,7 @@
                 this.cacheDOM();
                 this.bindEvents();
                 this.initArtikel()
-                this.initStatus('pangkat', 'Kenaikan Pangkat ')
+                this.initStatus({tabel: 'staf', tab: 'pangkat_tab' }, 'Kenaikan Pangkat ')
             },
             cacheDOM: function() {
                 this.$main_window = $( '#main-window' );
@@ -136,7 +136,6 @@
             },
             openArtikel: function(e){
                 var berita = _.find(this.artikel, function(art){ return art._id == e.target.id; }) || _.find(this.berita, function(art){ return art._id == e.target.id; })
-                console.log(berita)
                 this.$text_judul.text(berita.judul);
                 this.$text_content.html(berita.text);
                 this.$text_penulis.html(berita.penulis);
@@ -207,9 +206,6 @@
                 socket.emit('get all status', type, this.initStatusHandler.bind(this, intro))
             },
             initStatusHandler: function(intro, contents) {
-                // <h5>Kenaikan Gaji Berkala 2017: <a href="#">Sedang diproses</a></h5>
-                // <h5>Kenaikan Gaji Berkala 2015: <a href="#">Usulan diterima</a></h5>
-                // <h5>Kenaikan Pangkat III/b: <a href="#">Usulan diterima</a></h5>
                 var this_outer = this;
                 this.$status_container.append(
                     contents.length?_.map(contents, function(notif){

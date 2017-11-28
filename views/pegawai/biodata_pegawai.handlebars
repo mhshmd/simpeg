@@ -5,280 +5,263 @@
                 <div class="row hover-special-link" style="margin-bottom: 5px">
                     <div class="col-md-2 hover-edit">
                         <strong>Foto</strong>
-                        <img src="img/male.png" class="img-responsive" style="max-width: 100%; height: auto; display:block">
-                        <a id="link-ubah-foto" href="#" class="float-right mute"><i class="fa fa-pencil fa-sm"></i></a>
+                        <img id="profile-pict" src="img/male.png" class="img-responsive" style="max-width: 100%; height: auto; display:block">
+                        <label for="link-ubah-foto" class="float-right form"><i class="fa fa-pencil fa-sm"></i>ubah</label>
+                        <input id="link-ubah-foto" class="input" name="photo_pict" type='file' />
                     </div>
                     <div class="col-md-5">
                         <form id="form_pgw_usul_perubahan" action="#" method="POST">
+                            <div id="div-tbl-container" class="form-group form-actions">
+                                <button id="btn-edit" type="button" class="btn btn-primary" style="padding: 0.5rem 3rem;">Edit</button>
+                            </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Nama</label>
-                                <div class="col-md-8">
-                                    <p class="form-control-static">{{user.nama}} <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm edit"></i></a></p>
-                                    <input style="display: none;" id="field-tambah-nama" value="{{user.nama}}" type="text" name="nama" class="form-control" autocomplete="off" required>
-                                    <button style="display: none" id="button-submit-tambah-pgw" type="button" class="btn btn-primary">Usulkan</button>
+                                <label class="col-md-3 form-control-label">Nama<span> *</span></label>
+                                <div class="col-md-9">
+                                    <input id="field-tambah-nama" type="text" name="nama" class="form-control input" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Jenis Kelamin</label>
+                                <label class="col-md-3 form-control-label">Jenis Kelamin<span> *</span></label>
                                 <div class="col-md-9">
                                     <label class="radio-inline">
-                                        <p class="form-control-static">Laki-laki <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                        <!-- <input type="radio" name="jk" value="L" checked="checked">  Laki-laki -->
+                                        <input type="radio" id="jkL" class="input" name="jk" value="L" checked="checked">  Laki-laki
                                     </label>
-                                    <!-- <label class="radio-inline">
-                                        <input type="radio" name="jk" value="P">  Perempuan
-                                    </label> -->
+                                    <label class="radio-inline">
+                                        <input type="radio" id="jkP" class="input" name="jk" value="P">  Perempuan
+                                    </label>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Tempat & Tanggal Lahir</label>
+                                <label class="col-md-3 form-control-label">Tempat & Tanggal Lahir<span> *</span></label>
                                 <div class="col-md-6">
-                                    <p class="form-control-static">{{user.ttl_tl}} <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control" name="ttl_tl" required> -->
+                                    <input type='text-input' class="form-control input" name="ttl_tl" required>
                                     <span class="help-block text-muted">Tempat</span> 
                                 </div>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">24/02/1994 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control date" name="ttl_t" required> -->
+                                    <input type='text-input' class="form-control date input" name="ttl_t" required>
                                     <span class="help-block text-muted">Tanggal</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label">NIP</label>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">340058367 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='number' class="form-control disable-arrow" name="nip_lama" minlength=9> -->
+                                    <input type='number' class="form-control disable-arrow input" name="nip_lama" minlength=9>
                                     <span class="help-block text-muted">Lama</span> 
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="form-control-static">19940224201802241001 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='number' class="form-control disable-arrow" name="nip_baru" minlength=18 required> -->
-                                    <span class="help-block text-muted">Baru</span>
+                                    <input id="field-nip-baru" type='number' class="form-control disable-arrow input" name="nip_baru" minlength=18 required>
+                                    <span class="help-block text-muted">Baru<span style="color: red"> *</span></span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Terhitung Mulai Tanggal (TMT)</label>
+                                <label class="col-md-3 form-control-label">TMT</label>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">24/02/1994 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control date" name="tmt_cpns"> -->
+                                    <input type='text-input' class="form-control date input" name="tmt_cpns">
                                     <span class="help-block text-muted">CPNS</span> 
                                 </div>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">24/02/1994 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control date" name="tmt_pns" required> -->
-                                    <span class="help-block text-muted">PNS</span>
+                                    <input type='text-input' class="form-control date input" name="tmt_pns" required>
+                                    <span class="help-block text-muted">PNS<span style="color: red"> *</span></span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Pangkat</label>
+                                <label class="col-md-3 form-control-label">Pangkat<span> *</span></label>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">III/a <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <select name="pkt_gol" class="form-control input-lg" size="1">
-                                        <option value="I/a">I/a</option>
-                                        <option value="I/b">I/b</option>
-                                        <option value="I/c">I/c</option>
-                                        <option value="I/d">I/d</option>
+                                    <select name="pkt_gol" class="form-control input-lg input" size="1">
+                                        <option value="1">I/a</option>
+                                        <option value="2">I/b</option>
+                                        <option value="3">I/c</option>
+                                        <option value="4">I/d</option>
 
-                                        <option value="II/a">II/a</option>
-                                        <option value="II/b">II/b</option>
-                                        <option value="II/c">II/c</option>
-                                        <option value="II/d">II/d</option>
+                                        <option value="5">II/a</option>
+                                        <option value="6">II/b</option>
+                                        <option value="7">II/c</option>
+                                        <option value="8">II/d</option>
 
-                                        <option value="III/a">III/a</option>
-                                        <option value="III/b">III/b</option>
-                                        <option value="III/c">III/c</option>
-                                        <option value="III/d">III/d</option>
+                                        <option value="9">III/a</option>
+                                        <option value="10">III/b</option>
+                                        <option value="11">III/c</option>
+                                        <option value="12">III/d</option>
 
-                                        <option value="IV/a">IV/a</option>
-                                        <option value="IV/b">IV/b</option>
-                                        <option value="IV/c">IV/c</option>
-                                        <option value="IV/d">IV/d</option>
-                                    </select> -->
+                                        <option value="13">IV/a</option>
+                                        <option value="14">IV/b</option>
+                                        <option value="15">IV/c</option>
+                                        <option value="16">IV/d</option>
+                                        <option value="17">IV/e</option>
+                                    </select>
                                     <span class="help-block text-muted">Gol</span> 
                                 </div>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">24/02/1994 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control date" name="pkt_tmt" required> -->
+                                    <input type='text-input' class="form-control date input" name="pkt_tmt" required>
                                     <span class="help-block text-muted">TMT</span>
                                 </div>
                             </div> 
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Jabatan</label>
+                                <label class="col-md-3 form-control-label">Jabatan<span> *</span></label>
                                 <div class="col-md-6">
-                                    <p class="form-control-static">Staf BAU <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control" name="jbt_nama" required> -->
+                                    <select id="field-jbt_nama" name="jbt_nama" class="form-control input-lg input" size="1">
+                                    </select>
                                     <span class="help-block text-muted">Nama</span> 
                                 </div>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">24/02/1994 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control date" name="jbt_tmt" required> -->
+                                    <input type='text-input' class="form-control date input" name="jbt_tmt" required>
                                     <span class="help-block text-muted">TMT</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Masa Kerja</label>
+                                <label class="col-md-3 form-control-label">Tugas Belajar<span> *</span></label>
+                                <div class="col-md-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" id="isTbf" class="input" name="isTb" value="false" checked="checked">  Tidak
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" id="isTt" class="input" name="isTb" value="true">  Ya
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Masa Kerja<span> *</span></label>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">5 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='number' min="0" value=0 class="form-control" name="mk_th" required> -->
+                                    <input type='number' min="0" value=0 class="form-control input" name="mk_th" required>
                                     <span class="help-block text-muted">Banyak Th</span> 
                                 </div>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">7 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='number' min="0" value=0 class="form-control" name="mk_bl" required> -->
+                                    <input type='number' min="0" value=0 class="form-control input" name="mk_bl" required>
                                     <span class="help-block text-muted">+Bl</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label">Pelatihan</label>
                                 <div class="col-md-6">
-                                    <p class="form-control-static">PIM 4 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control" name="pelatihan_nama"> -->
+                                    <input type='text-input' class="form-control input" name="pelatihan_nama">
                                     <span class="help-block text-muted">Nama</span> 
                                 </div>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">2018 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='number' min="1900" class="form-control" name="pelatihan_th"> -->
+                                    <input type='number' min="1900" class="form-control input" name="pelatihan_th">
                                     <span class="help-block text-muted">Th</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label"></label>
                                 <div class="col-md-9">
-                                    <p class="form-control-static">Pusdiklat BPS <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control" name="pelatihan_penyelenggara"> -->
+                                    <input type='text-input' class="form-control input" name="pelatihan_penyelenggara">
                                     <span class="help-block text-muted">Penyelenggara</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Pendidikan</label>
+                                <label class="col-md-3 form-control-label">Pendidikan<span> *</span></label>
                                 <div class="col-md-6">
-                                    <p class="form-control-static">Komputasi Statistik <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control" name="pdk_jurusan" required> -->
+                                    <input type='text-input' class="form-control input" name="pdk_jurusan" required>
                                     <span class="help-block text-muted">Jurusan</span> 
                                 </div>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">DIV <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <select name="pdk_ijazah" class="form-control input-lg" size="1">
-                                        <option value="none">Tidak ada</option>
-                                        <option value="S3">S3</option>
-                                        <option value="S2">S2</option>
-                                        <option value="S1">S1</option>
-                                        <option value="DIV">DIV</option>
-                                        <option value="DIII">DIII</option>
-                                        <option value="SLTA">SLTA/SMA/Paket C</option>
-                                        <option value="SLTP">SLTP/SMP/Mts/Paket B</option>
-                                        <option value="SD">SD/MI/Paket A</option>
-                                    </select> -->
+                                    <select name="pdk_ijazah" class="form-control input-lg input" size="1">
+                                        <option value="0">Tidak ada</option>
+                                        <option value="8">S3</option>
+                                        <option value="7">S2</option>
+                                        <option value="6">S1</option>
+                                        <option value="5">DIV</option>
+                                        <option value="4">DIII</option>
+                                        <option value="3">SLTA/SMA/Paket C</option>
+                                        <option value="2">SLTP/SMP/Mts/Paket B</option>
+                                        <option value="1">SD/MI/Paket A</option>
+                                    </select>
                                     <span class="help-block text-muted">Ijazah</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label"></label>
                                 <div class="col-md-6">
-                                    <p class="form-control-static">Sekolah Tinggi Ilmu Statistik <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control" name="pdk_pt" required> -->
+                                    <input type='text-input' class="form-control input" name="pdk_pt" required>
                                     <span class="help-block text-muted">PT</span>
                                 </div>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">2017 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='number' min="1900" class="form-control" name="pdk_lulus_th" required> -->
+                                    <input type='number' min="1900" class="form-control input" name="pdk_lulus_th" required>
                                     <span class="help-block text-muted">Lulus Th</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Batas Usia Pensiun (BUP)</label>
+                                <label class="col-md-3 form-control-label">Batas Usia Pensiun (BUP)<span> *</span></label>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">58 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='number' min="0" name="bup" class="form-control" autocomplete="off" required> -->
+                                    <input id="bup" type='number' min="0" name="bup" class="form-control input" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Pensiun</label>
+                                <label class="col-md-3 form-control-label">Pensiun<span> *</span></label>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">2052 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type="text" name="pensiun" class="form-control date" autocomplete="off" required> -->
+                                    <input id="field-pensiun" type="text" name="pensiun" class="form-control date input" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label">Angka Kredit</label>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">205.5 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='number' min="0" step=any name="ak" class="form-control" autocomplete="off"> -->
+                                    <input type='number' min="0" step=any name="ak" class="form-control input" autocomplete="off">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Periode KGB</label>
+                                <label class="col-md-3 form-control-label">Periode KGB<span> *</span></label>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">24/02/2019 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type="text" name="periode_kgb" class="form-control date" autocomplete="off" required> -->
+                                    <input id="periode-kgb" type="text" name="periode_kgb" class="form-control date input" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label">NIDN</label>
                                 <div class="col-md-4">
-                                    <p class="form-control-static">1000542 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type="text" name="nidn" class="form-control" autocomplete="off"> -->
+                                    <input type="text" name="nidn" class="form-control input" autocomplete="off">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label">Sertifikasi</label>
                                 <div class="col-md-4">
-                                    <p class="form-control-static"> <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type="text" name="sertifikasi" class="form-control" autocomplete="off"> -->
+                                    <input type="text" name="sertifikasi" class="form-control input" autocomplete="off">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label">Penghargaan</label>
                                 <div class="col-md-6">
-                                    <p class="form-control-static">Setyalencana <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control" name="hrg_jenis"> -->
+                                    <input type='text-input' class="form-control input" name="hrg_jenis">
                                     <span class="help-block text-muted">Jenis</span>
                                 </div>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">2018 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='number' min="1900" class="form-control" name="hrg_th"> -->
+                                    <input type='number' min="1900" class="form-control input" name="hrg_th">
                                     <span class="help-block text-muted">Th</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label">Hukuman Disiplin</label>
                                 <div class="col-md-6">
-                                    <p class="form-control-static">Penundaan KGB <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control" name="hkm_jenis"> -->
-                                    <span class="help-block text-muted">Jenis</span>
+                                    <select id="field-hkm_jenis" name="hkm_jenis" class="form-control input-lg input" size="1">
+                                    </select>
+                                    <span class="help-block text-muted">Jenis</span> 
                                 </div>
                                 <div class="col-md-3">
-                                    <p class="form-control-static">24/02/2015 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type='text-input' class="form-control date" name="hkm_tmt"> -->
+                                    <input id="tmt_hukuman" type='text-input' class="form-control date input" name="hkm_tmt">
                                     <span class="help-block text-muted">TMT</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">No. Telepon</label>
+                                <label class="col-md-3 form-control-label">No. Telepon<span> *</span></label>
                                 <div class="col-md-5">
-                                    <p class="form-control-static">082311897547 <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type="number" name="telp" class="form-control disable-arrow" autocomplete="off" required> -->
+                                    <input type="number" name="telp" class="form-control disable-arrow input" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Email</label>
+                                <label class="col-md-3 form-control-label">Email<span> *</span></label>
                                 <div class="col-md-5">
-                                    <p class="form-control-static">shamad@stis.ac.id <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type="email" name="email" class="form-control" autocomplete="off" required> -->
+                                    <input type="email" name="email" class="form-control input" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label">Alamat lengkap</label>
+                                <label class="col-md-3 form-control-label">Alamat lengkap<span> *</span></label>
                                 <div class="col-md-9">
-                                    <p class="form-control-static">Jl. H. Hasbi <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <textarea name="alamat" rows="3" class="form-control"></textarea> -->
+                                    <textarea id="field-alamat" name="alamat" rows="3" class="form-control input"></textarea>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label">Password</label>
                                 <div class="col-md-5">
-                                    <p class="form-control-static">********* <a id="link-ganti-foto" href="#" class="mute"><i class="fa fa-pencil fa-sm"></i></a></p>
-                                    <!-- <input type="password" name="password" class="form-control" autocomplete="off"> -->
+                                    <input type="password" name="password" class="form-control input" autocomplete="off">
+                                    <span class="help-block text-muted">(kosongkan jika tidak ingin mengganti)</span>
                                 </div>
                             </div>
                         </form>
@@ -324,16 +307,21 @@
             ],
             init: function() {
                 this.cacheDOM();
+                this.initSelectJbt();
                 this.bindEvents();
                 this.registerAutoComplete();
                 this.jQueryCustomFuncInit();
                 this.registerAgComponent();
+                this.getUser();
+                $('.input').prop('disabled', true);
             },
             //umum
             cacheDOM: function() {
-                this.$btn_tbh_pgw = $( '#btn-tbh-pgw' );
-
                 this.$field_tambah_nama = $( '#field-tambah-nama' );
+                this.$field_nip_baru = $( '#field-nip-baru' );
+                this.$field_bup = $( '#bup' );
+                this.$periode_kgb = $( '#periode-kgb' );
+                this.$field_pensiun = $( '#field-pensiun' );
                 this.$ttl_tl = $( 'input[name=ttl_tl]' );
                 this.$jbt_nama = $( 'input[name=jbt_nama]' );
                 this.$pelatihan_nama = $( 'input[name=pelatihan_nama]' );
@@ -342,9 +330,14 @@
                 this.$pdk_pt = $( 'input[name=pdk_pt]' );
                 this.$hrg_jenis = $( 'input[name=hrg_jenis]' );
                 this.$hkm_jenis = $( 'input[name=hkm_jenis]' );
-                this.$form_pgw_usul_perubahan = $( '#form_pgw_usul_perubahan' );
+                this.$form_admin_tambah_pgw = $( '#form_admin_tambah_pgw' );
                 this.$button_submit_tambah_pgw = $( '#button-submit-tambah-pgw' )
+                this.$modal_title_pgw = $( '#modal-title-pgw' );
+                this.$link_ubah_foto = $( '#link-ubah-foto' );
+                this.$field_alamat = $( '#field-alamat' );
                 this.$main_window = $('#main-window');
+
+                this.$div_btn_container = $('#div-tbl-container')
             },
             bindEvents: function(){
                 $('.date').datetimepicker({
@@ -365,7 +358,23 @@
                 });
 
                 this.$main_window.on('click', '.edit', this.editDataHandle.bind(this))
+                this.$main_window.on('click', '#btn-edit', this.btnEditPgwHandle.bind(this))
+                this.$main_window.on('click', '#btn-simpan', this.btnSimpanPgwHandle.bind(this))
+                this.$main_window.on('click', '#btn-batal', this.btnBatalPgwHandle.bind(this))
 
+            },
+            btnEditPgwHandle: function(){
+                $('.input').prop('disabled', false)
+                this.$div_btn_container.html(`<button id="btn-simpan" type="button" class="btn btn-success" style="padding: 0.5rem 3rem;">Simpan</button>
+                    <button id="btn-batal" type="button" class="btn btn-secondary" style="padding: 0.5rem 3rem;">Batal</button>`)
+            },
+            btnSimpanPgwHandle: function(){
+                $('.input').prop('disabled', true)
+                this.$div_btn_container.html('<button id="btn-edit" type="button" class="btn btn-primary" style="padding: 0.5rem 3rem;">Edit</button>')
+            },
+            btnBatalPgwHandle: function(){
+                $('.input').prop('disabled', true)
+                this.$div_btn_container.html('<button id="btn-edit" type="button" class="btn btn-primary" style="padding: 0.5rem 3rem;">Edit</button>')
             },
             editDataHandle: function(e){
                 this.$display = $(e.target).parent().parent();
@@ -495,6 +504,68 @@
             },
             btnInCellRenderer: function(params){
                 return `<button class='edit-usulan'>Edit</button> <button class='batalkan-usulan'>Batalkan</button>`
+            },
+            dateCellRenderer: function(params) {
+                if(params.value){
+                    return moment(params.value).format('DD/MM/YYYY')
+                } else {
+                    return '';
+                }
+            },
+            initSelectJbt: function(){
+                socket.emit('getAllJabatan', 'from_pengaturan_pgw_admin', this.setJbtSelect.bind(this))
+                socket.emit('getAllHukuman', 'from_pengaturan_pgw_admin', this.setHkmSelect.bind(this))
+            },
+            setJbtSelect: function(all_jabatan) {
+                var jbt_opt = '';
+                _.each(all_jabatan, function(jbt, i, list){
+                    jbt_opt += '<option bup='+jbt.bup+' value='+jbt._id+' >' + jbt.jbt_nama + '</option>'
+                })
+                $( '#field-jbt_nama' ).html(jbt_opt);
+            },
+            setHkmSelect: function(all_hukuman) {
+                var hkm_opt = '<option value="tidak ada" >Tidak ada</option>';
+                _.each(all_hukuman, function(hkm, i, list){
+                    hkm_opt += '<option mb='+hkm.masa_berlaku+' value='+hkm._id+' >' + hkm.hkm_label + '</option>'
+                })
+                $( '#field-hkm_jenis' ).html(hkm_opt);
+            },
+            getUser: function(){
+                socket.emit('get user', '', this.setModalPgwFormData.bind(this))
+            },
+            setModalPgwFormData: function( data_pegawai ) {
+                if(!data_pegawai) return;
+                this.$field_alamat.text('')
+                if(data_pegawai['jk'] === 'L') $('#profile-pict').attr('src', 'img/male.png');
+                    else $('#profile-pict').attr('src', 'img/female.png');
+                for ( var key in data_pegawai ) {
+                    if (data_pegawai.hasOwnProperty( key )) {
+                        var $elem = $( '[name='+key+']' );
+                        if( !$elem.get(0) ){
+                            if(key === 'photo') {
+                                $('#profile-pict').attr('src', 'img/profile/'+data_pegawai[key]);
+                            }
+                        } else if( $elem.get(0).tagName === 'INPUT' ){
+                            if ( key == 'jk' ) {
+                                $("#jk"+data_pegawai[key]).prop("checked", true)
+                            } else if ( _.contains(['pkt_tmt', 'tmt_cpns', 'tmt_pns', 'pensiun', 'ttl_t', 'periode_kgb', 'hkm_tmt'], key) ) {
+                                $elem.val( this.dateCellRenderer({value: data_pegawai[key]}) );
+                            } else if ( key == 'isTb' ) {
+                                if(data_pegawai[key]){
+                                    $("#isTbt").prop("checked", true)
+                                }else {
+                                    $("#isTbf").prop("checked", true)
+                                }
+                            } else if( key !== 'password' ){
+                                $elem.val( data_pegawai[key] );
+                            }
+                        } else if( $elem.get(0).tagName === 'SELECT' ){
+                            $('[name='+key+']').val( data_pegawai[key]._id || data_pegawai[key] );
+                        } else if( $elem.get(0).tagName === 'TEXTAREA' ){
+                            $elem.text( data_pegawai[key] );
+                        }
+                    }
+                }
             },
         }
 

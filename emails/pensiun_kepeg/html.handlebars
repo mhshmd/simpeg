@@ -13,11 +13,21 @@ span {
 }
 </style>
 
-Yth. {{user.jk}} {{user.nama}} (admin)
+Yth. {{user.jk.label2}} {{user.nama}} (admin)
 <br><br>
-Bersama ini diberitahukan bahwa Batas Usia Pensiun (BUP) pegawai berikut akan jatuh pada 1 April 2019, yaitu:<br>
-1. .......<br>
-2. .......<br>
+Bersama ini diberitahukan bahwa Batas Usia Pensiun (BUP) pegawai berikut akan jatuh pada {{pensiun}}, yaitu:
+<table>
+	<tr>
+        <th>Nama</th>
+        <th>Pensiun</th>
+    </tr>
+	{{#each stafNotif}}
+	<tr>
+        <td>{{user.nama}}</td>
+        <td>{{user.pensiun}}</td>
+    </tr>
+    {{/each}}
+</table>
 Pegawai tersebut dapat mengajukan MPP (Masa Persiapan Pensiun) yang dapat diambil 1 tahun sebelum TMT pensiun (formulir terlampir).<br>
 Atau jika tidak mengambil MPP maka Pegawai tersebut dapat mengisi formulir pengajuan pensiun (terlampir) dan melengkapi berkas-berkas persyaratan pensiun yang diperlukan. yaitu: <br>
 1. Pas foto hitam putih 3x4 cm sebanyak 7 lembar<br>
@@ -32,10 +42,11 @@ Atau jika tidak mengambil MPP maka Pegawai tersebut dapat mengisi formulir penga
 10. Surat Permintaan Pembayaran Pensiun Pertama (SP-4)<br>
 11. Surat Keterangan alamat setelah pensiun<br>
 12. SKP tahun terakhir<br>
-selanjutnya diserahkan kepada Subbagian Kepegawaian STIS paling lambat 1 April 2018 untuk diproses lebih lanjut. 
+selanjutnya diserahkan kepada Subbagian Kepegawaian STIS paling lambat {{paling_lambat}} untuk diproses lebih lanjut. 
 <br><br>
 Demikian disampaikan atas perhatiannya diucapkan terima kasih.
 <br>
 <em>Subbagian Kepegawaian STIS<em>
 <hr>
-<em><span>Untuk masuk ke SIMANIS klik <a href="http://10.100.203.88:8000/admin">Masuk</a>.</span></em>
+<em><span>Email ini dibuat secara otomatis. Mohon tidak membalas email ini.</span><br>
+<span>Untuk masuk ke SIMANIS klik <a href="http://simanis.stis.ac.id/admin">Masuk</a>.</span></em>

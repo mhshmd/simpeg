@@ -6,22 +6,22 @@
                     <div class="col-md-12">
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item">
-                                <a id="pangkat_tab" class="nav-link active" data-toggle="tab" href="#pangkatchild" role="tab" aria-control="pangkatchild"><i class="icon-arrow-up-circle"></i> Kenaikan Pangkat</a>
+                                <a id="pangkat_tab" class="nav-link notif-tab active" data-toggle="tab" href="#pangkatchild" role="tab" aria-control="pangkatchild"><i class="icon-arrow-up-circle"></i> Kenaikan Pangkat</a>
                             </li>
                             <li class="nav-item">
-                                <a id="kgb_tab" class="nav-link" data-toggle="tab" href="#kgbchild" role="tab" aria-control="kgbchild"><i class="icon-wallet"></i> KGB</a>
+                                <a id="kgb_tab" class="nav-link notif-tab" data-toggle="tab" href="#kgbchild" role="tab" aria-control="kgbchild"><i class="icon-wallet"></i> KGB</a>
                             </li>
                             <li class="nav-item">
-                                <a id="pensiun_tab" class="nav-link" data-toggle="tab" href="#pensiunchild" role="tab" aria-control="pensiunchild"><i class="icon-cup"></i> Pensiun</a>
+                                <a id="pensiun_tab" class="nav-link notif-tab" data-toggle="tab" href="#pensiunchild" role="tab" aria-control="pensiunchild"><i class="icon-cup"></i> Pensiun</a>
                             </li>
                             <li class="nav-item">
-                                <a id="ptj_tab" class="nav-link" data-toggle="tab" href="#ptjchild" role="tab" aria-control="ptjchild"><i class="icon-badge"></i> Penghargaan Tanda Jasa</a>
+                                <a id="ptj_tab" class="nav-link notif-tab" data-toggle="tab" href="#ptjchild" role="tab" aria-control="ptjchild"><i class="icon-badge"></i> Penghargaan Tanda Jasa</a>
                             </li>
                             <li class="nav-item">
-                                <a id="phd_tab" class="nav-link" data-toggle="tab" href="#phdchild" role="tab" aria-control="phdchild"><i class="icon-check"></i> Pembebasan Hukuman Disiplin</a>
+                                <a id="phd_tab" class="nav-link notif-tab" data-toggle="tab" href="#phdchild" role="tab" aria-control="phdchild"><i class="icon-check"></i> Pembebasan Hukuman Disiplin</a>
                             </li>
                             <li class="nav-item">
-                                <a id="presensi_tab" class="nav-link" data-toggle="tab" href="#presensichild" role="tab" aria-control="presensichild"><i class="icon-layers"></i> Presensi</a>
+                                <a id="presensi_tab" class="nav-link notif-tab" data-toggle="tab" href="#presensichild" role="tab" aria-control="presensichild"><i class="icon-layers"></i> Presensi</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -53,41 +53,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="kgbchild" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-12" style="padding-left: 0">
-                                        <p>kgbchild</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="pensiunchild" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-12" style="padding-left: 0">
-                                        <p>pensiunchild</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="ptjchild" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-12" style="padding-left: 0">
-                                        <p>ptjchild</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="phdchild" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-12" style="padding-left: 0">
-                                        <p>phdchild</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="presensichild" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-12" style="padding-left: 0">
-                                        <p>presensichild</p>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -112,27 +77,33 @@
             rowData: [
                 // {_id: 'kj3n45n2k3jk532jk23nk23n32j5', pkt_gol: 'III/b', 'pkt_batas_usul': '24/12/2017', 'pkt_last_status': 'Usulan Diterima', 'pkt_last_notif': '07:30 09/11/2017'}
             ],
+            active_tab: 'pangkat_tab',
             //umum
             init: function() {
                 this.cacheDOM();
                 this.bindEvents();
                 this.registerAgComponent();
-                this.renderPktTable();
-                this.initStatus('pangkat');
+                this.initStatus({tabel: 'staf', tab: this.active_tab });
             },
             cacheDOM: function() {
                 this.$timelineDiv = $('#timeline-div');
-                this.$main_window = $( '#main-window' )
+                this.$main_window = $( '#main-window' );
             },
             bindEvents: function() {
                 this.$main_window.on('click', '.konfirmasi-pkt', this.konfirmasi_pktHandle.bind(this))
                 this.$main_window.on('click', '.btl-konfirmasi-pkt', this.btl_konfirmasi_pktHandle.bind(this))
+
+                this.$main_window.on('click', '.notif-tab', this.kgb_tabHandler.bind(this))
+            },
+            kgb_tabHandler: function(e){
+                this.active_tab = e.currentTarget.id;
+                this.destroy();
             },
             konfirmasi_pktHandle: function(){
                 var selectedData = this.gridOptions.api.getSelectedRows()[0];
                 var this_outer = this;
-                selectedData.type = 'staf';
-                socket.emit('konfirmasi notif kenaikan pangkat', selectedData, function(respons){
+
+                socket.emit('konfirmasi notif', {param: {tabel: 'staf', tab: this.active_tab }, data: selectedData}, function(respons){
                     if(respons){
                         selectedData.isConfirmed = true;
                         selectedData.isConfirmed = respons;
@@ -145,9 +116,9 @@
             btl_konfirmasi_pktHandle: function(){
                 var selectedData = this.gridOptions.api.getSelectedRows()[0];
                 var this_outer = this;
-                selectedData.type = 'staf';
-                socket.emit('batal konfirmasi notif kenaikan pangkat', selectedData, function(status){
-                    if(status){
+
+                socket.emit('batal konfirmasi', {param: {tabel: 'staf', tab: this.active_tab }, data: selectedData}, function(respons){
+                    if(respons){
                         selectedData.isConfirmed = false;
                         selectedData.pilihan = `<button class='konfirmasi-pkt'>Konfirmasi</button>`
                         var rowNode = this_outer.gridOptions.api.getRowNode(selectedData._id);
@@ -166,14 +137,70 @@
             },
             //>Ag Comp
             registerAgComponent: function(){
-                this.columnDefs = [
-                    {headerName: "Golongan", field: "gol_target", width: 75, cellRenderer: this.pkt_golCellRenderer},
-                    {headerName: "Periode TMT", field: "periode_tmt", width: 90, cellRenderer: this.dateCellRenderer},
-                    {headerName: "Batas Usul ke Kepeg", field: "bu_stis", width: 140, cellRenderer: this.dateCellRenderer},
-                    {headerName: "Status Terakhir", field: "status", width: 200, cellRenderer: this.statusCellRenderer},
-                    {headerName: "Notifikasi Terakhir", field: "time", width: 150, cellRenderer: this.dateCellRenderer2},
-                    {headerName: "Pilihan", field: "pilihan", width: 125, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
-                ]
+                if( this.active_tab === 'pangkat_tab' ){
+                    this.columnDefs = [
+                        {headerName: "Golongan", field: "gol_target", width: 75, cellRenderer: this.pkt_golCellRenderer},
+                        {headerName: "Periode TMT", field: "periode_tmt", width: 90, cellRenderer: this.dateCellRenderer},
+                        {headerName: "Batas Usul ke Kepeg", field: "bu_stis", width: 140, cellRenderer: this.dateCellRenderer},
+                        {headerName: "Status Terakhir", field: "status", width: 200, cellRenderer: this.statusCellRenderer},
+                        {headerName: "Notifikasi Terakhir", field: "time", width: 150, cellRenderer: this.dateCellRenderer2},
+                        {headerName: "Pilihan", field: "pilihan", width: 125, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if( this.active_tab === 'kgb_tab' ){
+                    this.columnDefs = [
+                        {headerName: "TMT CPNS", field: "user.tmt_cpns", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Periode KGB", field: "user.periode_kgb", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Status Terakhir", field: "status", width: 200, cellRenderer: this.statusCellRenderer},
+                        {headerName: "Notifikasi Terakhir", field: "time", width: 150, cellRenderer: this.dateCellRenderer2},
+                        {headerName: "Pilihan", field: "pilihan", width: 125, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if( this.active_tab === 'pensiun_tab' ){
+                    this.columnDefs = [
+                        {headerName: "Tanggal Lahir", field: "user.ttl_t", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Jabatan", field: "user.jbt_nama.jbt_nama", width: 90},
+                        {headerName: "BUP", field: "user.bup", width: 50},
+                        {headerName: "Pensiun", field: "user.pensiun", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Status Terakhir", field: "status", width: 200, cellRenderer: this.statusCellRenderer},
+                        {headerName: "Notifikasi Terakhir", field: "time", width: 150, cellRenderer: this.dateCellRenderer2},
+                        {headerName: "Pilihan", field: "pilihan", width: 125, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if( this.active_tab === 'ptj_tab' ){
+                    this.columnDefs = [
+                        {headerName: "TMT CPNS", field: "user.tmt_cpns", width: 90, cellRenderer: this.buCellRenderer},
+                        {headerName: "Masa kerja (Th)", field: "masa_kerja", width: 90},
+                        {
+                            headerName: 'Penghargaan',
+                            children: [
+                                {headerName: 'Terakhir', field: 'user.hrg_jenis', width: 200 },
+                                {headerName: 'Target', field: 'hrg_target', width: 200 }
+                            ]
+                        },
+                        {headerName: "Status Terakhir", field: "status", width: 200, cellRenderer: this.statusCellRenderer},
+                        {headerName: "Notifikasi Terakhir", field: "time", width: 150, cellRenderer: this.dateCellRenderer2},
+                        {headerName: "Pilihan", field: "pilihan", width: 125, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if( this.active_tab === 'phd_tab' ){
+                    this.columnDefs = [
+                        {
+                            headerName: 'Hukuman',
+                            children: [
+                                {headerName: 'Jenis', field: 'user.hkm_jenis.hkm_label', width: 290 },
+                                {headerName: 'TMT', field: 'user.hkm_tmt', width: 90, cellRenderer: this.buCellRenderer },
+                                {headerName: 'Durasi (Bln)', field: 'user.hkm_jenis.masa_berlaku', width: 80 },
+                                {headerName: 'Akhir', field: 'akhir_hukuman', width: 120 }
+                            ]
+                        },
+                        {headerName: "Status Terakhir", field: "status", width: 200, cellRenderer: this.statusCellRenderer},
+                        {headerName: "Notifikasi Terakhir", field: "time", width: 150, cellRenderer: this.dateCellRenderer2},
+                        {headerName: "Pilihan", field: "pilihan", width: 125, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                } else if( this.active_tab === 'presensi_tab' ){
+                    this.columnDefs = [
+                        {headerName: "Status Terakhir", field: "status", width: 200, cellRenderer: this.statusCellRenderer},
+                        {headerName: "Notifikasi Terakhir", field: "time", width: 150, cellRenderer: this.dateCellRenderer2},
+                        {headerName: "Pilihan", field: "pilihan", width: 125, cellRenderer: this.btnInCellRenderer, suppressFilter: true, suppressSorting: true, pinned: 'right'}
+                    ]
+                }
                 this.gridOptions = {
                     columnDefs: this.columnDefs,
                     rowData: this.rowData,
@@ -186,6 +213,18 @@
                     getRowNodeId: function(data) { return data._id; },
                     onRowDoubleClicked: this.lihatStatus.bind(this)
                 }
+                this.renderPktTable();
+            },
+            buCellRenderer: function(params) {
+                var tabel = $('[name="radio_notif_pkt"]:checked').val();
+                var date = params.value;
+                if(!params.value) return 'Belum';
+                if (  _.contains(['atasan', 'kepeg'], tabel)  ) {
+                    if(params.value instanceof Array && params.value[0]){
+                        date = (params.colDef.headerName === 'STIS')?params.value[0].bu_stis:params.value[0].bu_bps;
+                    }
+                }
+                return moment(date).format('DD/MM/YYYY')
             },
             pkt_golCellRenderer: function(params){
                 var transformGol = {
@@ -257,6 +296,13 @@
                     status.length?_.map(status, function(stat){
                     return `<div data-vtdate="`+this_outer.dateCellRenderer({value: stat.time})+`">`+stat.label+`</div>`; }):'Belum ada'
                 )
+            },
+            destroy: function(e){
+                this.gridOptions.api.destroy();
+                this.cacheDOM();
+                this.registerAgComponent();
+                this.$timelineDiv.html('<p>Double-click salah satu notifikasi.</p>')
+                this.initStatus({tabel: 'staf', tab: this.active_tab });
             }
 
         }

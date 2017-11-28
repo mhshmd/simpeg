@@ -8,7 +8,7 @@ var NotifPenghargaanAtasanSchema = new Schema({
     time: Date,
     time_next: Date,
     periode_kirim: Number,
-    periode_tmt: Date,
+    hrg_thn: Number,
     period_current: Number,
     period_max: Number,
     period_interval: Number,

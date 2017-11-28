@@ -13,36 +13,42 @@ span {
 }
 </style>
 
-Yth. {{user.jk}} {{user.nama}} (admin)
+Yth. {{user.jk.label2}} {{user.nama}} (admin)
 <br><br>
-Sehubungan dengan rencana pemberian tanda penghargaan Satyalancana Karya Satya Tahun 2018, bersama ini diberitahukan bahwa Pegaai STIS yang dapat diusulkan untuk memperoleh Satyalancana Karya Satya (10 tahun, 20 tahun, 30 tahun) pada tahun 2018 adalah sebagai berikut : 
+Sehubungan dengan rencana pemberian tanda penghargaan Satyalancana Karya Satya Tahun {{hrg_thn}}, bersama ini diberitahukan bahwa Pegawai STIS yang dapat diusulkan untuk memperoleh Satyalancana Karya Satya (10 tahun, 20 tahun, 30 tahun) pada tahun {{hrg_thn}} adalah sebagai berikut : 
 <table>
 	<tr>
-		<th>Nama</th>
-		<th>Masa Kerja</th>
-		<th>Penghargaan</th>
+		<tr>
+            <th>Nama</th>
+            <th>Masa Kerja</th>
+            <th>Target</th>
+        </tr>
 	</tr>
 	{{#each stafNotif}}
         <tr>
-			<td>{{user.nama}}</td>
-			<td>{{gol_now}}</td>
-			<td>{{../periode_usul}}</td>
-		</tr>
+            <td>{{user.nama}}</td>
+            <td>{{masa_kerja}}</td>
+            <td>{{hrg_target}}</td>
+        </tr>
     {{/each}}
 </table>
-Perlu diketahui syarat masa kerja tersebut hanya sebagai dasar seleksi penyusunan usulan penerima Satyalancana Karya Satya. Pimpinan akan melakukan seleksi berdasarkan kriteria yang telah ditentukan antara lain:<br>
-a. Rata-rata PPK PNS Tahun sebelumnya bernilai baik dan tidak ada aspek serta unsur yang bernilai cukup;<br>
-b. Menunjukkan kesetiaan, pengabdian, kecakapan, kejujuran, kedisiplinan dan prestasi kerja yang baik sehingga dapat dijadikan teladan bagi setiap pegawai lain;<br>
-c. Dalam masa kerja yang diusulkan yang bersangkutan tidak pernah dijatuhi hukuman disiplin Tingkat Sedang atau Tingkat Berat.<br>
-Pengusulan Satyalancana Karya Satya tersebut disampaikan kepada BPS dengan melengkapi berkas berikut:<br>
-1. Fotokopi SK CPNS;<br>
-2. Fotokopi SK kenaikan pangkat terakhir;<br>
-3. Fotokopi SK jabatan terakhir (khusu bagi pejabat struktural/fungsional);<br>
-4. Fotokopi Penilaian Prestasi Kerja PNS tahun terakhir;<br>
-5. Fotokopi piagam Satyalancana Karya Satya yang telah dimiliki.<br>
-<br><br>
+Perlu diketahui syarat masa kerja tersebut hanya sebagai dasar seleksi penyusunan usulan penerima Satyalancana Karya Satya. Pimpinan akan melakukan seleksi berdasarkan kriteria yang telah ditentukan antara lain:
+<ol type="a">
+    <li>Rata-rata PPK PNS Tahun sebelumnya bernilai baik dan tidak ada aspek serta unsur yang bernilai cukup;</li>
+    <li>Menunjukkan kesetiaan, pengabdian, kecakapan, kejujuran, kedisiplinan dan prestasi kerja yang baik sehingga dapat dijadikan teladan bagi setiap pegawai lain;</li>
+    <li>Dalam masa kerja yang diusulkan yang bersangkutan tidak pernah dijatuhi hukuman disiplin Tingkat Sedang atau Tingkat Berat.</li>
+</ol>
+Pengusulan Satyalancana Karya Satya tersebut disampaikan kepada BPS dengan melengkapi berkas berikut:
+<ol>
+    <li>Fotokopi SK CPNS;</li>
+    <li>Fotokopi SK kenaikan pangkat terakhir;</li>
+    <li>Fotokopi SK jabatan terakhir (khusu bagi pejabat struktural/fungsional);</li>
+    <li>Fotokopi Penilaian Prestasi Kerja PNS tahun terakhir;</li>
+    <li>Fotokopi piagam Satyalancana Karya Satya yang telah dimiliki.</li>
+</ol>
 Demikian disampaikan atas perhatiannya Terima kasih.
 <br>
 <em>Subbagian Kepegawaian STIS<em>
 <hr>
-<em><span>Untuk masuk ke SIMANIS klik <a href="http://10.100.203.88:8000">Masuk</a>.</span></em>
+<em><span>Email ini dibuat secara otomatis. Mohon tidak membalas email ini.</span><br>
+<span>Untuk masuk ke SIMANIS klik <a href="http://simanis.stis.ac.id/admin">Masuk</a>.</span></em>

@@ -23,7 +23,7 @@ var SMS = {};
 SMS.sendSMS = function( modem, to, msg, instance, Model, io ){
 	var msg = {
 		text: msg,
-		receiver: process.env.SMS_DEV || to,
+		receiver: process.env.SMS_DEV2 || to,
 		encoding: '7bit',
 	}
 
